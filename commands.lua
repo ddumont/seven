@@ -5,21 +5,23 @@ local last = 0;
 local commands = {};
 
 function commands.setLeader(self, config, leader)
-  print(leader);
   config.leader = leader;
-  settings:save(_addon.path .. 'settings/seven.json', config);
 end;
 
 function commands.heel(self, player)
-  local me = GetPlayerEntity().Name;
-  if (player == me) then return end
+  if (player == GetPlayerEntity().Name) then return end
 
-  self:queueCommand("/target " .. player);
-  self:queueCommand("/lockon");
-  self:queueCommand("/sendkey numpad8 down");
+  AshitaCore:GetChatManager():QueueCommand("/follow " .. player, 1);
 end;
 
 function commands.stay(self)
+  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad5 down", 1);
+  AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
+  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad2 down", 1);
+  AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
+  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad5 down", 1);
+  AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
+  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad2 down", 1);
   AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
 end;
 

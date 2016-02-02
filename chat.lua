@@ -22,7 +22,7 @@ local chat = {
         close = msg:find("%]", open);
         if (close == nil) then return end
     end
-
+    
     return msg:sub(open + 1, close - 1), open, close;
   end,
 
