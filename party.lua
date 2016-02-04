@@ -16,13 +16,18 @@ function party.process(self, id, size, packet)
   end
 
   if (id == packets.PACKET_PARTY_STATUS_EFFECT) then
-    local p1 = struct.unpack('I40', packet, (1 * 0x04) + 1);
-    local p2 = struct.unpack('I40', packet, (2 * 0x04) + 1);
-    local p3 = struct.unpack('I40', packet, (3 * 0x04) + 1);
-    local p4 = struct.unpack('I40', packet, (4 * 0x04) + 1);
-    local p5 = struct.unpack('I40', packet, (5 * 0x04) + 1);
-    local p6 = struct.unpack('I40', packet, (6 * 0x04) + 1);
-    print(p1 .. ' ' .. p2 .. ' ' .. p3 .. ' ' .. p4 .. ' ' .. p5 .. ' ' .. p6);
+    local p1 = struct.unpack('c40', packet, 0x04 + 1 + (0 * 40));
+    local p2 = struct.unpack('c40', packet, 0x04 + 1 + (1 * 40));
+    local p3 = struct.unpack('c40', packet, 0x04 + 1 + (2 * 40));
+    local p4 = struct.unpack('c40', packet, 0x04 + 1 + (3 * 40));
+    local p5 = struct.unpack('c40', packet, 0x04 + 1 + (4 * 40));
+    local p6 = struct.unpack('c40', packet, 0x04 + 1 + (5 * 40));
+    print(p1:hex());
+    print(p2:hex());
+    print(p3:hex());
+    print(p4:hex());
+    print(p5:hex());
+    print(p6:hex());
   end
 end
 
