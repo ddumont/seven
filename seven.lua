@@ -3,7 +3,7 @@ _addon.name     = 'seven';
 _addon.version  = '0.1';
 
 require 'common';
-local chat = require('./chat');
+local packets = require('./packets');
 local commands = require('./commands');
 
 local default_config = {};
@@ -20,28 +20,30 @@ end );
 
 
 ---------------------------------------------------------------------------------------------------
--- func: newchat
--- desc: listen to the leader
+-- func: incoming_packet
+-- desc: listen to the leader over the sevenet (/l2)
 ---------------------------------------------------------------------------------------------------
-ashita.register_event('newchat', function(mode, msg)
-  local shell, _, idx = chat.getShell(msg, 1);
-  if (shell ~= "2") then return end
+ashita.register_event('incoming_packet', function(id, size, packet)
+  if (id ~= packets.INCOMING_CHAT) then return end
 
-  local actor, _, idx = chat.getActor(msg, idx);
-  msg = msg:sub(idx):trim('\n');
+  local chatType = struct.unpack('b', packet, 0x4 + 1);
+  if (chatType ~= packets.CHAT_TYPE_LINKSHELL2) then return end
 
-  if (msg == "leader") then
+  local actor = struct.unpack('s', packet, 0x8 + 1);
+  local msg = struct.unpack('s', packet, 0x18 + 1);
+
+  if (msg == 'leader') then
     commands:setLeader(config, actor);
   end
 
-  -- If we're the leader...  then don't listen to the ls.
+  -- If we're the leader...  then don't listen.
   if (config.leader == GetPlayerEntity().Name) then return end
-  
-  if (msg == "heel") then
+
+  if (msg == 'follow') then
     commands:heel(config.leader or actor);
-  elseif (msg == "lock") then
+  elseif (msg == 'lock') then
     commands:lock(config.leader or actor);
-  elseif (msg == "stay") then
+  elseif (msg == 'stay') then
     commands:stay();
   end
 end);
@@ -59,7 +61,6 @@ ashita.register_event('render', function()
     last = t0;
     local command = commands:getCommand();
     if (command ~= nil) then
-      print(command);
       AshitaCore:GetChatManager():QueueCommand(command, 1);
     end
   end
@@ -76,11 +77,11 @@ ashita.register_event('command', function(cmd, nType)
 
     if (args[2] == 'leader') then
       config.leader = GetPlayerEntity().Name;
-      AshitaCore:GetChatManager():QueueCommand("/l2 leader", 1);
-    elseif (args[2] == 'heel') then
-      AshitaCore:GetChatManager():QueueCommand("/l2 heel", 1);
+      AshitaCore:GetChatManager():QueueCommand('/l2 leader', 1);
+    elseif (args[2] == 'follow') then
+      AshitaCore:GetChatManager():QueueCommand('/l2 follow', 1);
     elseif (args[2] == 'stay') then
-      AshitaCore:GetChatManager():QueueCommand("/l2 stay", 1);
+      AshitaCore:GetChatManager():QueueCommand('/l2 stay', 1);
     end
 
     return true;

@@ -15,14 +15,8 @@ function commands.heel(self, player)
 end;
 
 function commands.stay(self)
-  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad5 down", 1);
-  AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
-  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad2 down", 1);
-  AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
-  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad5 down", 1);
-  AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
-  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad2 down", 1);
-  AshitaCore:GetChatManager():QueueCommand("/release keys", 1);
+  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 down", -1);
+  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 up", -1);
 end;
 
 function commands.getCommand(self)
