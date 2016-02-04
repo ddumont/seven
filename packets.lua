@@ -1,6 +1,9 @@
 local packets = {
-  INCOMING_CHAT = 0x17,
-  
+  PACKET_INCOMING_CHAT = 0x17,
+  PACKET_PARTY_INVITE = 0xDC,
+
+  INVITE_TYPE_PARTY = 0x0,
+
   CHAT_TYPE_LINKSHELL2 = 0x1B
 };
 return packets;

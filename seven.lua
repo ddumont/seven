@@ -24,7 +24,7 @@ end );
 -- desc: listen to the leader over the sevenet (/l2)
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('incoming_packet', function(id, size, packet)
-  if (id ~= packets.INCOMING_CHAT) then return end
+  if (id ~= packets.PACKET_INCOMING_CHAT) then return end
 
   local chatType = struct.unpack('b', packet, 0x4 + 1);
   if (chatType ~= packets.CHAT_TYPE_LINKSHELL2) then return end
@@ -94,4 +94,18 @@ end);
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('unload', function()
   settings:save(_addon.path .. 'settings/seven.json', config);
+end);
+
+
+---------------------------------------------------------------------------------------------------
+-- func: incoming_packet
+-- desc: listen for party invites from the leader
+---------------------------------------------------------------------------------------------------
+ashita.register_event('incoming_packet', function(id, size, packet)
+  if (id ~= packets.PACKET_PARTY_INVITE) then return end
+  local type = struct.unpack('B', packet, 0x0B + 1);
+  local actor = struct.unpack('s', packet, 0x0C + 1);
+  if (type == packets.INVITE_TYPE_PARTY and actor == config.leader) then
+    AshitaCore:GetChatManager():QueueCommand('/join', 0);
+  end
 end);
