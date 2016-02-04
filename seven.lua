@@ -5,6 +5,7 @@ _addon.version  = '0.1';
 require 'common';
 local packets = require('./packets');
 local commands = require('./commands');
+local party = require('./party');
 
 local default_config = {};
 local config = default_config;
@@ -21,30 +22,13 @@ end );
 
 ---------------------------------------------------------------------------------------------------
 -- func: incoming_packet
--- desc: listen to the leader over the sevenet (/l2)
+-- desc: listen to incoming packets
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('incoming_packet', function(id, size, packet)
-  if (id ~= packets.PACKET_INCOMING_CHAT) then return end
-
-  local chatType = struct.unpack('b', packet, 0x4 + 1);
-  if (chatType ~= packets.CHAT_TYPE_LINKSHELL2) then return end
-
-  local actor = struct.unpack('s', packet, 0x8 + 1);
-  local msg = struct.unpack('s', packet, 0x18 + 1);
-
-  if (msg == 'leader') then
-    commands:setLeader(config, actor);
-  end
-
-  -- If we're the leader...  then don't listen.
-  if (config.leader == GetPlayerEntity().Name) then return end
-
-  if (msg == 'follow') then
-    commands:heel(config.leader or actor);
-  elseif (msg == 'lock') then
-    commands:lock(config.leader or actor);
-  elseif (msg == 'stay') then
-    commands:stay();
+  if (id == packets.PACKET_INCOMING_CHAT) then
+    commands:process(id, size, packet);
+  elseif (id == packets.PACKET_PARTY_INVITE or id == packets.PACKET_PARTY_STATUS_EFFECT) then
+    party:process(id, size, packet);
   end
 end);
 
@@ -82,6 +66,9 @@ ashita.register_event('command', function(cmd, nType)
       AshitaCore:GetChatManager():QueueCommand('/l2 follow', 1);
     elseif (args[2] == 'stay') then
       AshitaCore:GetChatManager():QueueCommand('/l2 stay', 1);
+    elseif (args[2] == 'reload') then
+      AshitaCore:GetChatManager():QueueCommand('/l2 reload', 1);
+      AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
     end
 
     return true;
@@ -94,18 +81,4 @@ end);
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('unload', function()
   settings:save(_addon.path .. 'settings/seven.json', config);
-end);
-
-
----------------------------------------------------------------------------------------------------
--- func: incoming_packet
--- desc: listen for party invites from the leader
----------------------------------------------------------------------------------------------------
-ashita.register_event('incoming_packet', function(id, size, packet)
-  if (id ~= packets.PACKET_PARTY_INVITE) then return end
-  local type = struct.unpack('B', packet, 0x0B + 1);
-  local actor = struct.unpack('s', packet, 0x0C + 1);
-  if (type == packets.INVITE_TYPE_PARTY and actor == config.leader) then
-    AshitaCore:GetChatManager():QueueCommand('/join', 0);
-  end
 end);
