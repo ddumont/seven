@@ -7,6 +7,7 @@ local party = {};
 -- desc: process party related stuff
 ---------------------------------------------------------------------------------------------------
 function party.process(self, id, size, packet)
+
   if (id == packets.PACKET_PARTY_INVITE) then
     local type = struct.unpack('B', packet, 0x0B + 1);
     local actor = struct.unpack('s', packet, 0x0C + 1);
@@ -16,20 +17,21 @@ function party.process(self, id, size, packet)
   end
 
   if (id == packets.PACKET_PARTY_STATUS_EFFECT) then
-    local p1id = struct.unpack('c4', packet, 0x04 + 1);
-    local p1idx = struct.unpack('c4', packet, 0x04 + 1 + 4);
-    local p1mask = struct.unpack('c8', packet, 0x04 + 1 + 4 + 4);
-    local p1buffs = struct.unpack('c32', packet, 0x04 + 1 + 4 + 4 + 8);
-    -- local p2 = struct.unpack('c40', packet, 0x04 + 1 + (1 * 40));
-    -- local p3 = struct.unpack('c40', packet, 0x04 + 1 + (2 * 40));
-    -- local p4 = struct.unpack('c40', packet, 0x04 + 1 + (3 * 40));
-    -- local p1 = struct.unpack('c40', packet, 0x04 + 1 + (0 * 40));
-    -- local p5 = struct.unpack('c40', packet, 0x04 + 1 + (4 * 40));
-    -- local p6 = struct.unpack('c40', packet, 0x04 + 1 + (5 * 40));
-    print(p1id:hex());
-    print(p1idx:hex());
-    print(p1mask:hex());
-    print(p1buffs:hex());
+    -- packet: [header-4][player-48][player-48][player-48][player-48][player-48]
+    -- player: [pid-4][pidx-4][bitmask-8][buffs-32]
+    local player;
+    for player = 0, 4, 1 do
+      local buff;
+      local buffstr = '';
+      local buffs = {};
+      for buff = 0, 32, 1 do
+        local mask = bitpack.unpackBitsBE(packet, 4 + (48 * player), buff * 2, 2);
+        local base = struct.unpack('B', packet, 4 + 1 + (48 * player) + 8);
+        buffs[buff] = (256 * mask) + base;
+        buffstr = buffstr .. ' ' .. buffs[buff];
+      end
+      print('player ' .. player .. ': ' .. buffstr);
+    end
   end
 end
 
