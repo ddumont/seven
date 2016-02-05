@@ -7,7 +7,6 @@ local party = {};
 -- desc: process party related stuff
 ---------------------------------------------------------------------------------------------------
 function party.process(self, id, size, packet)
-
   if (id == packets.PACKET_PARTY_INVITE) then
     local type = struct.unpack('B', packet, 0x0B + 1);
     local actor = struct.unpack('s', packet, 0x0C + 1);
@@ -26,10 +25,11 @@ function party.process(self, id, size, packet)
       local buffs = {};
       for buff = 0, 32, 1 do
         local mask = bitpack.unpackBitsBE(packet, 4 + (48 * player), buff * 2, 2);
-        local base = struct.unpack('B', packet, 4 + 1 + (48 * player) + 8);
+        local base = struct.unpack('B', packet, 4 + 1 + (48 * player) + 8 + buff);
         buffs[buff] = (256 * mask) + base;
         buffstr = buffstr .. ' ' .. buffs[buff];
       end
+      struct.unpack('B', packet, 4 + 1 + (48 * player) + 8);
       print('player ' .. player .. ': ' .. buffstr);
     end
   end
