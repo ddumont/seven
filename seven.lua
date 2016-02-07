@@ -7,6 +7,7 @@ local packets = require('./packets');
 local pgen = require('./pgen');
 local commands = require('./commands');
 local party = require('./party');
+local actions = require('./actions');
 
 local default_config = {};
 local config = default_config;
@@ -26,21 +27,12 @@ end );
 -- desc: listen to incoming packets
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('incoming_packet', function(id, size, packet)
+  actions:packet(true, id, size, packet);
+
   if (id == packets.inc.PACKET_INCOMING_CHAT) then
     commands:process(id, size, packet);
   elseif (id == packets.inc.PACKET_PARTY_INVITE or id == packets.inc.PACKET_PARTY_STATUS_EFFECT) then
     party:process(id, size, packet);
-  elseif (id == packets.inc.PACKET_NPC_INTERACTION_2) then
-    -- [header-4][tid-4][menu_params-32][tidx-2][tidx-2][zone-2][menuid-2][unk-2][zone_dupe-2][junk-2]
-    local target = struct.unpack('L', packet, 0x04 + 1);
-    local tidx = struct.unpack('H', packet, 0x28 + 1);
-    local zone = struct.unpack('H', packet, 0x2A + 1);
-    local menuid = struct.unpack('H', packet, 0x2C + 1); -- 2C   Seems to select between menus within a zone
-    local unk = struct.unpack('H', packet, 0x2E + 1); -- 2E   08 00 for me, but FFing did nothing
-    local dupezne = struct.unpack('H', packet, 0x30 + 1);
-    local junk = struct.unpack('H', packet, 0x32 + 1);
-
-    print('IN: target: ' .. target .. ' tidx: ' .. tidx .. ' zone: ' .. zone .. ' menuid: ' .. menuid .. ' unk: ' .. unk .. ' dupezne: ' .. dupezne .. ' junk: ' .. junk);
   elseif (id == packets.inc.PACKET_NPC_INTERACTION) then
     -- string.char(id):hex()
     print('IN: ' .. packet:hex());
@@ -53,6 +45,9 @@ end);
 -- desc: listen to incoming packets
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('outgoing_packet', function(id, size, packet)
+  local result = actions:packet(false, id, size, packet);
+  if (result == false) then return false end
+
   if (id == packets.out.PACKET_NPC_INTERACTION) then
     -- [header-4][tid-4][tidx-2][category-2][param-2][unknown-2][... x y and z]
     local target = struct.unpack('L', packet, 0x04 + 1);
@@ -74,7 +69,10 @@ ashita.register_event('outgoing_packet', function(id, size, packet)
     local unk2 = struct.unpack('B', packet, 0x0F + 1);
     local zone = struct.unpack('H', packet, 0x10 + 1);
     local menuid = struct.unpack('H', packet, 0x12 + 1);
+    print(packet:hex());
     print('OUT`: target: ' .. target .. ' idx: ' .. idx .. ' unk: ' .. unk .. ' tidx: ' .. tidx .. ' auto: ' .. auto .. ' unk2: ' .. unk2 .. ' zone: ' .. zone .. ' menuid: ' .. menuid);
+  else
+    -- print(packet:hex());
   end
 end);
 
@@ -89,10 +87,7 @@ ashita.register_event('render', function()
   local t0 = clock();
   if (t0 - last > 0.8) then
     last = t0;
-    local command = commands:getCommand();
-    if (command ~= nil) then
-      AshitaCore:GetChatManager():QueueCommand(command, 1);
-    end
+    actions:tick();
   end
 end);
 
@@ -115,23 +110,125 @@ ashita.register_event('command', function(cmd, nType)
     elseif (args[2] == 'reload') then
       AshitaCore:GetChatManager():QueueCommand('/l2 reload', 1);
       AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
-    elseif (args[2] == 'id') then
+    elseif (args[2] == 'book') then
+
       local target = AshitaCore:GetDataManager():GetTarget();
-      print('' .. target:GetTargetID() .. ' ' .. target:GetTargetIndex());
-      local pid = packets.out.PACKET_NPC_INTERACTION;
-      local packet = pgen:new(pid)
-        :push('L', target:GetTargetID())
-        :push('H', target:GetTargetIndex())
-        :push('H', 0):push('H', 0):push('H', 0)
-        :push('f', 0):push('f', 0):push('f', 0)
-        :get_packet();
+      local tid = target:GetTargetID();
+      local tidx = target:GetTargetIndex();
+
+      actions:queue(actions:new()
+        :next(function(self)
+          print('1');
+
+          local pid = packets.out.PACKET_NPC_INTERACTION;
+          local packet = pgen:new(pid)
+            :push('L', target:GetTargetID())
+            :push('H', target:GetTargetIndex())
+            :push('H', 0):push('H', 0):push('H', 0)
+            :push('f', 0):push('f', 0):push('f', 0)
+            :get_packet();
+
+          packet = packet:totable();
+          AddOutgoingPacket(packet, pid, #packet);
+          return 'packet_in';
+        end)
+        :next(function(self, id, size, packet)
+          if (id ~= packets.inc.PACKET_NPC_INTERACTION_2) then
+            return false;
+          end
+          print('2');
+
+          -- [header-4][tid-4][menu_params-32][tidx-2][tidx-2][zone-2][menuid-2][unk-2][zone_dupe-2][junk-2]
+          self._booktid = struct.unpack('L', packet, 0x04 + 1);
+          self._zone    = struct.unpack('H', packet, 0x2A + 1);
+          self._menuid  = struct.unpack('H', packet, 0x2C + 1);
+        end)
+        :next(function()
+          -- wait a tick
+        end)
+        :next(function(self)
+          -- choose the 3rd page
+
+          print('3');
+          -- [header-4][tid-4][idx-2][unkown-2][tidx-2][auto-1][unknown2-1][zone-2][menuid-2]
+          local pid = packets.out.PACKET_NPC_CHOICE;
+          local packet = pgen:new(pid)
+            :push('L', self._booktid) -- booktid
+            :push('H', packets.fov.MENU_PAGE_3)
+            :push('H', 0x00)    -- unkown   (with repeat?)
+            :push('H', tidx)    -- tidx
+            :push('B', 0x01)    -- auto
+            :push('B', 0x00)    -- unkown-2
+            :push('H', self._zone)
+            :push('H', self._menuid)
+            :get_packet();
+
+          print(packet:hex());
+          packet = packet:totable();
+          AddOutgoingPacket(packet, pid, #packet);
+        end)
+        :next(function()
+          -- wait a tick
+        end)
+        :next(function()
+          print('5');
+          AshitaCore:GetChatManager():QueueCommand('/sendkey escape down', -1);
+          AshitaCore:GetChatManager():QueueCommand('/sendkey escape up',   -1);
+          return 'packet_out';
+        end)
+        :next(function(self, id, size, packet)
+          if (id ~= packets.out.PACKET_NPC_CHOICE) then
+            return false;
+          end
+
+          -- replace the cancel packet with our 3rd page choice
+          print('6');
+          local pid = packets.out.PACKET_NPC_CHOICE;
+          local packet = pgen:new(pid)
+            :push('L', self._booktid) -- booktid
+            :push('H', packets.fov.MENU_PAGE_3)
+            :push('H', 0x8000)  -- unkown   (with repeat?)
+            :push('H', tidx)    -- tidx
+            :push('B', 0x00)    -- auto
+            :push('B', 0x00)    -- unkown-2
+            :push('H', self._zone)
+            :push('H', self._menuid)
+            :get_packet();
+
+          print(packet:hex());
+          packet = packet:totable();
+          AddOutgoingPacket(packet, pid, #packet);
+
+          return true; -- replace the outgoing packet
+        end)
 
 
-        print(packet:hex());
-        AshitaCore:GetChatManager():QueueCommand('/sendkey RETURN down', -1);
-        AshitaCore:GetChatManager():QueueCommand('/sendkey RETURN up', -1);
+        -- :next(function(self)
+        --   -- lets send the cancel packets
+        --
+        --   -- [header-4][tid-4][idx-2][unkown-2][tidx-2][auto-1][unknown2-1][zone-2][menuid-2]
+        --   local pid = packets.out.PACKET_NPC_CHOICE;
+        --   local packet = pgen:new(pid)
+        --     :push('L', self._booktid) -- booktid
+        --     :push('H', packets.fov.MENU_PAGE_3)
+        --     :push('H', 0x8000)  -- unkown
+        --     :push('H', tidx)    -- tidx
+        --     :push('B', 0x00)    -- auto
+        --     :push('B', 0x00)    -- unkown-2
+        --     :push('H', self._zone)
+        --     :push('H', self._menuid)
+        --     :get_packet();
+        --
+        --   print(packet:hex());
+        --   packet = packet:totable();
+        --   AddOutgoingPacket(packet, pid, #packet);
+        --
+        -- end)
+        :next(function()
+          print('done');
+        end)
+      );
 
-        -- AddOutgoingPacket(packet, pid, #packet);
     end
 
     return true;
