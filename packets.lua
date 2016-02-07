@@ -43,8 +43,8 @@ local packets = {
     MENU_INSTANT_NOODLES = 165,
     MENU_RERAISE         = 37,
     MENU_HOME_NATION     = 21,
-    MENU_CANCEL_REGIME   = 3,
-    MENU_QUIT            = 0
+    MENU_CANCEL_REGIME   = 3
   }
+
 };
 return packets;

@@ -55,7 +55,6 @@ function pgen.new(self, id, size)
           -- Generate the packet header..
           local packet_id = self._packet_id;
           local packet_size = self._packet_size or #self._packet + 4;
-          print(packet_size);
           local header = struct.pack('bbh', packet_id, packet_size / 2, 0);
 
           -- Append the packet data..
@@ -69,7 +68,7 @@ function pgen.new(self, id, size)
           end
 
           -- Return the new packet table..
-          return header;
+          return header:totable();
       end
     };
 end
