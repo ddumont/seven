@@ -23,8 +23,6 @@ function commands.process(self, id, size, packet)
 
   if (msg == 'follow') then
     self:follow(config.leader or actor);
-  elseif (msg == 'lock') then
-    self:lock(config.leader or actor);
   elseif (msg == 'stay') then
     self:stay();
   elseif (msg == 'reload') then

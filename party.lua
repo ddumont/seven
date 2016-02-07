@@ -7,7 +7,7 @@ local party = {};
 -- desc: process party related stuff
 ---------------------------------------------------------------------------------------------------
 function party.process(self, id, size, packet)
-  if (id == packets.PACKET_PARTY_INVITE) then
+  if (id == packets.inc.PACKET_PARTY_INVITE) then
     local type = struct.unpack('B', packet, 0x0B + 1);
     local actor = struct.unpack('s', packet, 0x0C + 1);
     if (type == packets.INVITE_TYPE_PARTY and actor == config.leader) then
@@ -15,7 +15,7 @@ function party.process(self, id, size, packet)
     end
   end
 
-  if (id == packets.PACKET_PARTY_STATUS_EFFECT) then
+  if (id == packets.inc.PACKET_PARTY_STATUS_EFFECT) then
     -- packet: [header-4][player-48][player-48][player-48][player-48][player-48]
     -- player: [pid-4][pidx-4][bitmask-8][buffs-32]
     local player;
