@@ -1,4 +1,6 @@
 local packets = require('./packets');
+local actions = require('./actions');
+local fov = require('./fov');
 
 local queue = {};
 local start = 0;
@@ -27,6 +29,19 @@ function commands.process(self, id, size, packet)
     self:stay();
   elseif (msg == 'reload') then
     self:reload();
+  elseif (msg:sub(1,4) == 'book') then
+    msg = msg:sub(6);
+    local i, len = msg:find('^%d+');
+    local tid = tonumber(msg:sub(i, len));
+    msg = msg:sub(len + 2);
+    i, len = msg:find('^%d+');
+    local tidx = tonumber(msg:sub(i, len));
+    msg = msg:sub(len + 2);
+    if (msg == 'cancel') then
+      actions:queue(fov:cancel(tid, tidx));
+    else
+      actions:queue(fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. msg]));
+    end
   end
 end
 

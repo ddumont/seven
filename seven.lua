@@ -87,10 +87,20 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/l2 reload', 1);
     AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
   elseif (args[2] == 'book') then
+    if (args[3] == nil) then
+      return print('Which page?');
+    end
+
     local target = AshitaCore:GetDataManager():GetTarget();
-    actions:queue(
-      fov:page(target:GetTargetID(), target:GetTargetIndex(), packets.fov.MENU_PAGE_3)
-    );
+    if (args[3] == 'cancel') then
+      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. target:GetTargetID() .. ' ' .. target:GetTargetIndex() .. ' cancel', 1);
+      actions:queue(fov:cancel(target:GetTargetID(), target:GetTargetIndex()));
+    elseif (packets.fov['MENU_PAGE_' .. args[3]] == nil) then
+      return print('Dunno what page that is...');
+    else
+      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. target:GetTargetID() .. ' ' .. target:GetTargetIndex() .. ' ' .. args[3], 1);
+      actions:queue(fov:page(target:GetTargetID(), target:GetTargetIndex(), packets.fov['MENU_PAGE_' .. args[3]]));
+    end
   end
 
   return true;
