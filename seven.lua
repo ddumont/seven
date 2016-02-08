@@ -92,14 +92,19 @@ ashita.register_event('command', function(cmd, nType)
     end
 
     local target = AshitaCore:GetDataManager():GetTarget();
+    local tid = target:GetTargetID();
+    local tidx = target:GetTargetIndex();
     if (args[3] == 'cancel') then
-      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. target:GetTargetID() .. ' ' .. target:GetTargetIndex() .. ' cancel', 1);
-      actions:queue(fov:cancel(target:GetTargetID(), target:GetTargetIndex()));
+      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' cancel', 1);
+      fov:cancel(tid, tidx);
+    elseif (args[3] == 'buff' or args[3] == 'buffs') then
+      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' buffs', 1);
+      fov:buffs(tid, tidx);
     elseif (packets.fov['MENU_PAGE_' .. args[3]] == nil) then
       return print('Dunno what page that is...');
     else
-      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. target:GetTargetID() .. ' ' .. target:GetTargetIndex() .. ' ' .. args[3], 1);
-      actions:queue(fov:page(target:GetTargetID(), target:GetTargetIndex(), packets.fov['MENU_PAGE_' .. args[3]]));
+      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
+      fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. args[3]]);
     end
   end
 

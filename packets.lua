@@ -43,7 +43,14 @@ local packets = {
     MENU_INSTANT_NOODLES = 165,
     MENU_RERAISE         = 37,
     MENU_HOME_NATION     = 21,
-    MENU_CANCEL_REGIME   = 3
+    MENU_CANCEL_REGIME   = 3,
+
+    EFFECT_PROTECT       = 40,
+    EFFECT_SHELL         = 41,
+    EFFECT_REGEN         = 42,
+    EFFECT_REFRESH       = 43,
+    EFFECT_RERAISE       = 113,
+    EFFECT_FOOD          = 251
   }
 
 };

@@ -38,9 +38,11 @@ function commands.process(self, id, size, packet)
     local tidx = tonumber(msg:sub(i, len));
     msg = msg:sub(len + 2);
     if (msg == 'cancel') then
-      actions:queue(fov:cancel(tid, tidx));
+      fov:cancel(tid, tidx);
+    elseif(msg == 'buffs') then
+      fov:buffs(tid, tidx);
     else
-      actions:queue(fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. msg]));
+      fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. msg]);
     end
   end
 end
