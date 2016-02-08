@@ -3,17 +3,21 @@
 1. Equip the new linkshell on all of your characters as the secondary linkshell (/l2)
 
 # commands
+
+## general
 * **/seven leader**
   * Make the current character the leader.
 * **/seven follow**
   * Instructs all bots to follow the leader.
 * **/seven stay**
   * Instructs all bots to stay put
-* **/seven book #** ( ```/seven book 1``` )
+ 
+## fov
+* **/seven book #** ( with book targetted )
   * Tell all bots to pick up page #.
-* **/seven book cancel**
+* **/seven book cancel** ( with book targetted )
   * Tell all bots to drop whatever page they are on.
-* **/seven book buffs**
+* **/seven book buffs** ( with book targetted )
   * Tell all bots to get Job appropriate buffs 
     * regen
     * refresh
