@@ -1,5 +1,6 @@
 local packets = require('./packets');
 local actions = require('./actions');
+local combat = require('./combat');
 local fov = require('./fov');
 
 local queue = {};
@@ -7,7 +8,6 @@ local start = 0;
 local last = 0;
 
 local commands = {};
-
 
 function commands.process(self, id, size, packet)
   local chatType = struct.unpack('b', packet, 0x4 + 1);
@@ -44,6 +44,10 @@ function commands.process(self, id, size, packet)
     else
       fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. msg]);
     end
+  elseif (msg:sub(1,6) == 'debuff') then
+    combat:debuff(tonumber(msg:sub(8)));
+  elseif (msg:sub(1,4) == 'nuke') then
+    combat:nuke(tonumber(msg:sub(6)));
   end
 end
 
@@ -61,8 +65,14 @@ end
 
 
 function commands.stay(self)
-  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 down", -1);
-  AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 up", -1);
+  actions:queue(actions:new()
+    :next(function(self)
+      AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 down", -1);
+    end)
+    :next(function(self)
+      AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 up", -1);
+    end));
+
 end
 
 

@@ -61,7 +61,7 @@ local last = 0;
 ashita.register_event('render', function()
   local clock = os.clock;
   local t0 = clock();
-  if (t0 - last > 0.8) then
+  if (t0 - last > 0.5) then
     last = t0;
     actions:tick();
   end
@@ -106,6 +106,18 @@ ashita.register_event('command', function(cmd, nType)
       AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
       fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. args[3]]);
     end
+
+  elseif (args[2] == 'buffs') then
+    local buffs = party:GetBuffs(tonumber(args[3]));
+    local buffstr = '';
+    for k in pairs(buffs) do
+        buffstr = buffstr .. k .. ' ';
+    end
+    print(buffstr);
+  elseif (args[2] == 'debuff') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 debuff ' .. AshitaCore:GetDataManager():GetTarget():GetTargetID(), 1);
+  elseif (args[2] == 'nuke') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 nuke ' .. AshitaCore:GetDataManager():GetTarget():GetTargetID(), 1);
   end
 
   return true;

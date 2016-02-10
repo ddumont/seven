@@ -35,7 +35,7 @@ local actions = {
     if (#parts == 0) then
       table.remove(queue, 1);
       self:tick();
-    elseif (action.count >= 5) then
+    elseif (action.count >= 5 and action.stalled ~= true) then
       action.stalled = true;
       parts[1](action, true); -- action will be killed next tick
     elseif (action.stalled == true) then
@@ -43,8 +43,14 @@ local actions = {
       AshitaCore:GetChatManager():QueueCommand('/l2 Action stalled, removed.', -1);
       table.remove(queue, 1);
       self:tick();
+    elseif (action.waiting == 'wait') then
+      action.wait = action.wait - 1;
+      print('waiting 1 tick');
+      if (action.wait <= 0) then
+        action.waiting = nil;
+      end
     elseif (action.waiting == nil) then
-      action.waiting = table.remove(parts, 1)(action, false);
+      action.waiting, action.wait = table.remove(parts, 1)(action, false);
       action.count = 0;
       action.stalled = false;
     else
@@ -65,7 +71,7 @@ local actions = {
     elseif (isIn == true and action.waiting == 'packet_in') then
       local result = parts[1](action, false, id, size, packet);
       if (result ~= false) then
-        action.waiting = result;
+        action.waiting, action.wait = result;
         table.remove(parts, 1);
         action.count = 0;
         action.stalled = false;
@@ -73,7 +79,7 @@ local actions = {
     elseif (isIn == false and action.waiting == 'packet_out') then
       local result = parts[1](action, false, id, size, packet);
       if (result ~= false) then
-        action.waiting = result;
+        action.waiting, action.wait = result;
         table.remove(parts, 1);
         action.count = 0;
         action.stalled = false;

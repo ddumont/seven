@@ -14,7 +14,7 @@ function init(tid, tidx)
   AddOutgoingPacket(packet, pid, #packet);
 end
 
-function talkToBook(tid, tidx)
+function talkToBook(tid, tidx, choice, auto)
   return actions:new()
     :next(function(self, stalled)
       init(tid, tidx);
@@ -23,12 +23,16 @@ function talkToBook(tid, tidx)
 
     :next(function(self, stalled, id, size, packet)
       if (stalled == true) then -- npcs get contention when talked to repeatedly (even by other players)
-        if (self.__count ~= nil and self.__count >= 5) then return end -- bail
+        if (self.__count ~= nil and self.__count >= 15) then -- bail
+          print('I give up');
+          return;
+        end
+        print('trying again');
         init(tid, tidx);
         self.stalled = false; -- try again
-        math.randomseed(os.clock());
-        self.count = math.random(0, 4); -- backdown
+        self.count = 0; -- backdown
         self.__count = (self.__count or 0) + 1;
+        print(self.__count);
         return false;
       elseif (id ~= packets.inc.PACKET_NPC_INTERACTION_2) then
         return false;
@@ -40,34 +44,33 @@ function talkToBook(tid, tidx)
       self._tidx    = tidx;
     end)
 
-    :next(function()end) -- wait 2 ticks
+    :next(function()end) -- wait 4 ticks
+    :next(function()end)
+    :next(function()end)
     :next(function()end)
     :next(function(self, stalled) -- kill the text menu from the book
       AshitaCore:GetChatManager():QueueCommand('/sendkey escape down', -1);
-      AshitaCore:GetChatManager():QueueCommand('/sendkey escape up',   -1);
       return 'packet_out'; -- wait to cap the packet
-    end);
-end
+    end)
+    :next(function(self, stalled, id, size, packet)
+      AshitaCore:GetChatManager():QueueCommand('/sendkey escape up',   -1);
+      if (stalled == true) then return end
+      if (id ~= packets.out.PACKET_NPC_CHOICE) then return false end
 
-function simpleMenuChoice(choice)
-  return (function(self, stalled, id, size, packet) -- read the 3rd page
-    if (stalled == true) then return end
-    if (id ~= packets.out.PACKET_NPC_CHOICE) then return false end
-
-    -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L661
-    local packet = pgen:new(id)
-      :push('L', self._booktid) -- booktid
-      :push('H', choice)
-      :push('H', 0x00)    -- unkown   (with repeat?)
-      :push('H', self._tidx)    -- tidx
-      :push('B', 0x00)    -- auto
-      :push('B', 0x00)    -- unkown-2
-      :push('H', self._zone)
-      :push('H', self._menuid)
-      :get_packet();
-    AddOutgoingPacket(packet, id, #packet);
-    return true; -- replace the outgoing packet
-  end);
+      -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L661
+      local packet = pgen:new(id)
+        :push('L', self._booktid) -- booktid
+        :push('H', choice)
+        :push('H', 0x00)    -- unkown   (with repeat?)
+        :push('H', self._tidx)    -- tidx
+        :push('B', auto and 0x01 or 0x00)    -- auto
+        :push('B', 0x00)    -- unkown-2
+        :push('H', self._zone)
+        :push('H', self._menuid)
+        :get_packet();
+      AddOutgoingPacket(packet, id, #packet);
+      return true; -- replace the outgoing packet
+    end)
 end
 
 return {
@@ -77,8 +80,7 @@ return {
   -- desc: Get page from the specified target
   ---------------------------------------------------------------------------------------------------
   page = function(self, tid, tidx, page)
-    actions:queue(talkToBook(tid, tidx)
-      :next(simpleMenuChoice(page))
+    actions:queue(talkToBook(tid, tidx, page, true)
       :next(function(self, stalled)  -- choose the 3rd page
         -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L661
         local pid = packets.out.PACKET_NPC_CHOICE;
@@ -104,8 +106,7 @@ return {
   -- desc: Cancel the current page.
   ---------------------------------------------------------------------------------------------------
   cancel = function(self, tid, tidx)
-    actions:queue(talkToBook(tid, tidx)
-      :next(simpleMenuChoice(packets.fov.MENU_CANCEL_REGIME))
+    actions:queue(talkToBook(tid, tidx, packets.fov.MENU_CANCEL_REGIME)
       :next(function(self)
         AshitaCore:GetChatManager():QueueCommand('/l2 done.', 1);
       end)
@@ -130,15 +131,15 @@ return {
     end
 
     if (isMana == true and buffs[packets.fov.EFFECT_REFRESH] ~= true) then
-      actions:queue(talkToBook(tid, tidx):next(simpleMenuChoice(packets.fov.MENU_REFRESH)));
+      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_REFRESH));
     end
     if (buffs[packets.fov.EFFECT_REGEN] ~= true) then
-      actions:queue(talkToBook(tid, tidx):next(simpleMenuChoice(packets.fov.MENU_REGEN)));
+      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_REGEN));
     end
     if (isMage and buffs[packets.fov.EFFECT_FOOD] ~= true) then
-      actions:queue(talkToBook(tid, tidx):next(simpleMenuChoice(packets.fov.MENU_HARD_COOKIE)));
+      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_HARD_COOKIE));
     elseif (buffs[packets.fov.EFFECT_FOOD] ~= true) then
-      actions:queue(talkToBook(tid, tidx):next(simpleMenuChoice(packets.fov.MENU_DRIED_MEAT)));
+      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_DRIED_MEAT));
     end
 
     actions:queue(actions:new():next(function(self)
