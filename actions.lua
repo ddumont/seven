@@ -44,8 +44,8 @@ local actions = {
       table.remove(queue, 1);
       self:tick();
     elseif (action.waiting == 'wait') then
-      action.wait = action.wait - 1;
-      print('waiting 1 tick');
+      action.wait = (action.wait or 0) - 1;
+      print('waiting 1 tick, ' .. action.wait);
       if (action.wait <= 0) then
         action.waiting = nil;
       end

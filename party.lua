@@ -7,7 +7,7 @@ return {
   -- func: process
   -- desc: process party related stuff
   ---------------------------------------------------------------------------------------------------
-  process = function(self, id, size, packet)
+  process = function(self, id, size, packet, config)
     if (id == packets.inc.PACKET_PARTY_INVITE) then
       local type = struct.unpack('B', packet, 0x0B + 1);
       local actor = struct.unpack('s', packet, 0x0C + 1);

@@ -7,6 +7,7 @@ local debug_packet = require('./debug_packet');
 local commands = require('./commands');
 local actions = require('./actions');
 local packets = require('./packets');
+local combat = require('./combat');
 local party = require('./party');
 local pgen = require('./pgen');
 local fov = require('./fov');
@@ -33,9 +34,9 @@ ashita.register_event('incoming_packet', function(id, size, packet)
   actions:packet(true, id, size, packet);
 
   if (id == packets.inc.PACKET_INCOMING_CHAT) then
-    commands:process(id, size, packet);
+    commands:process(id, size, packet, config);
   elseif (id == packets.inc.PACKET_PARTY_INVITE or id == packets.inc.PACKET_PARTY_STATUS_EFFECT) then
-    party:process(id, size, packet);
+    party:process(id, size, packet, config);
   end
 end);
 
@@ -64,6 +65,7 @@ ashita.register_event('render', function()
   if (t0 - last > 0.5) then
     last = t0;
     actions:tick();
+    combat:tick();
   end
 end);
 
@@ -110,7 +112,7 @@ ashita.register_event('command', function(cmd, nType)
   elseif (args[2] == 'buffs') then
     local buffs = party:GetBuffs(tonumber(args[3]));
     local buffstr = '';
-    for k in pairs(buffs) do
+    for k, v in pairs(buffs) do
         buffstr = buffstr .. k .. ' ';
     end
     print(buffstr);
@@ -129,5 +131,7 @@ end);
 -- desc: Called when our addon is unloaded.
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('unload', function()
-  settings:save(_addon.path .. 'settings/seven.json', config);
+  if (config.leader == GetPlayerEntity().Name) then
+    settings:save(_addon.path .. 'settings/seven.json', config);
+  end
 end);
