@@ -30,20 +30,22 @@ return {
       self:stay();
     elseif (msg == 'reload') then
       self:reload();
-    elseif (msg:sub(1,4) == 'book') then
-      msg = msg:sub(6);
+    elseif (msg:sub(2,3) == 'ov') then
+      local fovgov = msg:sub(1,3);
+      msg = msg:sub(5);
       local i, len = msg:find('^%d+');
       local tid = tonumber(msg:sub(i, len));
       msg = msg:sub(len + 2);
       i, len = msg:find('^%d+');
       local tidx = tonumber(msg:sub(i, len));
       msg = msg:sub(len + 2);
+      
       if (msg == 'cancel') then
-        fov:cancel(tid, tidx);
+        fov:cancel(fovgov, tid, tidx);
       elseif(msg == 'buffs') then
-        fov:buffs(tid, tidx);
+        fov:buffs(fovgov, tid, tidx);
       else
-        fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. msg]);
+        fov:page(fovgov, tid, tidx, msg);
       end
     elseif (msg:sub(1,6) == 'debuff') then
       combat:debuff(tonumber(msg:sub(8)));

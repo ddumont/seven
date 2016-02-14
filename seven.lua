@@ -101,10 +101,10 @@ ashita.register_event('command', function(cmd, nType)
       AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' cancel', 1);
       fov:cancel(args[2], tid, tidx);
     elseif (args[3] == 'buff' or args[3] == 'buffs') then
-      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' buffs', 1);
+      AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' buffs', 1);
       fov:buffs(args[2], tid, tidx);
     elseif (tonumber(args[3])) then
-      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
+      AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
       fov:page(args[2], tid, tidx, args[3]);
     end
 

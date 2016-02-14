@@ -96,7 +96,7 @@ return {
         local pid = packets.out.PACKET_NPC_CHOICE;
         local packet = pgen:new(pid)
           :push('L', self._booktid) -- booktid
-          :push('H', page)
+          :push('H', packets[fovgov]['MENU_PAGE_' .. page])
           :push('H', packets[fovgov].PAGE_REPEAT)  -- unkown   (with repeat?)
           :push('H', tidx)    -- tidx
           :push('B', 0x00)    -- auto
