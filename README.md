@@ -23,3 +23,17 @@
     * refresh
     * food
     * *It's assumed you would have prot/shell already if you're mboxin*
+* **/seven debuff** ( with mob targetted )
+  * Tell all bots to apply job appropriate debuffs to the target
+    * Poison
+    * Dia
+    * Bio
+    * Paralyze
+    * Blind
+    * etc...
+* **/seven nuke** ( with mob targetted )
+  * Tell all bots to nuke your target
+    * Banish
+    * Fire
+    * Aero
+    * etc...
