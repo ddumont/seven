@@ -62,10 +62,10 @@ return {
     elseif (main == JOB_BLM) then
       actions:queue(actions:new():next(function(self)
         magic('Blizzard', tid);
-        magic('Fire', tid);
-        magic('Aero', tid);
-        magic('Water', tid);
-        magic('Stone', tid);
+        -- magic('Fire', tid);
+        -- magic('Aero', tid);
+        -- magic('Water', tid);
+        -- magic('Stone', tid);
       end));
     end
   end,
@@ -102,7 +102,7 @@ return {
             :next(partial(magic, 'Cure', pid))
             :next(function(self) healing = false; end));
           break;
-        elseif (buffs[packets.status.EFFECT_POISON] == 1 or buffs[packets.status.EFFECT_POISON_II] == 1) then
+        elseif (buffs[packets.status.EFFECT_POISON] == true or buffs[packets.status.EFFECT_POISON_II] == true) then
           healing = true;
           actions:queue(actions:new():next(partial(wait, 8))
             :next(partial(magic, 'Poisona', pid))

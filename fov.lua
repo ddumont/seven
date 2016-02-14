@@ -1,5 +1,6 @@
 local actions = require('./actions');
 local packets = require('./packets');
+local party = require('./party');
 local pgen = require('./pgen');
 
 function init(tid, tidx)
@@ -129,7 +130,7 @@ return {
   -- desc:
   ---------------------------------------------------------------------------------------------------
   buffs = function(self, fovgov, tid, tidx)
-    local buffs = {};
+    local buffs = party:GetBuffs(0);
     local player = AshitaCore:GetDataManager():GetPlayer();
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
@@ -137,13 +138,6 @@ return {
       main == JOB_WHM or main == JOB_BLM or main == JOB_RDM or main == JOB_PLD or main == JOB_DRK or main == JOB_SMN or main == JOB_BLU or main == JOB_SCH or
       sub  == JOB_WHM or sub  == JOB_BLM or sub  == JOB_RDM or sub  == JOB_PLD or sub  == JOB_DRK or sub  == JOB_SMN or sub  == JOB_BLU or sub  == JOB_SCH);
     local isMage = (main == JOB_WHM or main == JOB_BLM or main == JOB_RDM or main == JOB_SMN or main == JOB_SCH);
-
-    local k, v;
-    for k, v in pairs(player.GetBuffs) do
-      if (v ~= -1) then
-        buffs[v] = true;
-      end
-    end
 
     if (buffs[packets.status.EFFECT_RERAISE] ~= true) then
       actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_RERAISE));
