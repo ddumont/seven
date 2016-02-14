@@ -49,6 +49,8 @@ return {
       combat:debuff(tonumber(msg:sub(8)));
     elseif (msg:sub(1,4) == 'nuke') then
       combat:nuke(tonumber(msg:sub(6)));
+    elseif (msg:sub(1,5) == 'sleep') then
+      combat:nuke(tonumber(msg:sub(7)));
     end
   end,
 

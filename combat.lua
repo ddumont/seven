@@ -1,5 +1,6 @@
 local actions = require('./actions');
 local packets = require('./packets');
+local party = require('./party');
 local pgen = require('./pgen');
 
 function magic(spell, target, action)
@@ -33,18 +34,18 @@ return {
 
     if (main == JOB_WHM) then
       actions:queue(actions:new()
-        :next(partial(magic, 'Dia', tid)));
-      actions:queue(actions:new()
-        :next(partial(wait, 10))
+        :next(partial(magic, 'Slow', tid)));
+      actions:queue(actions:new():next(partial(wait, 10))
         :next(partial(magic, 'Paralyze', tid)));
+      actions:queue(actions:new():next(partial(wait, 10))
+        :next(partial(magic, 'Dia', tid)));
+
     elseif (main == JOB_BLM) then
       actions:queue(actions:new()
-        :next(partial(magic, 'Poison', tid)));
-      actions:queue(actions:new()
-        :next(partial(wait, 10))
         :next(partial(magic, 'Blind', tid)));
-      actions:queue(actions:new()
-        :next(partial(wait, 10))
+      actions:queue(actions:new():next(partial(wait, 10))
+        :next(partial(magic, 'Frost', tid)));
+      actions:queue(actions:new():next(partial(wait, 10))
         :next(partial(magic, 'Bio', tid)));
     end
   end,
@@ -60,9 +61,23 @@ return {
         :next(partial(magic, 'Banish', tid)));
     elseif (main == JOB_BLM) then
       actions:queue(actions:new():next(function(self)
+        magic('Blizzard', tid);
         magic('Fire', tid);
         magic('Aero', tid);
+        magic('Water', tid);
+        magic('Stone', tid);
       end));
+    end
+  end,
+
+
+  sleep = function(self, tid)
+    local player = AshitaCore:GetDataManager():GetPlayer();
+    local main = player:GetMainJob();
+    local sub  = player:GetSubJob();
+
+    if (main == JOB_BLM) then
+      actions:queue(actions:new():next(partial(magic, 'Sleep', tid)));
     end
   end,
 
@@ -73,20 +88,35 @@ return {
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
 
-    local party = datamgr:GetParty();
+    local iparty = datamgr:GetParty();
     if (healing == false and main == JOB_WHM) then
       local i;
       for i = 1, 5 do
-        local hpp = party:GetPartyMemberHPP(i);
+        local pid = iparty:GetPartyMemberID(i);
+        local hpp = iparty:GetPartyMemberHPP(i);
+        local buffs = party:GetBuffs(i);
+
         if (hpp > 0 and hpp < 80) then
           healing = true;
-          print(i .. ' ' .. hpp);
-          actions:queue(actions:new()
-            :next(partial(wait, 8))
-            :next(partial(magic, 'Cure', party:GetPartyMemberID(i)))
-            :next(function(self)
-              healing = false;
-            end));
+          actions:queue(actions:new():next(partial(wait, 8))
+            :next(partial(magic, 'Cure', pid))
+            :next(function(self) healing = false; end));
+          break;
+        elseif (buffs[packets.status.EFFECT_POISON] == 1 or buffs[packets.status.EFFECT_POISON_II] == 1) then
+          healing = true;
+          actions:queue(actions:new():next(partial(wait, 8))
+            :next(partial(magic, 'Poisona', pid))
+            :next(function(self) healing = false; end));
+          break;
+        end
+      end
+      for i = 1, 5 do
+        local buffs = party:GetBuffs(i);
+        if (buffs[packets.status.BLINDNESS] == 1) then
+          healing = true;
+          actions:queue(actions:new():next(partial(wait, 8))
+            :next(partial(magic, 'Blindna', pid))
+            :next(function(self) healing = false; end));
           break;
         end
       end

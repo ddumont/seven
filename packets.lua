@@ -43,14 +43,47 @@ local packets = {
     MENU_INSTANT_NOODLES = 165,
     MENU_RERAISE         = 37,
     MENU_HOME_NATION     = 21,
-    MENU_CANCEL_REGIME   = 3,
+    MENU_CANCEL_REGIME   = 3
+  },
 
-    EFFECT_PROTECT       = 40,
-    EFFECT_SHELL         = 41,
-    EFFECT_REGEN         = 42,
-    EFFECT_REFRESH       = 43,
-    EFFECT_RERAISE       = 113,
-    EFFECT_FOOD          = 251
+  gov = {
+    PAGE_REPEAT          = 0x8000,
+
+    MENU_PAGE_1          = 18;
+    MENU_PAGE_2          = 34;
+    MENU_PAGE_3          = 50;
+    MENU_PAGE_4          = 66;
+    MENU_PAGE_5          = 82;
+    MENU_PAGE_6          = 98;
+    MENU_PAGE_7          = 114;
+    MENU_PAGE_8          = 130;
+    MENU_PAGE_9          = 146;
+    MENU_PAGE_10         = 162;
+    MENU_VIEW_REGIME     = 1,
+    MENU_LEVEL_RANGE     = 5,
+    MENU_REGEN           = 116,
+    MENU_REFRESH         = 132,
+    MENU_PROTECT         = 148,
+    MENU_SHELL           = 164,
+    MENU_DRIED_MEAT      = 196,
+    MENU_SALTED_FISH     = 212,
+    MENU_HARD_COOKIE     = 228,
+    MENU_INSTANT_NOODLES = 244,
+    MENU_RERAISE         = 68,
+    MENU_HOME_NATION     = 20,
+    MENU_CANCEL_REGIME   = 3
+  },
+
+  status = {
+    EFFECT_POISON                   = 3,
+    EFFECT_BLINDNESS                = 5,
+    EFFECT_PROTECT                  = 40,
+    EFFECT_SHELL                    = 41,
+    EFFECT_REGEN                    = 42,
+    EFFECT_REFRESH                  = 43,
+    EFFECT_RERAISE                  = 113,
+    EFFECT_FOOD                     = 251,
+    EFFECT_POISON_II                = 540,
   }
 
 };

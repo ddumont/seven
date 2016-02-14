@@ -11,19 +11,33 @@
   * Instructs all bots to follow the leader.
 * **/seven stay**
   * Instructs all bots to stay put
- 
+
 ## fov
-* **/seven book #** ( with book targetted )
+* **/seven fov #** ( with book targeted )
   * Tell all bots to pick up page #.
-* **/seven book cancel** ( with book targetted )
+* **/seven fov cancel** ( with book targeted )
   * Tell all bots to drop whatever page they are on.
-* **/seven book buffs** ( with book targetted )
-  * Tell all bots to get Job appropriate buffs 
+* **/seven fov buffs** ( with book targeted )
+  * Tell all bots to get Job appropriate buffs
     * regen
     * refresh
     * food
     * *It's assumed you would have prot/shell already if you're mboxin*
-* **/seven debuff** ( with mob targetted )
+
+## gov
+* **/seven gov #** ( with book targeted )
+  * Tell all bots to pick up page #.
+* **/seven gov cancel** ( with book targeted )
+  * Tell all bots to drop whatever page they are on.
+* **/seven gov buffs** ( with book targeted )
+  * Tell all bots to get Job appropriate buffs
+    * regen
+    * refresh
+    * food
+    * *It's assumed you would have prot/shell already if you're mboxin*
+
+## combat
+* **/seven debuff** ( with mob targeted )
   * Tell all bots to apply job appropriate debuffs to the target
     * Poison
     * Dia
@@ -31,9 +45,12 @@
     * Paralyze
     * Blind
     * etc...
-* **/seven nuke** ( with mob targetted )
+* **/seven nuke** ( with mob targeted )
   * Tell all bots to nuke your target
     * Banish
     * Fire
     * Aero
     * etc...
+* **/seven sleep** ( with mob targeted )
+  * Tell all bots to sleep your target if they are able
+    * Currently only blm sleep

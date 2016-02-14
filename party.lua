@@ -31,7 +31,7 @@ return {
           local base = struct.unpack('B', packet, 4 + 1  + 4 + 4 + (48 * player) + 8 + buff);
           local buffid = (256 * mask) + base;
           if (buffid ~= 0xFF) then
-            party[player + 1][buffid] = 1;
+            party[player + 1][buffid] = true;
           end
         end
       end

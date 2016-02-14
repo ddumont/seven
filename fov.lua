@@ -44,16 +44,18 @@ function talkToBook(tid, tidx, choice, auto)
       self._tidx    = tidx;
     end)
 
-    :next(function()end) -- wait 4 ticks
-    :next(function()end)
-    :next(function()end)
-    :next(function()end)
+    :next(function(self) return 'wait', 4; end) -- wait 4 ticks
     :next(function(self, stalled) -- kill the text menu from the book
+      self.esc = true;
       AshitaCore:GetChatManager():QueueCommand('/sendkey escape down', -1);
       return 'packet_out'; -- wait to cap the packet
     end)
     :next(function(self, stalled, id, size, packet)
-      AshitaCore:GetChatManager():QueueCommand('/sendkey escape up',   -1);
+      if (self.esc == true) then
+        self.esc = false;
+        AshitaCore:GetChatManager():QueueCommand('/sendkey escape up',   -1);
+      end
+
       if (stalled == true) then return end
       if (id ~= packets.out.PACKET_NPC_CHOICE) then return false end
 
@@ -69,6 +71,14 @@ function talkToBook(tid, tidx, choice, auto)
         :push('H', self._menuid)
         :get_packet();
       AddOutgoingPacket(packet, id, #packet);
+
+      local i;
+      local pstr = '';
+      for i = 1, #packet do
+        pstr = pstr .. string.char(packet[i]);
+      end
+      print(pstr:hex());
+
       return true; -- replace the outgoing packet
     end)
 end
@@ -79,7 +89,7 @@ return {
   -- func: page
   -- desc: Get page from the specified target
   ---------------------------------------------------------------------------------------------------
-  page = function(self, tid, tidx, page)
+  page = function(self, fovgov, tid, tidx, page)
     actions:queue(talkToBook(tid, tidx, page, true)
       :next(function(self, stalled)  -- choose the 3rd page
         -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L661
@@ -87,7 +97,7 @@ return {
         local packet = pgen:new(pid)
           :push('L', self._booktid) -- booktid
           :push('H', page)
-          :push('H', packets.fov.PAGE_REPEAT)  -- unkown   (with repeat?)
+          :push('H', packets[fovgov].PAGE_REPEAT)  -- unkown   (with repeat?)
           :push('H', tidx)    -- tidx
           :push('B', 0x00)    -- auto
           :push('B', 0x00)    -- unkown-2
@@ -105,15 +115,20 @@ return {
   -- func: cancel
   -- desc: Cancel the current page.
   ---------------------------------------------------------------------------------------------------
-  cancel = function(self, tid, tidx)
-    actions:queue(talkToBook(tid, tidx, packets.fov.MENU_CANCEL_REGIME)
+  cancel = function(self, fovgov, tid, tidx)
+    actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_CANCEL_REGIME)
       :next(function(self)
         AshitaCore:GetChatManager():QueueCommand('/l2 done.', 1);
       end)
     );
   end,
 
-  buffs = function(self, tid, tidx)
+
+  ---------------------------------------------------------------------------------------------------
+  -- func: buffs
+  -- desc:
+  ---------------------------------------------------------------------------------------------------
+  buffs = function(self, fovgov, tid, tidx)
     local buffs = {};
     local player = AshitaCore:GetDataManager():GetPlayer();
     local main = player:GetMainJob();
@@ -130,16 +145,19 @@ return {
       end
     end
 
-    if (isMana == true and buffs[packets.fov.EFFECT_REFRESH] ~= true) then
-      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_REFRESH));
+    if (buffs[packets.status.EFFECT_RERAISE] ~= true) then
+      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_RERAISE));
     end
-    if (buffs[packets.fov.EFFECT_REGEN] ~= true) then
-      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_REGEN));
+    if (isMana == true and buffs[packets.status.EFFECT_REFRESH] ~= true) then
+      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_REFRESH));
     end
-    if (isMage and buffs[packets.fov.EFFECT_FOOD] ~= true) then
-      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_HARD_COOKIE));
-    elseif (buffs[packets.fov.EFFECT_FOOD] ~= true) then
-      actions:queue(talkToBook(tid, tidx, packets.fov.MENU_DRIED_MEAT));
+    if (buffs[packets.status.EFFECT_REGEN] ~= true) then
+      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_REGEN));
+    end
+    if (isMage and buffs[packets.status.EFFECT_FOOD] ~= true) then
+      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_HARD_COOKIE));
+    elseif (buffs[packets.status.EFFECT_FOOD] ~= true) then
+      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_DRIED_MEAT));
     end
 
     actions:queue(actions:new():next(function(self)

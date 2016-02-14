@@ -78,6 +78,9 @@ ashita.register_event('command', function(cmd, nType)
   local args = cmd:GetArgs();
   if (args[1] ~= '/seven') then return end
 
+  local target = AshitaCore:GetDataManager():GetTarget();
+  local tid = target:GetTargetID();
+
   if (args[2] == 'leader') then
     config.leader = GetPlayerEntity().Name;
     AshitaCore:GetChatManager():QueueCommand('/l2 leader', 1);
@@ -88,25 +91,21 @@ ashita.register_event('command', function(cmd, nType)
   elseif (args[2] == 'reload') then
     AshitaCore:GetChatManager():QueueCommand('/l2 reload', 1);
     AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
-  elseif (args[2] == 'book') then
+  elseif (args[2] == 'fov' or args[2] == 'gov') then
     if (args[3] == nil) then
       return print('Which page?');
     end
 
-    local target = AshitaCore:GetDataManager():GetTarget();
-    local tid = target:GetTargetID();
     local tidx = target:GetTargetIndex();
     if (args[3] == 'cancel') then
-      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' cancel', 1);
-      fov:cancel(tid, tidx);
+      AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' cancel', 1);
+      fov:cancel(args[2], tid, tidx);
     elseif (args[3] == 'buff' or args[3] == 'buffs') then
-      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' buffs', 1);
-      fov:buffs(tid, tidx);
-    elseif (packets.fov['MENU_PAGE_' .. args[3]] == nil) then
-      return print('Dunno what page that is...');
-    else
-      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
-      fov:page(tid, tidx, packets.fov['MENU_PAGE_' .. args[3]]);
+      -- AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. tid .. ' ' .. tidx .. ' buffs', 1);
+      fov:buffs(args[2], tid, tidx);
+    elseif (tonumber(args[3])) then
+      AshitaCore:GetChatManager():QueueCommand('/l2 book ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
+      fov:page(args[2], tid, tidx, args[3]);
     end
 
   elseif (args[2] == 'buffs') then
@@ -117,10 +116,13 @@ ashita.register_event('command', function(cmd, nType)
     end
     print(buffstr);
   elseif (args[2] == 'debuff') then
-    AshitaCore:GetChatManager():QueueCommand('/l2 debuff ' .. AshitaCore:GetDataManager():GetTarget():GetTargetID(), 1);
+    AshitaCore:GetChatManager():QueueCommand('/l2 debuff ' .. tid, 1);
   elseif (args[2] == 'nuke') then
-    AshitaCore:GetChatManager():QueueCommand('/l2 nuke ' .. AshitaCore:GetDataManager():GetTarget():GetTargetID(), 1);
+    AshitaCore:GetChatManager():QueueCommand('/l2 nuke ' .. tid, 1);
+  elseif (args[2] == 'sleep') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 sleep ' .. tid, 1);
   end
+
 
   return true;
 end);
