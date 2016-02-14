@@ -44,7 +44,7 @@ return {
       actions:queue(actions:new()
         :next(partial(magic, 'Blind', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
-        :next(partial(magic, 'Frost', tid)));
+        :next(partial(magic, 'Poison', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
         :next(partial(magic, 'Bio', tid)));
     end

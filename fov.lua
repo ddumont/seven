@@ -72,12 +72,12 @@ function talkToBook(tid, tidx, choice, auto)
         :get_packet();
       AddOutgoingPacket(packet, id, #packet);
 
-      local i;
-      local pstr = '';
-      for i = 1, #packet do
-        pstr = pstr .. string.char(packet[i]);
-      end
-      print(pstr:hex());
+      -- local i;
+      -- local pstr = '';
+      -- for i = 1, #packet do
+      --   pstr = pstr .. string.char(packet[i]);
+      -- end
+      -- print(pstr:hex());
 
       return true; -- replace the outgoing packet
     end)
