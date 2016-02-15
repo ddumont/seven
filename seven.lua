@@ -7,22 +7,25 @@ local debug_packet = require('./debug_packet');
 local commands = require('./commands');
 local actions = require('./actions');
 local packets = require('./packets');
+local config = require('./config');
 local combat = require('./combat');
 local party = require('./party');
 local pgen = require('./pgen');
 local fov = require('./fov');
-
-local default_config = {};
-local config = default_config;
-
 
 ---------------------------------------------------------------------------------------------------
 -- func: load
 -- desc: First called when our addon is loaded.
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('load', function()
-  config = settings:load(_addon.path .. 'settings/seven.json') or config;
-end );
+  local saved = settings:load(_addon.path .. 'settings/seven.json');
+  local k, v;
+  if (saved) then
+    for k, v in pairs(saved) do
+      config[k] = v;
+    end
+  end
+end);
 
 
 ---------------------------------------------------------------------------------------------------
@@ -80,6 +83,7 @@ ashita.register_event('command', function(cmd, nType)
 
   local target = AshitaCore:GetDataManager():GetTarget();
   local tid = target:GetTargetID();
+  local tidx = target:GetTargetIndex();
 
   if (args[2] == 'leader') then
     config.leader = GetPlayerEntity().Name;
@@ -96,7 +100,6 @@ ashita.register_event('command', function(cmd, nType)
       return print('Which page?');
     end
 
-    local tidx = target:GetTargetIndex();
     if (args[3] == 'cancel') then
       AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' cancel', 1);
       fov:cancel(args[2], tid, tidx);
@@ -121,6 +124,8 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/l2 nuke ' .. tid, 1);
   elseif (args[2] == 'sleep') then
     AshitaCore:GetChatManager():QueueCommand('/l2 sleep ' .. tid, 1);
+  elseif (args[2] == 'attack') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 attack ' .. tid, 1);
   end
 
 

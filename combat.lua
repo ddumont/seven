@@ -1,7 +1,9 @@
 local actions = require('./actions');
 local packets = require('./packets');
+local config = require('./config');
 local party = require('./party');
 local pgen = require('./pgen');
+
 
 function magic(spell, target, action)
   AshitaCore:GetChatManager():QueueCommand('/magic ' .. spell .. ' ' .. target, 0);
@@ -25,7 +27,7 @@ end
 local healing = false;
 
 return {
-
+  ATTACK_TID = nil,
 
   debuff = function(self, tid)
     local player = AshitaCore:GetDataManager():GetPlayer();
@@ -82,8 +84,29 @@ return {
   end,
 
 
+  attack = function(self, tid)
+    local player = AshitaCore:GetDataManager():GetPlayer();
+    local main = player:GetMainJob();
+    local sub  = player:GetSubJob();
+
+    if (main == JOB_THF) then
+      local combat = self;
+      actions:queue(actions:new()
+        :next(function(self)
+          AshitaCore:GetChatManager():QueueCommand('/attack ' .. tid, 0);
+        end)
+        :next(function(self)
+          combat.ATTACK_TID = tid;
+          AshitaCore:GetChatManager():QueueCommand('/follow ' .. tid, 0);
+        end));
+    end
+  end,
+
+
   tick = function(self)
     local datamgr = AshitaCore:GetDataManager();
+    local tid = datamgr:GetTarget():GetTargetID();
+
     local player = datamgr:GetPlayer();
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
@@ -119,6 +142,11 @@ return {
             :next(function(self) healing = false; end));
           break;
         end
+      end
+    elseif (main == JOB_THF) then
+      if (self.ATTACK_TID and tid ~= self.ATTACK_TID) then
+        self.ATTACK_TID = nil;
+        AshitaCore:GetChatManager():QueueCommand("/follow " .. config.leader, 1);
       end
     end
   end

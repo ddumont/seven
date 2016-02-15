@@ -39,7 +39,7 @@ return {
       i, len = msg:find('^%d+');
       local tidx = tonumber(msg:sub(i, len));
       msg = msg:sub(len + 2);
-      
+
       if (msg == 'cancel') then
         fov:cancel(fovgov, tid, tidx);
       elseif(msg == 'buffs') then
@@ -53,6 +53,8 @@ return {
       combat:nuke(tonumber(msg:sub(6)));
     elseif (msg:sub(1,5) == 'sleep') then
       combat:nuke(tonumber(msg:sub(7)));
+    elseif (msg:sub(1,6) == 'attack') then
+      combat:attack(tonumber(msg:sub(8)));
     end
   end,
 

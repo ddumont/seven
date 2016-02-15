@@ -3,6 +3,7 @@ local packets = {
   out = { -- outgoing
     PACKET_NPC_INTERACTION = 0x1A,
     PACKET_NPC_CHOICE = 0x5B,
+    PACKET_IDX_UPDATE = 0x15
   },
 
 
