@@ -135,7 +135,7 @@ return {
       end
       for i = 1, 5 do
         local buffs = party:GetBuffs(i);
-        if (buffs[packets.status.BLINDNESS] == 1) then
+        if (buffs[packets.status.BLINDNESS] == true) then
           healing = true;
           actions:queue(actions:new():next(partial(wait, 8))
             :next(partial(magic, 'Blindna', pid))
