@@ -139,9 +139,9 @@ return {
       sub  == JOB_WHM or sub  == JOB_BLM or sub  == JOB_RDM or sub  == JOB_PLD or sub  == JOB_DRK or sub  == JOB_SMN or sub  == JOB_BLU or sub  == JOB_SCH);
     local isMage = (main == JOB_WHM or main == JOB_BLM or main == JOB_RDM or main == JOB_SMN or main == JOB_SCH);
 
-    if (buffs[packets.status.EFFECT_RERAISE] ~= true) then
-      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_RERAISE));
-    end
+    -- if (buffs[packets.status.EFFECT_RERAISE] ~= true) then
+    --   actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_RERAISE));
+    -- end
     if (isMana == true and buffs[packets.status.EFFECT_REFRESH] ~= true) then
       actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_REFRESH));
     end
