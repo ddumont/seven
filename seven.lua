@@ -1,6 +1,6 @@
-_addon.author   = 'ddumont';
+_addon.author   = 'siete';
 _addon.name     = 'seven';
-_addon.version  = '0.1';
+_addon.version  = '0.2';
 
 require 'common';
 local debug_packet = require('./debug_packet');
@@ -18,7 +18,9 @@ local fov = require('./fov');
 -- desc: First called when our addon is loaded.
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('load', function()
-  local saved = settings:load(_addon.path .. 'settings/seven.json');
+  local saved = ashita.settings.load_merged(_addon.path .. 'settings/settings.json', {
+    -- defaults
+  });
   local k, v;
   if (saved) then
     for k, v in pairs(saved) do
@@ -41,6 +43,7 @@ ashita.register_event('incoming_packet', function(id, size, packet)
   elseif (id == packets.inc.PACKET_PARTY_INVITE or id == packets.inc.PACKET_PARTY_STATUS_EFFECT) then
     party:process(id, size, packet, config);
   end
+  return false;
 end);
 
 
@@ -54,6 +57,7 @@ ashita.register_event('outgoing_packet', function(id, size, packet)
   if (result == true) then
     return true;
   end
+  return false;
 end);
 
 
@@ -78,11 +82,11 @@ end);
 -- desc: Leader Commands
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('command', function(cmd, nType)
-  local args = cmd:GetArgs();
-  if (args[1] ~= '/seven') then return end
+  local args = cmd:args();
+  if (args[1] ~= '/seven') then return false end
 
   local target = AshitaCore:GetDataManager():GetTarget();
-  local tid = target:GetTargetID();
+  local tid = target:GetTargetServerId();
   local tidx = target:GetTargetIndex();
 
   if (args[2] == 'leader') then
@@ -97,7 +101,8 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
   elseif (args[2] == 'fov' or args[2] == 'gov') then
     if (args[3] == nil) then
-      return print('Which page?');
+      print('Which page?');
+      return true;
     end
 
     if (args[3] == 'cancel') then
@@ -128,7 +133,6 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/l2 attack ' .. tid, 1);
   end
 
-
   return true;
 end);
 
@@ -139,6 +143,6 @@ end);
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('unload', function()
   if (config.leader == GetPlayerEntity().Name) then
-    settings:save(_addon.path .. 'settings/seven.json', config);
+    ashita.settings:save(_addon.path .. 'settings/seven.json', config);
   end
 end);

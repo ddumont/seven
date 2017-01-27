@@ -105,7 +105,7 @@ return {
 
   tick = function(self)
     local datamgr = AshitaCore:GetDataManager();
-    local tid = datamgr:GetTarget():GetTargetID();
+    local tid = datamgr:GetTarget():GetTargetServerId();
 
     local player = datamgr:GetPlayer();
     local main = player:GetMainJob();
