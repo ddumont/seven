@@ -54,3 +54,5 @@
 * **/seven sleep** ( with mob targeted )
   * Tell all bots to sleep your target if they are able
     * Currently only blm sleep
+* **/seven attack** ( with mob targeted )
+  * Tell all melee bots to attack your target
