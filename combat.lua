@@ -34,7 +34,7 @@ return {
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
 
-    if (main == JOB_WHM) then
+    if (main == Jobs.WhiteMage) then
       actions:queue(actions:new()
         :next(partial(magic, 'Slow', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
@@ -42,7 +42,7 @@ return {
       actions:queue(actions:new():next(partial(wait, 10))
         :next(partial(magic, 'Dia', tid)));
 
-    elseif (main == JOB_BLM) then
+    elseif (main == Jobs.BlackMage) then
       actions:queue(actions:new()
         :next(partial(magic, 'Blind', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
@@ -58,10 +58,10 @@ return {
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
 
-    if (main == JOB_WHM) then
+    if (main == Jobs.WhiteMage) then
       actions:queue(actions:new()
         :next(partial(magic, 'Banish', tid)));
-    elseif (main == JOB_BLM) then
+    elseif (main == Jobs.BlackMage) then
       actions:queue(actions:new():next(function(self)
         -- magic('Blizzard', tid);
         -- magic('Fire', tid);
@@ -78,7 +78,7 @@ return {
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
 
-    if (main == JOB_BLM) then
+    if (main == Jobs.BlackMage) then
       actions:queue(actions:new():next(partial(magic, 'Sleep', tid)));
     end
   end,
@@ -89,7 +89,7 @@ return {
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
 
-    if (main == JOB_THF) then
+    if (main == Jobs.Thief or main == Jobs.Warrior) then
       local combat = self;
       actions:queue(actions:new()
         :next(function(self)
@@ -112,11 +112,11 @@ return {
     local sub  = player:GetSubJob();
 
     local iparty = datamgr:GetParty();
-    if (healing == false and main == JOB_WHM) then
+    if (healing == false and main == Jobs.WhiteMage) then
       local i;
       for i = 1, 5 do
-        local pid = iparty:GetPartyMemberID(i);
-        local hpp = iparty:GetPartyMemberHPP(i);
+        local pid = iparty:GetMemberServerId(i);
+        local hpp = iparty:GetMemberCurrentHPP(i);
         local buffs = party:GetBuffs(i);
 
         if (hpp > 0 and hpp < 80) then
@@ -143,7 +143,7 @@ return {
           break;
         end
       end
-    elseif (main == JOB_THF) then
+    elseif (main == Jobs.Thief) then
       if (self.ATTACK_TID and tid ~= self.ATTACK_TID) then
         self.ATTACK_TID = nil;
         AshitaCore:GetChatManager():QueueCommand("/follow " .. config.leader, 1);

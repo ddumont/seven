@@ -135,9 +135,9 @@ return {
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
     local isMana = (
-      main == JOB_WHM or main == JOB_BLM or main == JOB_RDM or main == JOB_PLD or main == JOB_DRK or main == JOB_SMN or main == JOB_BLU or main == JOB_SCH or
-      sub  == JOB_WHM or sub  == JOB_BLM or sub  == JOB_RDM or sub  == JOB_PLD or sub  == JOB_DRK or sub  == JOB_SMN or sub  == JOB_BLU or sub  == JOB_SCH);
-    local isMage = (main == JOB_WHM or main == JOB_BLM or main == JOB_RDM or main == JOB_SMN or main == JOB_SCH);
+      main == Jobs.WhiteMage or main == Jobs.BlackMage or main == Jobs.RedMage or main == Jobs.Paladin or main == Jobs.DarkKnight or main == Jobs.Summoner or main == Jobs.BlueMage or main == Jobs.Scholar or
+      sub  == Jobs.WhiteMage or sub  == Jobs.BlackMage or sub  == Jobs.RedMage or sub  == Jobs.Paladin or sub  == Jobs.DarkKnight or sub  == Jobs.Summoner or sub  == Jobs.BlueMage or sub  == Jobs.Scholar);
+    local isMage = (main == Jobs.WhiteMage or main == Jobs.BlackMage or main == Jobs.RedMage or main == Jobs.Summoner or main == Jobs.Scholar);
 
     -- if (buffs[packets.status.EFFECT_RERAISE] ~= true) then
     --   actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_RERAISE));
