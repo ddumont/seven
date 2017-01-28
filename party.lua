@@ -19,19 +19,29 @@ return {
     end
 
     if (id == packets.inc.PACKET_PARTY_STATUS_EFFECT) then
-      -- packet: [header-4][player-48][player-48][player-48][player-48][player-48]
-      -- player: [pid-4][pidx-4][bitmask-8][buffs-32]
-      local player;
-      for player = 0, 4, 1 do
-        party[player + 1] = {};
+      -- party buff entry (pbe): [pid-4][pidx-2][unk-2][mask-8][buffs-32]
+      -- packet: [header-4][pbe-48][pbe-48][pbe-48][pbe-48][pbe-48]
+      local pidx;
+      for pidx = 0, 4, 1 do
+        party[pidx + 1] = {};
 
+        local offset = 4 + (pidx * 48);
+        local playerid = struct.unpack('I4', packet, offset);
+        local partyidx = struct.unpack('I2', packet, offset + 4);
+        local unk = struct.unpack('I2', packet, offset + 6);
+        local mask = struct.unpack('I8', packet, offset + 8);
         local buff;
-        for buff = 0, 31, 1 do
-          local mask = bitpack.unpackBitsBE(packet, 4 + 4 + 4 + (48 * player), buff * 2, 2);
-          local base = struct.unpack('B', packet, 4 + 1  + 4 + 4 + (48 * player) + 8 + buff);
-          local buffid = (256 * mask) + base;
-          if (buffid ~= 0xFF) then
-            party[player + 1][buffid] = true;
+        for buff = 0, 32, 1 do
+          -- 64 total bits in the mask
+          local shifted = bit.rshift(mask, 63 - (2 * buff)); -- move the 2 bits all the way to the right
+          shifted = bit.band(shifted, 3) -- only the last 2 bits
+
+          local base = struct.unpack('I1', packet, offset + 16 + buff);
+          local buffid = (256 * shifted) + base;
+
+          if (buffid ~= 0xFF and buffid ~= 0x00) then
+            -- print("Party member: " .. pidx .. " buff: " .. buffid);
+            party[pidx + 1][buffid] = true;
           end
         end
       end

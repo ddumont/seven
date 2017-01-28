@@ -12,7 +12,7 @@ function init(tid, tidx)
     :push('H', 0):push('H', 0):push('H', 0)
     :push('f', 0):push('f', 0):push('f', 0)
     :get_packet();
-  AddOutgoingPacket(packet, pid, #packet);
+  AddOutgoingPacket(pid, #packet, packet);
 end
 
 function talkToBook(tid, tidx, choice, auto)
@@ -71,7 +71,7 @@ function talkToBook(tid, tidx, choice, auto)
         :push('H', self._zone)
         :push('H', self._menuid)
         :get_packet();
-      AddOutgoingPacket(packet, id, #packet);
+      AddOutgoingPacket(id, #packet, packet);
 
       -- local i;
       -- local pstr = '';
@@ -105,7 +105,7 @@ return {
           :push('H', self._zone)
           :push('H', self._menuid)
           :get_packet();
-        AddOutgoingPacket(packet, pid, #packet);
+        AddOutgoingPacket(pid, #packet, packet);
         AshitaCore:GetChatManager():QueueCommand('/l2 done.', 1);
       end)
     );

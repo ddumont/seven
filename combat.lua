@@ -63,11 +63,11 @@ return {
         :next(partial(magic, 'Banish', tid)));
     elseif (main == JOB_BLM) then
       actions:queue(actions:new():next(function(self)
-        magic('Blizzard', tid);
+        -- magic('Blizzard', tid);
         -- magic('Fire', tid);
         -- magic('Aero', tid);
         -- magic('Water', tid);
-        -- magic('Stone', tid);
+        magic('Stone', tid);
       end));
     end
   end,
