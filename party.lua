@@ -56,8 +56,8 @@ return {
   GetBuffs = function(self, index)
     if (index == 0) then -- for the local player
       local buffs = {};
-      local player = AshitaCore:GetDataManager():GetPlayer();
-      for k, v in pairs(player.GetBuffs) do
+      local bufftbl = AshitaCore:GetDataManager():GetPlayer():GetBuffs();
+      for k, v in pairs(bufftbl) do
         if (v ~= -1) then
           buffs[v] = true;
         end

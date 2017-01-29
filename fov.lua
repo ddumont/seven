@@ -148,11 +148,11 @@ return {
     if (buffs[packets.status.EFFECT_REGEN] ~= true) then
       actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_REGEN));
     end
-    if (isMage and buffs[packets.status.EFFECT_FOOD] ~= true) then
-      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_HARD_COOKIE));
-    elseif (buffs[packets.status.EFFECT_FOOD] ~= true) then
-      actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_DRIED_MEAT));
-    end
+    -- if (isMage and buffs[packets.status.EFFECT_FOOD] ~= true) then
+    --   actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_HARD_COOKIE));
+    -- elseif (buffs[packets.status.EFFECT_FOOD] ~= true) then
+    --   actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_DRIED_MEAT));
+    -- end
 
     actions:queue(actions:new():next(function(self)
       AshitaCore:GetChatManager():QueueCommand('/l2 done buffing.', 1);
