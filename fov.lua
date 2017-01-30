@@ -3,22 +3,10 @@ local packets = require('./packets');
 local party = require('./party');
 local pgen = require('./pgen');
 
-function init(tid, tidx)
-  -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L349
-  local pid = packets.out.PACKET_NPC_INTERACTION;
-  local packet = pgen:new(pid)
-    :push('L', tid)
-    :push('H', tidx)
-    :push('H', 0):push('H', 0):push('H', 0)
-    :push('f', 0):push('f', 0):push('f', 0)
-    :get_packet();
-  AddOutgoingPacket(pid, packet);
-end
-
 function talkToBook(tid, tidx, choice, auto)
   return actions:new()
     :next(function(self, stalled)
-      init(tid, tidx);
+      actions:talkNpc(tid, tidx);
       return 'packet_in';
     end)
 
@@ -29,7 +17,7 @@ function talkToBook(tid, tidx, choice, auto)
           return;
         end
         print('trying again');
-        init(tid, tidx);
+        actions:talkNpc(tid, tidx);
         self.stalled = false; -- try again
         self.count = 0; -- backdown
         self.__count = (self.__count or 0) + 1;
@@ -39,10 +27,9 @@ function talkToBook(tid, tidx, choice, auto)
         return false;
       end
       -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L1880
-      self._booktid = struct.unpack('L', packet, 0x04 + 1);
+      self._npcid   = struct.unpack('L', packet, 0x04 + 1);
       self._zone    = struct.unpack('H', packet, 0x2A + 1);
       self._menuid  = struct.unpack('H', packet, 0x2C + 1);
-      self._tidx    = tidx;
     end)
 
     :next(function(self) return 'wait', 4; end) -- wait 4 ticks
@@ -62,23 +49,16 @@ function talkToBook(tid, tidx, choice, auto)
 
       -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L661
       local packet = pgen:new(id)
-        :push('L', self._booktid) -- booktid
+        :push('L', self._npcid) -- npcid
         :push('H', choice)
         :push('H', 0x00)    -- unkown   (with repeat?)
-        :push('H', self._tidx)    -- tidx
+        :push('H', tidx)    -- tidx
         :push('B', auto and 0x01 or 0x00)    -- auto
         :push('B', 0x00)    -- unkown-2
         :push('H', self._zone)
         :push('H', self._menuid)
         :get_packet();
       AddOutgoingPacket(id, packet);
-
-      -- local i;
-      -- local pstr = '';
-      -- for i = 1, #packet do
-      --   pstr = pstr .. string.char(packet[i]);
-      -- end
-      -- print(pstr:hex());
 
       return true; -- replace the outgoing packet
     end)
@@ -96,7 +76,7 @@ return {
         -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L661
         local pid = packets.out.PACKET_NPC_CHOICE;
         local packet = pgen:new(pid)
-          :push('L', self._booktid) -- booktid
+          :push('L', self._npcid) -- booktid
           :push('H', packets[fovgov]['MENU_PAGE_' .. page])
           :push('H', packets[fovgov].PAGE_REPEAT)  -- unkown   (with repeat?)
           :push('H', tidx)    -- tidx

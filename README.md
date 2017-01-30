@@ -11,6 +11,10 @@
   * Instructs all bots to follow the leader.
 * **/seven stay**
   * Instructs all bots to stay put
+* **/seven signet**  ( with signet npc targeted )
+  * Instruct all bots to refresh signet
+* **/seven warpscroll**  ( with npc targeted )
+  * Instruct all bots to buy a warp scroll
 
 ## fov
 * **/seven fov #** ( with book targeted )

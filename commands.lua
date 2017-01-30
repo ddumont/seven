@@ -7,6 +7,16 @@ local queue = {};
 local start = 0;
 local last = 0;
 
+function findIds(msg)
+  local i, len = msg:find('^%d+');
+  local tid = tonumber(msg:sub(i, len));
+  msg = msg:sub(len + 2);
+  i, len = msg:find('^%d+');
+  local tidx = tonumber(msg:sub(i, len));
+  msg = msg:sub(len + 2);
+  return tid, tidx, msg;
+end
+
 return {
   following = false,
 
@@ -33,12 +43,9 @@ return {
     elseif (msg:sub(2,3) == 'ov') then
       local fovgov = msg:sub(1,3);
       msg = msg:sub(5);
-      local i, len = msg:find('^%d+');
-      local tid = tonumber(msg:sub(i, len));
-      msg = msg:sub(len + 2);
-      i, len = msg:find('^%d+');
-      local tidx = tonumber(msg:sub(i, len));
-      msg = msg:sub(len + 2);
+
+      local tid, tidx;
+      tid, tidx, msg = findIds(msg);
 
       if (msg == 'cancel') then
         fov:cancel(fovgov, tid, tidx);
@@ -55,9 +62,12 @@ return {
       combat:nuke(tonumber(msg:sub(7)));
     elseif (msg:sub(1,6) == 'attack') then
       combat:attack(tonumber(msg:sub(8)));
+    elseif (msg:sub(1,6) == 'signet') then
+      actions:signet(findIds(msg:sub(8)))
+    elseif (msg:sub(1,10) == 'warpscroll') then
+      actions:warp_scroll(findIds(msg:sub(12)))
     end
   end,
-
 
   setLeader = function(self, config, leader)
     config.leader = leader;

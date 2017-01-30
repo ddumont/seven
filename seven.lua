@@ -131,6 +131,12 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/l2 sleep ' .. tid, 1);
   elseif (args[2] == 'attack') then
     AshitaCore:GetChatManager():QueueCommand('/l2 attack ' .. tid, 1);
+  elseif (args[2] == 'signet') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 signet ' .. tid .. " " .. tidx, 1);
+    actions:signet(tid, tidx);
+  elseif (args[2] == 'warpscroll') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 warpscroll ' .. tid .. " " .. tidx, 1);
+    actions:warp_scroll(tid, tidx);
   end
 
   return true;
