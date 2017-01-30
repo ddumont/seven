@@ -69,6 +69,14 @@ return {
         magic('Water', tid);
         magic('Stone', tid);
       end));
+    elseif (main == Jobs.RedMage) then
+      actions:queue(actions:new():next(function(self)
+        magic('Blizzard', tid);
+        magic('Fire', tid);
+        magic('Aero', tid);
+        magic('Water', tid);
+        magic('Stone', tid);
+      end));
     end
   end,
 
