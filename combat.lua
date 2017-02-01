@@ -63,19 +63,21 @@ return {
       --   :next(partial(magic, 'Banish', tid)));
     elseif (main == Jobs.BlackMage) then
       actions:queue(actions:new():next(function(self)
-        magic('Blizzard', tid);
-        magic('Fire', tid);
+        -- multiple casts in a row seem to crsh the client
+        -- magic('Blizzard', tid);
+        -- magic('Fire', tid);
         magic('Aero', tid);
-        magic('Water', tid);
-        magic('Stone', tid);
+        -- magic('Water', tid);
+        -- magic('Stone', tid);
       end));
     elseif (main == Jobs.RedMage) then
       actions:queue(actions:new():next(function(self)
-        magic('Blizzard', tid);
-        magic('Fire', tid);
+        -- multiple casts in a row seem to crsh the client
+        -- magic('Blizzard', tid);
+        -- magic('Fire', tid);
         magic('Aero', tid);
-        magic('Water', tid);
-        magic('Stone', tid);
+        -- magic('Water', tid);
+        -- magic('Stone', tid);
       end));
     end
   end,

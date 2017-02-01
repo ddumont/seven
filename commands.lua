@@ -28,7 +28,7 @@ return {
     local msg = struct.unpack('s', packet, 0x18 + 1);
 
     if (msg == 'leader') then
-      self:setLeader(config, actor);
+      actions:leader(actor);
     end
 
     -- If we're the leader...  then don't listen.
@@ -68,11 +68,6 @@ return {
       actions:warp_scroll(findIds(msg:sub(12)))
     end
   end,
-
-  setLeader = function(self, config, leader)
-    config.leader = leader;
-  end,
-
 
   follow = function(self, player)
     if (player ~= GetPlayerEntity().Name) then

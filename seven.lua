@@ -3,32 +3,15 @@ _addon.name     = 'seven';
 _addon.version  = '0.2';
 
 require 'common';
+local config = require('./config');
 local debug_packet = require('./debug_packet');
 local commands = require('./commands');
 local actions = require('./actions');
 local packets = require('./packets');
-local config = require('./config');
 local combat = require('./combat');
 local party = require('./party');
 local pgen = require('./pgen');
 local fov = require('./fov');
-
----------------------------------------------------------------------------------------------------
--- func: load
--- desc: First called when our addon is loaded.
----------------------------------------------------------------------------------------------------
-ashita.register_event('load', function()
-  local saved = ashita.settings.load_merged(_addon.path .. 'settings/settings.json', {
-    -- defaults
-  });
-  local k, v;
-  if (saved) then
-    for k, v in pairs(saved) do
-      config[k] = v;
-    end
-  end
-end);
-
 
 ---------------------------------------------------------------------------------------------------
 -- func: incoming_packet
@@ -39,10 +22,11 @@ ashita.register_event('incoming_packet', function(id, size, packet)
   actions:packet(true, id, size, packet);
 
   if (id == packets.inc.PACKET_INCOMING_CHAT) then
-    commands:process(id, size, packet, config);
+    commands:process(id, size, packet, config:get());
   elseif (id == packets.inc.PACKET_PARTY_INVITE or id == packets.inc.PACKET_PARTY_STATUS_EFFECT) then
-    party:process(id, size, packet, config);
+    party:process(id, size, packet, config:get());
   end
+
   return false;
 end);
 
@@ -90,7 +74,7 @@ ashita.register_event('command', function(cmd, nType)
   local tidx = target:GetTargetIndex();
 
   if (args[2] == 'leader') then
-    config.leader = GetPlayerEntity().Name;
+    actions:leader(GetPlayerEntity().Name);
     AshitaCore:GetChatManager():QueueCommand('/l2 leader', 1);
   elseif (args[2] == 'follow') then
     AshitaCore:GetChatManager():QueueCommand('/l2 follow', 1);
@@ -148,7 +132,7 @@ end);
 -- desc: Called when our addon is unloaded.
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('unload', function()
-  if (config.leader == GetPlayerEntity().Name) then
-    ashita.settings:save(_addon.path .. 'settings/seven.json', config);
-  end
+  config:get(function(config)
+    ashita.settings.save(_addon.path .. '/settings/' .. GetPlayerEntity().Name .. '/settings.json', config);
+  end);
 end);

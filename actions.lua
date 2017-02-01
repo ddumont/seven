@@ -1,3 +1,4 @@
+local config = require('./config');
 local packets = require('./packets');
 local pgen = require('./pgen');
 
@@ -232,6 +233,12 @@ local actions = {
         AshitaCore:GetChatManager():QueueCommand('/l2 done.', 1);
       end)
     );
+  end,
+
+  leader = function(self, leader)
+    config:get(function(config)
+      config.leader = leader;
+    end);
   end
 
 };
