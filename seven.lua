@@ -3,15 +3,34 @@ _addon.name     = 'seven';
 _addon.version  = '0.2';
 
 require 'common';
-local config = require('./config');
-local debug_packet = require('./debug_packet');
-local commands = require('./commands');
-local actions = require('./actions');
-local packets = require('./packets');
-local combat = require('./combat');
-local party = require('./party');
-local pgen = require('./pgen');
-local fov = require('./fov');
+local config = require('config');
+local debug_packet = require('debug_packet');
+local commands = require('commands');
+local actions = require('actions');
+local packets = require('packets');
+local combat = require('combat');
+local party = require('party');
+local pgen = require('pgen');
+local fov = require('fov');
+
+function wait(time)
+  return 'wait', time;
+end
+
+function magic(spell, target)
+  AshitaCore:GetChatManager():QueueCommand('/magic ' .. spell .. ' ' .. target, 0);
+end
+
+function partial(func, ...)
+  local args = {...};
+  return function(...)
+    local newargs = {...};
+    while (#newargs > 0) do
+      table.insert(args, table.remove(newargs, 1));
+    end
+    return func(unpack(args));
+  end
+end
 
 ---------------------------------------------------------------------------------------------------
 -- func: incoming_packet

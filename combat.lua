@@ -1,30 +1,10 @@
-local actions = require('./actions');
-local packets = require('./packets');
-local config = require('./config');
-local party = require('./party');
-local pgen = require('./pgen');
+local actions = require('actions');
+local packets = require('packets');
+local config = require('config');
+local party = require('party');
+local pgen = require('pgen');
 
-local jwhm = require('./jobs/whm');
-
-
-function magic(spell, target, action)
-  AshitaCore:GetChatManager():QueueCommand('/magic ' .. spell .. ' ' .. target, 0);
-end
-
-function wait(time)
-  return 'wait', time;
-end
-
-function partial(func, ...)
-  local args = {...};
-  return function(...)
-    local newargs = {...};
-    while (#newargs > 0) do
-      table.insert(args, table.remove(newargs, 1));
-    end
-    return func(unpack(args));
-  end
-end
+local jwhm = require('jobs.whm');
 
 local healing = false;
 
@@ -66,8 +46,8 @@ return {
     elseif (main == Jobs.BlackMage) then
       actions:queue(actions:new():next(function(self)
         -- multiple casts in a row seem to crsh the client
-        -- magic('Thunder', tid);
-        magic('Blizzard', tid);
+        magic('Thunder', tid);
+        -- magic('Blizzard', tid);
         -- magic('Fire', tid);
         -- magic('Aero', tid);
         -- magic('Water', tid);
@@ -76,8 +56,8 @@ return {
     elseif (main == Jobs.RedMage) then
       actions:queue(actions:new():next(function(self)
         -- multiple casts in a row seem to crsh the client
-        -- magic('Thunder', tid);
-        magic('Blizzard', tid);
+        magic('Thunder', tid);
+        -- magic('Blizzard', tid);
         -- magic('Fire', tid);
         -- magic('Aero', tid);
         -- magic('Water', tid);
@@ -136,7 +116,7 @@ return {
     local sub  = player:GetSubJob();
 
     if (main == Jobs.WhiteMage) then
-      jwhm:tick();
+      jwhm.tick();
     end
 
     local iparty = datamgr:GetParty();
@@ -147,13 +127,7 @@ return {
         local hpp = iparty:GetMemberCurrentHPP(i);
         local buffs = party:GetBuffs(i);
 
-        if (hpp > 0 and hpp < 80) then
-          healing = true;
-          actions:queue(actions:new():next(partial(wait, 8))
-            :next(partial(magic, 'Cure', pid))
-            :next(function(self) healing = false; end));
-          break;
-        elseif (buffs[packets.status.EFFECT_POISON] == true or buffs[packets.status.EFFECT_POISON_II] == true) then
+        if (buffs[packets.status.EFFECT_POISON] == true or buffs[packets.status.EFFECT_POISON_II] == true) then
           healing = true;
           actions:queue(actions:new():next(partial(wait, 8))
             :next(partial(magic, 'Poisona', pid))

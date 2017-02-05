@@ -1,4 +1,4 @@
-local packets = require('./packets');
+local packets = require('packets');
 
 local tinc = {};
 local tout = {};

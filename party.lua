@@ -1,4 +1,4 @@
-local packets = require('./packets');
+local packets = require('packets');
 local party = {{},{},{},{},{}}; -- array of buff tables
 
 return {
@@ -85,6 +85,16 @@ return {
       if (cb(i, buffs) == true) then
         break;
       end
+    end
+  end,
+
+  GetHPP = function(self, i)
+    local iparty = AshitaCore:GetDataManager():GetParty();
+    local player = GetPlayerEntity();
+    if (i == 0 and player) then
+      return player.HealthPercent;
+    else
+      return iparty:GetMemberCurrentHPP(i);
     end
   end
 };

@@ -1,10 +1,12 @@
-local config = require('./config');
-local packets = require('./packets');
-local pgen = require('./pgen');
+local config = require('config');
+local packets = require('packets');
+local pgen = require('pgen');
 
 local queue = {};
 
 local actions = {
+  busy = false,
+
   talkNpc = function(self, tid, tidx)
     -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L349
     local pid = packets.out.PACKET_NPC_INTERACTION;

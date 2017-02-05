@@ -1,7 +1,7 @@
-local packets = require('./packets');
-local actions = require('./actions');
-local combat = require('./combat');
-local fov = require('./fov');
+local packets = require('packets');
+local actions = require('actions');
+local combat = require('combat');
+local fov = require('fov');
 
 local queue = {};
 local start = 0;

@@ -1,7 +1,7 @@
-local actions = require('./actions');
-local packets = require('./packets');
-local party = require('./party');
-local pgen = require('./pgen');
+local actions = require('actions');
+local packets = require('packets');
+local party = require('party');
+local pgen = require('pgen');
 
 function talkToBook(tid, tidx, choice, auto)
   return actions:new()
