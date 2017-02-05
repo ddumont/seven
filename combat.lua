@@ -4,6 +4,8 @@ local config = require('./config');
 local party = require('./party');
 local pgen = require('./pgen');
 
+local jwhm = require('./jobs/whm');
+
 
 function magic(spell, target, action)
   AshitaCore:GetChatManager():QueueCommand('/magic ' .. spell .. ' ' .. target, 0);
@@ -81,6 +83,16 @@ return {
         -- magic('Water', tid);
         -- magic('Stone', tid);
       end));
+    elseif (main == Jobs.Scholar) then
+      actions:queue(actions:new():next(function(self)
+        -- multiple casts in a row seem to crsh the client
+        magic('Thunder', tid);
+        -- magic('Blizzard', tid);
+        -- magic('Fire', tid);
+        -- magic('Aero', tid);
+        -- magic('Water', tid);
+        -- magic('Stone', tid);
+      end));
     end
   end,
 
@@ -122,6 +134,10 @@ return {
     local player = datamgr:GetPlayer();
     local main = player:GetMainJob();
     local sub  = player:GetSubJob();
+
+    if (main == Jobs.WhiteMage) then
+      jwhm:tick();
+    end
 
     local iparty = datamgr:GetParty();
     if (healing == false and main == Jobs.WhiteMage) then
@@ -174,9 +190,9 @@ return {
         elseif (buffs[packets.status.EFFECT_PAEON] ~= true) then
           healing = true;
           actions:queue(actions:new():next(partial(wait, 8))
-          :next(partial(magic, '"Army\'s Paeon II"', '"<me>"'))
-          :next(function(self) healing = false; end));
-          break;
+            :next(partial(magic, '"Army\'s Paeon II"', '"<me>"'))
+            :next(function(self) healing = false; end));
+            break;
         end
       end
     end

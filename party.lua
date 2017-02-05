@@ -66,5 +66,19 @@ return {
     else
       return party[index];
     end
+  end,
+
+  -- Scan the party and perform a callback for each player,
+  -- with the table of buffs for that player
+  -- @param cb The callback, will be passed index of party member (0 == self), and buff table
+  --           return true from the cb to stop party member iteration.
+  PartyBuffs = function(self, cb)
+    local i;
+    for i = 0, 5 do -- include current player
+      local buffs = self:GetBuffs(i);
+      if (cb(i, buffs) == true) then
+        break;
+      end
+    end
   end
 };
