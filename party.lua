@@ -41,7 +41,13 @@ return {
 
           if (buffid ~= 0xFF and buffid ~= 0x00) then
             -- print("Party member: " .. pidx .. " buff: " .. buffid);
-            party[pidx + 1][buffid] = true;
+            if (party[pidx + 1][buffid] == nil) then
+              party[pidx + 1][buffid] = true;
+            elseif (party[pidx + 1][buffid] == true) then
+              party[pidx + 1][buffid] = 2;
+            else
+              party[pidx + 1][buffid] = party[pidx + 1][buffid] + 1;
+            end
           end
         end
       end
