@@ -83,6 +83,9 @@ local packets = {
     EFFECT_REGEN                    = 42,
     EFFECT_REFRESH                  = 43,
     EFFECT_RERAISE                  = 113,
+    EFFECT_PAEON                    = 195,
+    EFFECT_BALLAD                   = 196,
+    EFFECT_MINUET                   = 198,
     EFFECT_FOOD                     = 251,
     EFFECT_POISON_II                = 540,
   }
