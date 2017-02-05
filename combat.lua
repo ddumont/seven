@@ -81,6 +81,16 @@ return {
         -- magic('Water', tid);
         -- magic('Stone', tid);
       end));
+    elseif (main == Jobs.Scholar) then
+      actions:queue(actions:new():next(function(self)
+        -- multiple casts in a row seem to crsh the client
+        magic('Thunder', tid);
+        -- magic('Blizzard', tid);
+        -- magic('Fire', tid);
+        -- magic('Aero', tid);
+        -- magic('Water', tid);
+        -- magic('Stone', tid);
+      end));
     end
   end,
 
