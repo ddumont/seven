@@ -142,7 +142,12 @@ ashita.register_event('command', function(cmd, nType)
     if (tidx ~= 0) then
       actions:warp_scroll(tid, tidx);
     else
-      AshitaCore:GetChatManager():QueueCommand("/item \"Instant Warp\" <me>", -1);
+      actions:queue(actions:new()
+      :next(partial(wait, 2))
+        :next(function(self)
+          AshitaCore:GetChatManager():QueueCommand('/item "Instant Warp" <me>', -1);
+          actions.busy = false;
+        end));
     end
   end
 
