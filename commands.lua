@@ -59,13 +59,18 @@ return {
     elseif (msg:sub(1,4) == 'nuke') then
       combat:nuke(tonumber(msg:sub(6)));
     elseif (msg:sub(1,5) == 'sleep') then
-      combat:nuke(tonumber(msg:sub(7)));
+      combat:sleep(tonumber(msg:sub(7)));
     elseif (msg:sub(1,6) == 'attack') then
       combat:attack(tonumber(msg:sub(8)));
     elseif (msg:sub(1,6) == 'signet') then
       actions:signet(findIds(msg:sub(8)))
     elseif (msg:sub(1,10) == 'warpscroll') then
-      actions:warp_scroll(findIds(msg:sub(12)))
+      local tid, tidx = findIds(msg:sub(12))
+      if (tidx ~= 0) then
+        actions:warp_scroll(tid, tidx);
+      else
+        AshitaCore:GetChatManager():QueueCommand("/item \"Instant Warp\" <me>", -1);
+      end
     end
   end,
 

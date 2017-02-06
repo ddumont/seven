@@ -15,6 +15,7 @@
   * Instruct all bots to refresh signet
 * **/seven warpscroll**  ( with npc targeted )
   * Instruct all bots to buy a warp scroll
+  * With no target, bots will use the warpscroll
 
 ## fov
 * **/seven fov #** ( with book targeted )

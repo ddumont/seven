@@ -139,7 +139,11 @@ ashita.register_event('command', function(cmd, nType)
     actions:signet(tid, tidx);
   elseif (args[2] == 'warpscroll') then
     AshitaCore:GetChatManager():QueueCommand('/l2 warpscroll ' .. tid .. " " .. tidx, 1);
-    actions:warp_scroll(tid, tidx);
+    if (tidx ~= 0) then
+      actions:warp_scroll(tid, tidx);
+    else
+      AshitaCore:GetChatManager():QueueCommand("/item \"Instant Warp\" <me>", -1);
+    end
   end
 
   return true;

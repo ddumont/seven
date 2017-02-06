@@ -78,6 +78,7 @@ local packets = {
   status = {
     EFFECT_POISON                   = 3,
     EFFECT_BLINDNESS                = 5,
+    EFFECT_STONESKIN                = 37,
     EFFECT_PROTECT                  = 40,
     EFFECT_SHELL                    = 41,
     EFFECT_REGEN                    = 42,
