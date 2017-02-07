@@ -1,4 +1,5 @@
 local packets = require('packets');
+local config = require('config');
 local party = {{},{},{},{},{}}; -- array of buff tables
 
 return {
@@ -7,7 +8,7 @@ return {
   -- func: process
   -- desc: process party related stuff
   ---------------------------------------------------------------------------------------------------
-  process = function(self, id, size, packet, config)
+  process = function(self, id, size, packet)
     if (id == packets.inc.PACKET_PARTY_INVITE) then
       local type = struct.unpack('B', packet, 0x0B + 1);
       local actor = struct.unpack('s', packet, 0x0C + 1);

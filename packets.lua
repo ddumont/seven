@@ -89,6 +89,14 @@ local packets = {
     EFFECT_MINUET                   = 198,
     EFFECT_FOOD                     = 251,
     EFFECT_POISON_II                = 540,
+  },
+
+  spells = {
+    PROTECT = 43,
+    SHELL = 48,
+    STONESKIN = 54,
+    PROTECTRA = 125,
+    SHELLRA = 130,
   }
 
 };

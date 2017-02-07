@@ -1,6 +1,7 @@
 local packets = require('packets');
 local actions = require('actions');
 local combat = require('combat');
+local config = require('config');
 local fov = require('fov');
 
 local queue = {};
@@ -20,7 +21,7 @@ end
 return {
   following = false,
 
-  process = function(self, id, size, packet, config)
+  process = function(self, id, size, packet)
     local chatType = struct.unpack('b', packet, 0x4 + 1);
     if (chatType ~= packets.CHAT_TYPE_LINKSHELL2) then return end
 
@@ -71,6 +72,9 @@ return {
       else
         AshitaCore:GetChatManager():QueueCommand("/item \"Instant Warp\" <me>", -1);
       end
+    elseif (msg:sub(1,9) == 'idlebuffs') then
+      local value = msg:sub(11)
+      config:get()['IdleBuffs'] = value == 'true' or value == 'on';
     end
   end,
 

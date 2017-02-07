@@ -41,9 +41,9 @@ ashita.register_event('incoming_packet', function(id, size, packet)
   actions:packet(true, id, size, packet);
 
   if (id == packets.inc.PACKET_INCOMING_CHAT) then
-    commands:process(id, size, packet, config:get());
+    commands:process(id, size, packet);
   elseif (id == packets.inc.PACKET_PARTY_INVITE or id == packets.inc.PACKET_PARTY_STATUS_EFFECT) then
-    party:process(id, size, packet, config:get());
+    party:process(id, size, packet);
   end
 
   return false;
@@ -143,12 +143,15 @@ ashita.register_event('command', function(cmd, nType)
       actions:warp_scroll(tid, tidx);
     else
       actions:queue(actions:new()
-      :next(partial(wait, 2))
+        :next(partial(wait, 2))
         :next(function(self)
           AshitaCore:GetChatManager():QueueCommand('/item "Instant Warp" <me>', -1);
           actions.busy = false;
         end));
     end
+  elseif (args[2] == 'idlebuffs') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 idlebuffs ' .. args[3], 1);
+    config:get()['IdleBuffs'] = args[3] == 'true' or args[3] == 'on';
   end
 
   return true;

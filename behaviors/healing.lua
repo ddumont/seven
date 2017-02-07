@@ -23,7 +23,8 @@ return {
   end,
 
   -- Heals a target in the party in need of heals
-  Heal = function(self)
+  -- @param table of spell levels
+  Heal = function(self, spell_levels)
     local iparty = AshitaCore:GetDataManager():GetParty();
     local idxs = self:NeedHeals();
     if (#idxs > 0) then
@@ -39,6 +40,8 @@ return {
         :next(partial(magic, 'Cure', target))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
+
+      return true;
     end
   end
 

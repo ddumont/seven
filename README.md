@@ -16,6 +16,8 @@
 * **/seven warpscroll**  ( with npc targeted )
   * Instruct all bots to buy a warp scroll
   * With no target, bots will use the warpscroll
+* **/seven idlebuffs [on/off]**
+  * Instruct all bots to engage or disengage in idle buffing behavior
 
 ## fov
 * **/seven fov #** ( with book targeted )
