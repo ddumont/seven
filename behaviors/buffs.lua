@@ -12,7 +12,8 @@ return {
   -- @param the spell level table
   CanCast = function(self, spell, levels)
     local player = AshitaCore:GetDataManager():GetPlayer();
-    return player:HasSpell(spell) and player:GetMainJobLevel() >= levels[spell];
+    local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
+    return player:HasSpell(spell) and lvl >= levels[spell];
   end,
 
   -- Scans the party (including the current player) for those needing heals
@@ -23,8 +24,10 @@ return {
     local iparty = AshitaCore:GetDataManager():GetParty();
     local zone = iparty:GetMemberZone(0);
     party:PartyBuffs(function(i, buffs)
+      -- print(i .. ' ' .. buff .. ' ' .. tostring(buffs[buff]));
       local samez = zone == iparty:GetMemberZone(i);
-      if (samez and buffs[buff] == nil) then
+      local alive = iparty:GetMemberCurrentHPP(i) > 0;
+      if (alive and samez and buffs[buff] == nil) then
         table.insert(need, i);
       end
     end);
@@ -35,6 +38,7 @@ return {
   -- @param table of spell levels
   IdleBuffs = function(self, levels)
     if (config:get()['IdleBuffs'] ~= true) then return end
+    if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 50) then return end
 
     local buffs = party:GetBuffs(0);
     if (self:CanCast(spells.STONESKIN, levels) and buffs[status.EFFECT_STONESKIN] == nil) then
@@ -47,6 +51,7 @@ return {
     end
 
     local need = self:NeedBuff(status.EFFECT_PROTECT);
+    -- print('need prot ' .. ashita.settings.JSON:encode_pretty(need, nil, { pretty = true, align_keys = false, indent = '    ' }));
     if (self:CanCast(spells.PROTECTRA, levels) and #need > 1) then
       actions.busy = true;
       actions:queue(actions:new()
@@ -65,7 +70,8 @@ return {
       return true;
     end
 
-    local need = self:NeedBuff(status.EFFECT_SHELL);
+    need = self:NeedBuff(status.EFFECT_SHELL);
+    -- print('need shell ' .. ashita.settings.JSON:encode_pretty(need, nil, { pretty = true, align_keys = false, indent = '    ' }));
     if (self:CanCast(spells.SHELLRA, levels) and #need > 1) then
       actions.busy = true;
       actions:queue(actions:new()

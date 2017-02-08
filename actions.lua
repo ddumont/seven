@@ -238,9 +238,8 @@ local actions = {
   end,
 
   leader = function(self, leader)
-    config:get(function(config)
-      config.leader = leader;
-    end);
+    config:get().leader = leader;
+    print(config:get().leader);
   end
 
 };
