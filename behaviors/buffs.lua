@@ -38,7 +38,7 @@ return {
   -- @param table of spell levels
   IdleBuffs = function(self, levels)
     if (config:get()['IdleBuffs'] ~= true) then return end
-    if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 50) then return end
+    if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 70) then return end
 
     local buffs = party:GetBuffs(0);
     if (self:CanCast(spells.STONESKIN, levels) and buffs[status.EFFECT_STONESKIN] == nil) then

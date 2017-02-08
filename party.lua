@@ -12,10 +12,10 @@ return {
     if (id == packets.inc.PACKET_PARTY_INVITE) then
       local type = struct.unpack('B', packet, 0x0B + 1);
       local actor = struct.unpack('s', packet, 0x0C + 1);
-      if (type == packets.INVITE_TYPE_PARTY and actor == config.leader) then
+      if (type == packets.INVITE_TYPE_PARTY and actor == config:get().leader) then
         AshitaCore:GetChatManager():QueueCommand('/join', 0);
       elseif (type == packets.INVITE_TYPE_PARTY) then
-        print('actor: ' .. actor .. ' leader: ' .. config.leader);
+        print('actor: ' .. actor .. ' leader: ' .. config:get().leader);
       end
     end
 
