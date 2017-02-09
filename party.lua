@@ -23,7 +23,6 @@ return {
       -- party buff entry (pbe): [pid-4][pidx-2][unk-2][mask-8][buffs-32]
       -- packet: [header-4][pbe-48][pbe-48][pbe-48][pbe-48][pbe-48]
 
-      local pidx;
       for pidx = 0, 4, 1 do
         local offset = 4 + (pidx * 48);
         local playerid = struct.unpack('I4', packet, offset);
@@ -35,7 +34,6 @@ return {
         local buffs = {};
         party[playeridx] = buffs;
 
-        local debugstr = playeridx .. ' [';
         local buff;
         for buff = 0, 31, 1 do
           -- 64 total bits in the mask
@@ -55,22 +53,22 @@ return {
               buffs[buffid] = buffs[buffid] + 1;
             end
           end
-          if (buffs[buffid] ~= nil) then
-            debugstr = debugstr .. ' ' .. buffid .. ',';
-          end
-        end
-        print(debugstr .. ' ]');
-      end
-      for pidx = 1, 5 do
-        local iparty = AshitaCore:GetDataManager():GetParty();
-        if (iparty:GetMemberName(pidx) ~= nil) then
-          print("Party member: " .. pidx .. " " .. iparty:GetMemberName(pidx) .. ' ' .. tostring(self:GetBuffs(pidx)[packets.status.EFFECT_PROTECT]));
         end
       end
+      -- self:DumpBuffs();
     end
-
   end,
 
+  DumpBuffs = function(self)
+    self:PartyBuffs(function(i, buffs)
+      local list = {};
+      for k, v in pairs(buffs) do
+        table.insert(list, k);
+      end
+      table.sort(list);
+      print('member'.. i .. ': ' .. ashita.settings.JSON:encode_pretty(list, nil, {}));
+    end);
+  end,
 
   ---------------------------------------------------------------------------------------------------
   -- func: GetBuffs
@@ -96,7 +94,6 @@ return {
   -- @param cb The callback, will be passed index of party member (0 == self), and buff table
   --           return true from the cb to stop party member iteration.
   PartyBuffs = function(self, cb)
-    local i;
     for i = 0, 5 do -- include current player
       local buffs = self:GetBuffs(i);
       if (cb(i, buffs) == true) then
