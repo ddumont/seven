@@ -24,6 +24,8 @@ return {
     local iparty = AshitaCore:GetDataManager():GetParty();
     local zone = iparty:GetMemberZone(0);
     party:PartyBuffs(function(i, buffs)
+      -- print(iparty:GetMemberName(i) .. ' ' .. i .. ' ' .. tostring(buffs[buff]));
+      -- print(iparty:GetMemberName(i+1) .. ' ' .. i);
       -- print(i .. ' ' .. buff .. ' ' .. tostring(buffs[buff]));
       local samez = zone == iparty:GetMemberZone(i);
       local alive = iparty:GetMemberCurrentHPP(i) > 0;
@@ -39,16 +41,6 @@ return {
   IdleBuffs = function(self, levels)
     if (config:get()['IdleBuffs'] ~= true) then return end
     if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 70) then return end
-
-    local buffs = party:GetBuffs(0);
-    if (self:CanCast(spells.STONESKIN, levels) and buffs[status.EFFECT_STONESKIN] == nil) then
-      actions.busy = true;
-      actions:queue(actions:new()
-        :next(partial(magic, 'Stoneskin', '<me>'))
-        :next(partial(wait, 16))
-        :next(function(self) actions.busy = false; end));
-      return true;
-    end
 
     local need = self:NeedBuff(status.EFFECT_PROTECT);
     -- print('need prot ' .. ashita.settings.JSON:encode_pretty(need, nil, { pretty = true, align_keys = false, indent = '    ' }));
@@ -87,6 +79,16 @@ return {
         :next(partial(magic, 'Shell', target))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
+      return true;
+    end
+
+    local buffs = party:GetBuffs(0);
+    if (self:CanCast(spells.STONESKIN, levels) and buffs[status.EFFECT_STONESKIN] == nil) then
+      actions.busy = true;
+      actions:queue(actions:new()
+      :next(partial(magic, 'Stoneskin', '<me>'))
+      :next(partial(wait, 16))
+      :next(function(self) actions.busy = false; end));
       return true;
     end
   end
