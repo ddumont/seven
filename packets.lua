@@ -77,6 +77,7 @@ local packets = {
 
   status = {
     EFFECT_POISON                   = 3,
+    EFFECT_PARALYSIS                = 4,
     EFFECT_BLINDNESS                = 5,
     EFFECT_STONESKIN                = 37,
     EFFECT_PROTECT                  = 40,
@@ -92,6 +93,9 @@ local packets = {
   },
 
   spells = {
+    POISONA = 14,
+    PARALYNA = 15,
+    BLINDNA = 16,
     PROTECT = 43,
     SHELL = 48,
     STONESKIN = 54,

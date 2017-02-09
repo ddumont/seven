@@ -35,16 +35,17 @@ return {
         local buffs = {};
         party[playeridx] = buffs;
 
+        local debugstr = playeridx .. ' [';
         local buff;
-        for buff = 0, 32, 1 do
+        for buff = 0, 31, 1 do
           -- 64 total bits in the mask
-          local shifted = bit.rshift(mask, 63 - (2 * buff)); -- move the 2 bits all the way to the right
+          local shifted = bit.rshift(mask, 62 - (2 * buff)); -- move the 2 bits all the way to the right
           shifted = bit.band(shifted, 3) -- only the last 2 bits
 
           local base = struct.unpack('I1', packet, offset + 16 + buff);
           local buffid = (256 * shifted) + base;
 
-          if (buffid ~= 0xFF and buffid ~= 0x00) then
+          if (base ~= 0xFF and base ~= 0x00) then
             -- print("Party member: " .. pidx .. " buff: " .. buffid);
             if (buffs[buffid] == nil) then
               buffs[buffid] = true;
@@ -54,6 +55,16 @@ return {
               buffs[buffid] = buffs[buffid] + 1;
             end
           end
+          if (buffs[buffid] ~= nil) then
+            debugstr = debugstr .. ' ' .. buffid .. ',';
+          end
+        end
+        print(debugstr .. ' ]');
+      end
+      for pidx = 1, 5 do
+        local iparty = AshitaCore:GetDataManager():GetParty();
+        if (iparty:GetMemberName(pidx) ~= nil) then
+          print("Party member: " .. pidx .. " " .. iparty:GetMemberName(pidx) .. ' ' .. tostring(self:GetBuffs(pidx)[packets.status.EFFECT_PROTECT]));
         end
       end
     end

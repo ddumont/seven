@@ -118,7 +118,7 @@ return {
       main == Jobs.WhiteMage or main == Jobs.BlackMage or main == Jobs.RedMage or main == Jobs.Paladin or main == Jobs.DarkKnight or main == Jobs.Summoner or main == Jobs.BlueMage or main == Jobs.Scholar or
       sub  == Jobs.WhiteMage or sub  == Jobs.BlackMage or sub  == Jobs.RedMage or sub  == Jobs.Paladin or sub  == Jobs.DarkKnight or sub  == Jobs.Summoner or sub  == Jobs.BlueMage or sub  == Jobs.Scholar);
     local isMage = (main == Jobs.WhiteMage or main == Jobs.BlackMage or main == Jobs.RedMage or main == Jobs.Summoner or main == Jobs.Scholar);
-
+    print('getting buffs');
     -- if (buffs[packets.status.EFFECT_RERAISE] ~= true) then
     --   actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_RERAISE));
     -- end

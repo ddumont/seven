@@ -120,32 +120,7 @@ return {
     end
 
     local iparty = datamgr:GetParty();
-    if (healing == false and main == Jobs.WhiteMage) then
-      local i;
-      for i = 1, 5 do
-        local pid = iparty:GetMemberServerId(i);
-        local hpp = iparty:GetMemberCurrentHPP(i);
-        local buffs = party:GetBuffs(i);
-
-        if (buffs[packets.status.EFFECT_POISON] == true or buffs[packets.status.EFFECT_POISON_II] == true) then
-          healing = true;
-          actions:queue(actions:new():next(partial(wait, 8))
-            :next(partial(magic, 'Poisona', pid))
-            :next(function(self) healing = false; end));
-          break;
-        end
-      end
-      for i = 1, 5 do
-        local buffs = party:GetBuffs(i);
-        if (buffs[packets.status.BLINDNESS] == true) then
-          healing = true;
-          actions:queue(actions:new():next(partial(wait, 8))
-            :next(partial(magic, 'Blindna', pid))
-            :next(function(self) healing = false; end));
-          break;
-        end
-      end
-    elseif (main == Jobs.Thief) then
+    if (main == Jobs.Thief) then
       if (self.ATTACK_TID and tid ~= self.ATTACK_TID) then
         self.ATTACK_TID = nil;
         AshitaCore:GetChatManager():QueueCommand("/follow " .. config.leader, 1);

@@ -24,9 +24,6 @@ return {
     local iparty = AshitaCore:GetDataManager():GetParty();
     local zone = iparty:GetMemberZone(0);
     party:PartyBuffs(function(i, buffs)
-      -- print(iparty:GetMemberName(i) .. ' ' .. i .. ' ' .. tostring(buffs[buff]));
-      -- print(iparty:GetMemberName(i+1) .. ' ' .. i);
-      -- print(i .. ' ' .. buff .. ' ' .. tostring(buffs[buff]));
       local samez = zone == iparty:GetMemberZone(i);
       local alive = iparty:GetMemberCurrentHPP(i) > 0;
       if (alive and samez and buffs[buff] == nil) then
@@ -88,6 +85,54 @@ return {
       actions:queue(actions:new()
       :next(partial(magic, 'Stoneskin', '<me>'))
       :next(partial(wait, 16))
+      :next(function(self) actions.busy = false; end));
+      return true;
+    end
+  end,
+
+  -- Scans the party (including the current player) for those needing heals
+  -- @param status effect buff to check
+  -- @returns list of party indicies needing buff
+  NeedCleanse = function(self, status)
+    local need = {};
+    local iparty = AshitaCore:GetDataManager():GetParty();
+    local zone = iparty:GetMemberZone(0);
+    party:PartyBuffs(function(i, buffs)
+      local samez = zone == iparty:GetMemberZone(i);
+      local alive = iparty:GetMemberCurrentHPP(i) > 0;
+      if (alive and samez and buffs[status] ~= nil) then
+        table.insert(need, i);
+      end
+    end);
+    return need;
+  end,
+
+  Cleanse = function(self, levels)
+    local iparty = AshitaCore:GetDataManager():GetParty();
+    local need = self:NeedCleanse(status.EFFECT_POISON);
+    if (self:CanCast(spells.POISONA, levels) and #need > 0) then
+      actions.busy = true;
+      actions:queue(actions:new()
+      :next(partial(magic, 'Poisona', iparty:GetMemberServerId(need[math.random(#need)])))
+      :next(partial(wait, 8))
+      :next(function(self) actions.busy = false; end));
+      return true;
+    end
+    need = self:NeedCleanse(status.EFFECT_BLINDNESS);
+    if (self:CanCast(spells.BLINDNA, levels) and #need > 0) then
+      actions.busy = true;
+      actions:queue(actions:new()
+      :next(partial(magic, 'Blindna', iparty:GetMemberServerId(need[math.random(#need)])))
+      :next(partial(wait, 8))
+      :next(function(self) actions.busy = false; end));
+      return true;
+    end
+    need = self:NeedCleanse(status.EFFECT_PARALYSIS);
+    if (self:CanCast(spells.PARALYNA, levels) and #need > 0) then
+      actions.busy = true;
+      actions:queue(actions:new()
+      :next(partial(magic, 'Paralyna', iparty:GetMemberServerId(need[math.random(#need)])))
+      :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
       return true;
     end
