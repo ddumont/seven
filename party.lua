@@ -30,11 +30,20 @@ return {
         local unk = struct.unpack('I2', packet, offset + 6);
         local mask = struct.unpack('I8', packet, offset + 8);
 
+        local iparty = AshitaCore:GetDataManager():GetParty()
+        -- print(partyidx .. ' ' .. iparty:GetMemberNumber(playeridx) .. ' ' .. iparty:GetMemberIndex(playeridx));
+
+        -- Try see if the memberindex is the correct slot to put them in.
         local playeridx = pidx + 1;
+        for i = 1, 5 do
+          if (iparty:GetMemberIndex(i) == pidx + 1) then
+            playeridx = i;
+            break;
+          end
+        end
         local buffs = {};
         party[playeridx] = buffs;
-
-        local buff;
+        -- print(playeridx .. ',' .. tostring(party[playeridx]));
         for buff = 0, 31, 1 do
           -- 64 total bits in the mask
           local shifted = bit.rshift(mask, 62 - (2 * buff)); -- move the 2 bits all the way to the right
@@ -55,18 +64,20 @@ return {
           end
         end
       end
-      -- self:DumpBuffs();
+      self:DumpBuffs();
     end
   end,
 
   DumpBuffs = function(self)
     self:PartyBuffs(function(i, buffs)
-      local list = {};
-      for k, v in pairs(buffs) do
-        table.insert(list, k);
+      if (buffs ~= nil) then
+        local list = {};
+        for k, v in pairs(buffs) do
+          table.insert(list, k);
+        end
+        table.sort(list);
+        print('member'.. i .. ': ' .. ashita.settings.JSON:encode_pretty(list, nil, {}));
       end
-      table.sort(list);
-      print('member'.. i .. ': ' .. ashita.settings.JSON:encode_pretty(list, nil, {}));
     end);
   end,
 
@@ -85,7 +96,7 @@ return {
       end
       return buffs;
     else
-      return party[AshitaCore:GetDataManager():GetParty():GetMemberIndex(index)];
+      return party[index];
     end
   end,
 

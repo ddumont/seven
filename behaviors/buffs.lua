@@ -50,10 +50,9 @@ return {
       return true;
     elseif (self:CanCast(spells.PROTECT, levels) and #need > 0) then
       local iparty = AshitaCore:GetDataManager():GetParty();
-      local target = iparty:GetMemberServerId(need[1]);
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Protect', target))
+        :next(partial(magic, 'Protect', iparty:GetMemberServerId(need[math.random(#need)])))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -70,10 +69,9 @@ return {
       return true;
     elseif (self:CanCast(spells.SHELL, levels) and #need > 0) then
       local iparty = AshitaCore:GetDataManager():GetParty();
-      local target = iparty:GetMemberServerId(need[1]);
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Shell', target))
+        :next(partial(magic, 'Shell', iparty:GetMemberServerId(need[math.random(#need)])))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
