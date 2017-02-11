@@ -75,6 +75,9 @@ return {
     elseif (msg:sub(1,9) == 'idlebuffs') then
       local value = msg:sub(11)
       config:get()['IdleBuffs'] = value == 'true' or value == 'on';
+    elseif (msg:sub(1,4) == 'talk') then
+      msg = msg:sub(6);
+      actions:queue(actions:InteractNpc(findIds(msg)));
     end
   end,
 

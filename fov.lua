@@ -4,34 +4,7 @@ local party = require('party');
 local pgen = require('pgen');
 
 function talkToBook(tid, tidx, choice, auto)
-  return actions:new()
-    :next(function(self, stalled)
-      actions:talkNpc(tid, tidx);
-      return 'packet_in';
-    end)
-
-    :next(function(self, stalled, id, size, packet)
-      if (stalled == true) then -- npcs get contention when talked to repeatedly (even by other players)
-        if (self.__count ~= nil and self.__count >= 15) then -- bail
-          print('I give up');
-          return;
-        end
-        print('trying again');
-        actions:talkNpc(tid, tidx);
-        self.stalled = false; -- try again
-        self.count = 0; -- backdown
-        self.__count = (self.__count or 0) + 1;
-        print(self.__count);
-        return false;
-      elseif (id ~= packets.inc.PACKET_NPC_INTERACTION_2) then
-        return false;
-      end
-      -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L1880
-      self._npcid   = struct.unpack('L', packet, 0x04 + 1);
-      self._zone    = struct.unpack('H', packet, 0x2A + 1);
-      self._menuid  = struct.unpack('H', packet, 0x2C + 1);
-    end)
-
+  return actions:InteractNpc(tid, tidx)
     :next(function(self) return 'wait', 4; end) -- wait 4 ticks
     :next(function(self, stalled) -- kill the text menu from the book
       self.esc = true;

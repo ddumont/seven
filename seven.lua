@@ -152,6 +152,12 @@ ashita.register_event('command', function(cmd, nType)
   elseif (args[2] == 'idlebuffs') then
     AshitaCore:GetChatManager():QueueCommand('/l2 idlebuffs ' .. args[3], 1);
     config:get()['IdleBuffs'] = args[3] == 'true' or args[3] == 'on';
+  elseif (args[2] == 'talk') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 talk ' .. tid .. " " .. tidx, 1);
+    actions:queue(actions:new():next(partial(wait, 2))
+    :next(function(self, stalled)
+      actions:queue(actions:InteractNpc(tid, tidx));
+    end))
   end
 
   return true;

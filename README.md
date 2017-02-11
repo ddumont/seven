@@ -18,6 +18,8 @@
   * With no target, bots will use the warpscroll
 * **/seven idlebuffs [on/off]**
   * Instruct all bots to engage or disengage in idle buffing behavior
+* **/seven talk** ( with npc targeted )
+  * Instruct all bots to talk to npc
 
 ## fov
 * **/seven fov #** ( with book targeted )
