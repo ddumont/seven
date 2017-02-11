@@ -24,14 +24,14 @@ return {
       -- packet: [header-4][pbe-48][pbe-48][pbe-48][pbe-48][pbe-48]
 
       for pidx = 0, 4, 1 do
-        local offset = 4 + (pidx * 48);
+        local offset = 1 + 4 + (pidx * 48); -- +1 because lua
         local playerid = struct.unpack('I4', packet, offset);
         local partyidx = struct.unpack('I2', packet, offset + 4);
         local unk = struct.unpack('I2', packet, offset + 6);
         local mask = struct.unpack('I8', packet, offset + 8);
 
         local iparty = AshitaCore:GetDataManager():GetParty()
-        -- print(partyidx .. ' ' .. iparty:GetMemberNumber(playeridx) .. ' ' .. iparty:GetMemberIndex(playeridx));
+        -- print('offset:' .. pidx + 1 .. ' packetid:' .. playerid .. ' packetidx:' .. partyidx .. ' id:' ..  tostring(iparty:GetMemberServerId(pidx + 1)));
 
         -- Try see if the memberindex is the correct slot to put them in.
         local playeridx = pidx + 1;
@@ -64,7 +64,7 @@ return {
           end
         end
       end
-      self:DumpBuffs();
+      -- self:DumpBuffs();
     end
   end,
 
