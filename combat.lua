@@ -123,7 +123,7 @@ return {
     if (main == Jobs.Thief) then
       if (self.ATTACK_TID and tid ~= self.ATTACK_TID) then
         self.ATTACK_TID = nil;
-        AshitaCore:GetChatManager():QueueCommand("/follow " .. config.leader, 1);
+        AshitaCore:GetChatManager():QueueCommand("/follow " .. config:get().leader, 1);
       end
 
     elseif (healing == false and main == Jobs.Bard) then
