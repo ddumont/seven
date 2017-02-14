@@ -30,14 +30,22 @@ return {
     end
 
     party:PartyBuffs(function(i, buffs)
+      if (i == 0) then return end
       local samez = zone == iparty:GetMemberZone(i);
       local alive = iparty:GetMemberCurrentHPP(i) > 0;
       if (alive and samez and buffs[buff] == nil) then
-        if (i == 0 or exclude[iparty:GetMemberMainJob(i)] ~= true) then
+        if (exclude[iparty:GetMemberMainJob(i)] ~= true) then
           table.insert(need, i);
         end
       end
     end);
+
+    if (#need == 0) then
+      local alive = iparty:GetMemberCurrentHPP(0) > 0;
+      if (alive and party:GetBuffs(0)[buff] == nil) then
+        table.insert(need, 0);
+      end
+    end
     return need;
   end,
 
@@ -163,7 +171,7 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, 'Invisible', iparty:GetMemberServerId(need[math.random(#need)])))
-        :next(partial(wait, 10))
+        :next(partial(wait, 12))
         :next(function(self) actions.busy = false; end));
       return true;
     end
