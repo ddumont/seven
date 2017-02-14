@@ -92,6 +92,7 @@ local packets = {
     EFFECT_RERAISE                  = 113,
     EFFECT_PAEON                    = 195,
     EFFECT_BALLAD                   = 196,
+    EFFECT_MINNE                    = 197,
     EFFECT_MINUET                   = 198,
     EFFECT_FOOD                     = 251,
     EFFECT_POISON_II                = 540,
@@ -109,6 +110,17 @@ local packets = {
     INVISIBLE = 136,
     SNEAK = 137,
     DEODORIZE = 138,
+    FOE_REQUIEM = 368,
+    FOE_REQUIEM_II = 369,
+    ARMYS_PAEON = 378,
+    ARMYS_PAEON_II = 379,
+    MAGES_BALLAD = 386,
+    MAGES_BALLAD_II = 387,
+    KNIGHTS_MINNE = 389,
+    KNIGHTS_MINNE_II = 390,
+    VALOR_MINUET = 394,
+    VALOR_MINUET_II = 395,
+    HERB_PASTORAL = 406,
   }
 
 };

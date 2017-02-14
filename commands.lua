@@ -34,7 +34,7 @@ return {
     end
 
     -- If we're the leader...  then don't listen.
-    if (config.leader == GetPlayerEntity().Name) then return end
+    if (config:get().leader == GetPlayerEntity().Name) then return end
 
     if (msg == 'follow') then
       self:follow(config.leader or actor);

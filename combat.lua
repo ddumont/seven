@@ -4,6 +4,13 @@ local config = require('config');
 local party = require('party');
 local pgen = require('pgen');
 
+local jblm = require('jobs.blm');
+local jbrd = require('jobs.brd');
+local jdnc = require('jobs.dnc');
+local jrdm = require('jobs.rdm');
+local jsch = require('jobs.sch');
+local jthf = require('jobs.thf');
+local jwar = require('jobs.war');
 local jwhm = require('jobs.whm');
 
 local healing = false;
@@ -94,13 +101,12 @@ return {
     local sub  = player:GetSubJob();
 
     if (main == Jobs.Thief or main == Jobs.Warrior) then
-      local combat = self;
       actions:queue(actions:new()
         :next(function(self)
           AshitaCore:GetChatManager():QueueCommand('/attack ' .. tid, 0);
         end)
         :next(function(self)
-          combat.ATTACK_TID = tid;
+          config:get().ATTACK_TID = tid;
           AshitaCore:GetChatManager():QueueCommand('/follow ' .. tid, 0);
         end));
     end
@@ -116,34 +122,24 @@ return {
     local sub  = player:GetSubJob();
 
     if (main == Jobs.WhiteMage) then
-      jwhm.tick();
+      jwhm:tick();
+    elseif (main == Jobs.RedMage) then
+      jrdm:tick();
+    elseif (main == Jobs.Bard) then
+      jbrd:tick();
+    elseif (main == Jobs.Thief) then
+      jthf:tick();
+    elseif (main == Jobs.Warrior) then
+      jwar:tick();
+    elseif (main == Jobs.Scholar) then
+      jsch:tick();
+    elseif (main == Jobs.Dancer) then
+      jdnc:tick();
+    elseif (main == Jobs.BlackMage) then
+      jblm:tick();
+    elseif (main == Jobs.DarkKnight) then
+      jdrk:tick();
     end
 
-    local iparty = datamgr:GetParty();
-    if (main == Jobs.Thief) then
-      if (self.ATTACK_TID and tid ~= self.ATTACK_TID) then
-        self.ATTACK_TID = nil;
-        AshitaCore:GetChatManager():QueueCommand("/follow " .. config:get().leader, 1);
-      end
-
-    elseif (healing == false and main == Jobs.Bard) then
-      local i;
-      for i = 1, 5 do
-        local buffs = party:GetBuffs(i);
-        if (buffs[packets.status.EFFECT_BALLAD] ~= true) then
-          healing = true;
-          actions:queue(actions:new():next(partial(wait, 8))
-            :next(partial(magic, '"Mage\'s Ballad"', '"<me>"'))
-            :next(function(self) healing = false; end));
-          break;
-        elseif (buffs[packets.status.EFFECT_PAEON] ~= true) then
-          healing = true;
-          actions:queue(actions:new():next(partial(wait, 8))
-            :next(partial(magic, '"Army\'s Paeon II"', '"<me>"'))
-            :next(function(self) healing = false; end));
-            break;
-        end
-      end
-    end
   end
 };
