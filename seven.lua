@@ -151,7 +151,10 @@ ashita.register_event('command', function(cmd, nType)
     end
   elseif (args[2] == 'idlebuffs') then
     AshitaCore:GetChatManager():QueueCommand('/l2 idlebuffs ' .. args[3], 1);
-    config:get()['IdleBuffs'] = args[3] == 'true' or args[3] == 'on';
+    commands:SetIdleBuffs(args[3]);
+  elseif (args[2] == 'sneakytime') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 sneakytime ' .. args[3], 1);
+    commands:SetSneakyTime(args[3]);
   elseif (args[2] == 'talk') then
     AshitaCore:GetChatManager():QueueCommand('/l2 talk ' .. tid .. " " .. tidx, 1);
     actions:queue(actions:new():next(partial(wait, 2))
@@ -169,7 +172,5 @@ end);
 -- desc: Called when our addon is unloaded.
 ---------------------------------------------------------------------------------------------------
 ashita.register_event('unload', function()
-  config:get(function(config)
-    ashita.settings.save(_addon.path .. '/settings/' .. GetPlayerEntity().Name .. '/settings.json', config);
-  end);
+  config:save();
 end);

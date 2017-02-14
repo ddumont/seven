@@ -24,5 +24,9 @@ return {
     end
 
     return config;
+  end,
+
+  save = function(self)
+    ashita.settings.save(_addon.path .. '/settings/' .. GetPlayerEntity().Name .. '/settings.json', self:get());
   end
 };

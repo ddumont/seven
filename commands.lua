@@ -30,6 +30,7 @@ return {
 
     if (msg == 'leader') then
       actions:leader(actor);
+      config:save();
     end
 
     -- If we're the leader...  then don't listen.
@@ -73,12 +74,30 @@ return {
         AshitaCore:GetChatManager():QueueCommand("/item \"Instant Warp\" <me>", -1);
       end
     elseif (msg:sub(1,9) == 'idlebuffs') then
-      local value = msg:sub(11)
-      config:get()['IdleBuffs'] = value == 'true' or value == 'on';
+      self:SetIdleBuffs(msg:sub(11));
+    elseif (msg:sub(1,10) == 'sneakytime') then
+      self:SetSneakyTime(msg:sub(12));
     elseif (msg:sub(1,4) == 'talk') then
       msg = msg:sub(6);
       actions:queue(actions:InteractNpc(findIds(msg)));
     end
+  end,
+
+  SetIdleBuffs = function(self, value)
+    local cnf = config:get();
+    cnf['IdleBuffs'] = value == 'true' or value == 'on';
+    if (cnf['IdleBuffs']) then
+      cnf['SneakyTime'] = false;
+    end
+    config:save();
+  end,
+  SetSneakyTime = function(self, value)
+    local cnf = config:get();
+    cnf['SneakyTime'] = value == 'true' or value == 'on';
+    if (cnf['SneakyTime']) then
+      cnf['IdleBuffs'] = false;
+    end
+    config:save();
   end,
 
   follow = function(self, player)
@@ -86,7 +105,6 @@ return {
       AshitaCore:GetChatManager():QueueCommand("/follow " .. player, 1);
     end
   end,
-
 
   stay = function(self)
     actions:queue(actions:new()

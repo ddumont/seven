@@ -86,6 +86,9 @@ local packets = {
     EFFECT_SHELL                    = 41,
     EFFECT_REGEN                    = 42,
     EFFECT_REFRESH                  = 43,
+    EFFECT_INVISIBLE                = 69,
+    EFFECT_DEODORIZE                = 70,
+    EFFECT_SNEAK                    = 71,
     EFFECT_RERAISE                  = 113,
     EFFECT_PAEON                    = 195,
     EFFECT_BALLAD                   = 196,
@@ -103,6 +106,9 @@ local packets = {
     STONESKIN = 54,
     PROTECTRA = 125,
     SHELLRA = 130,
+    INVISIBLE = 136,
+    SNEAK = 137,
+    DEODORIZE = 138,
   }
 
 };
