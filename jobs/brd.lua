@@ -38,7 +38,7 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Mage\'s Ballad"', '<me>'))
-        :next(partial(wait, 16))
+        :next(partial(wait, 14))
         :next(function(self) actions.busy = false; end));
       return true;
     end
@@ -47,7 +47,7 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Army\'s Paeon"', '<me>'))
-        :next(partial(wait, 16))
+        :next(partial(wait, 14))
         :next(function(self) actions.busy = false; end));
       return true;
     end
@@ -56,7 +56,7 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Knight\'s Minne"', '<me>'))
-        :next(partial(wait, 16))
+        :next(partial(wait, 14))
         :next(function(self) actions.busy = false; end));
       return true;
     end
@@ -65,7 +65,7 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Valor Minuet"', '<me>'))
-        :next(partial(wait, 16))
+        :next(partial(wait, 14))
         :next(function(self) actions.busy = false; end));
       return true;
     end
