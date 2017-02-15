@@ -1,3 +1,4 @@
+local config = require('config');
 local party = require('party');
 local actions = require('actions');
 local packets = require('packets');
@@ -25,12 +26,19 @@ return {
   tick = function(self)
     if (actions.busy) then return end
 
+    -- local cnf = config:get();
+    -- local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();
+    -- if (cnf.ATTACK_TID and tid ~= cnf.ATTACK_TID) then
+    --   cnf.ATTACK_TID = nil;
+    --   AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
+    -- end
+
     local status = party:GetBuffs(0);
     if (buffs:CanCast(spells.MAGES_BALLAD, spell_levels) and status[packets.status.EFFECT_BALLAD] ~= true) then
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Mage\'s Ballad"', '<me>'))
-        :next(partial(wait, 14))
+        :next(partial(wait, 16))
         :next(function(self) actions.busy = false; end));
       return true;
     end
@@ -39,7 +47,7 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Army\'s Paeon"', '<me>'))
-        :next(partial(wait, 14))
+        :next(partial(wait, 16))
         :next(function(self) actions.busy = false; end));
       return true;
     end
@@ -48,7 +56,7 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Knight\'s Minne"', '<me>'))
-        :next(partial(wait, 14))
+        :next(partial(wait, 16))
         :next(function(self) actions.busy = false; end));
       return true;
     end
@@ -57,10 +65,21 @@ return {
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Valor Minuet"', '<me>'))
-        :next(partial(wait, 14))
+        :next(partial(wait, 16))
         :next(function(self) actions.busy = false; end));
       return true;
     end
+  end,
+
+  attack = function(self, tid)
+    -- actions:queue(actions:new()
+    --   :next(function(self)
+    --     AshitaCore:GetChatManager():QueueCommand('/attack ' .. tid, 0);
+    --   end)
+    --   :next(function(self)
+    --     config:get().ATTACK_TID = tid;
+    --     AshitaCore:GetChatManager():QueueCommand('/follow ' .. tid, 0);
+    --   end));
   end
 
 };

@@ -25,6 +25,9 @@ return {
     if (buffs:Cleanse(spell_levels)) then return end
     if (buffs:SneakyTime(spell_levels)) then return end
     if (buffs:IdleBuffs(spell_levels)) then return end
+  end,
+
+  attack = function(self, tid)
   end
 
 };

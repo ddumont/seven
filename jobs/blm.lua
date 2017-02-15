@@ -11,6 +11,9 @@ return {
   tick = function(self)
     if (actions.busy) then return end
 
+  end,
+
+  attack = function(self, tid)
   end
 
 };

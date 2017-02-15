@@ -98,7 +98,26 @@ return {
   attack = function(self, tid)
     local player = AshitaCore:GetDataManager():GetPlayer();
     local main = player:GetMainJob();
-    local sub  = player:GetSubJob();
+
+    if (main == Jobs.WhiteMage) then
+      jwhm:attack(tid);
+    elseif (main == Jobs.RedMage) then
+      jrdm:attack(tid);
+    elseif (main == Jobs.Bard) then
+      jbrd:attack(tid);
+    elseif (main == Jobs.Thief) then
+      jthf:attack(tid);
+    elseif (main == Jobs.Warrior) then
+      jwar:attack(tid);
+    elseif (main == Jobs.Scholar) then
+      jsch:attack(tid);
+    elseif (main == Jobs.Dancer) then
+      jdnc:attack(tid);
+    elseif (main == Jobs.BlackMage) then
+      jblm:attack(tid);
+    elseif (main == Jobs.DarkKnight) then
+      jdrk:attack(tid);
+    end
 
     if (main == Jobs.Thief or main == Jobs.Warrior) then
       actions:queue(actions:new()
