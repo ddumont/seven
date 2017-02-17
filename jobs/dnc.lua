@@ -25,7 +25,7 @@ return {
     end
 
     local status = party:GetBuffs(0);
-    local tp = party:GetMemberCurrentTP(0);
+    local tp = AshitaCore:GetDataManager():GetParty():GetMemberCurrentTP(0);
     if (tp >= 150 and buffs:IsAble(abilities.DRAIN_SAMBA, ability_levels) and status[packets.status.EFFECT_DRAIN_SAMBA] ~= true) then
       actions.busy = true;
       actions:queue(actions:new()
