@@ -13,7 +13,7 @@ return {
   CanCast = function(self, spell, levels)
     local player = AshitaCore:GetDataManager():GetPlayer();
     local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
-    return player:HasSpell(spell) and lvl >= levels[spell];
+    return player:HasSpell(spell) and levels[spell] and lvl >= levels[spell];
   end,
 
   -- Scans the party (including the current player) for those needing heals

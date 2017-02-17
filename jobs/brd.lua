@@ -52,14 +52,14 @@ return {
       return true;
     end
 
-    if (buffs:CanCast(spells.KNIGHTS_MINNE, spell_levels) and status[packets.status.EFFECT_MINNE] ~= true) then
-      actions.busy = true;
-      actions:queue(actions:new()
-        :next(partial(magic, '"Knight\'s Minne"', '<me>'))
-        :next(partial(wait, 14))
-        :next(function(self) actions.busy = false; end));
-      return true;
-    end
+    -- if (buffs:CanCast(spells.KNIGHTS_MINNE, spell_levels) and status[packets.status.EFFECT_MINNE] ~= true) then
+    --   actions.busy = true;
+    --   actions:queue(actions:new()
+    --     :next(partial(magic, '"Knight\'s Minne"', '<me>'))
+    --     :next(partial(wait, 14))
+    --     :next(function(self) actions.busy = false; end));
+    --   return true;
+    -- end
 
     if (buffs:CanCast(spells.VALOR_MINUET, spell_levels) and status[packets.status.EFFECT_MINUET] ~= true) then
       actions.busy = true;
