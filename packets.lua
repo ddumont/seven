@@ -95,7 +95,12 @@ local packets = {
     EFFECT_MINNE                    = 197,
     EFFECT_MINUET                   = 198,
     EFFECT_FOOD                     = 251,
+    EFFECT_DRAIN_SAMBA              = 368,
     EFFECT_POISON_II                = 540,
+  },
+
+  abilities = {
+    DRAIN_SAMBA = 168,
   },
 
   spells = {

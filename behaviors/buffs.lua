@@ -13,7 +13,16 @@ return {
   CanCast = function(self, spell, levels)
     local player = AshitaCore:GetDataManager():GetPlayer();
     local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
-    return player:HasSpell(spell) and levels[spell] and lvl >= levels[spell];
+    return player:HasSpell(spell) and levels[spell] ~= nil and lvl >= levels[spell];
+  end,
+
+  -- Can the player cast this spell?
+  -- @param the ability id
+  -- @param the ability level table
+  IsAble = function(self, ability, levels)
+    local player = AshitaCore:GetDataManager():GetPlayer();
+    local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
+    return levels[ability] ~= nil and lvl >= levels[ability];
   end,
 
   -- Scans the party (including the current player) for those needing heals

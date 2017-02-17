@@ -5,7 +5,12 @@ local packets = require('packets');
 local buffs = require('behaviors.buffs')
 local healing = require('behaviors.healing');
 
-local spell_levels = {};
+local spells = packets.spells;
+local status = packets.status;
+local abilities = packets.abilities;
+
+local ability_levels = {};
+ability_levels[packets.abilities.DRAIN_SAMBA] = 5;
 
 return {
 
@@ -17,6 +22,17 @@ return {
     if (cnf.ATTACK_TID and tid ~= cnf.ATTACK_TID) then
       cnf.ATTACK_TID = nil;
       AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
+    end
+
+    local status = party:GetBuffs(0);
+    local tp = party:GetMemberCurrentTP(0);
+    if (tp >= 150 and buffs:IsAble(abilities.DRAIN_SAMBA, ability_levels) and status[packets.status.EFFECT_DRAIN_SAMBA] ~= true) then
+      actions.busy = true;
+      actions:queue(actions:new()
+        :next(partial(ability, '"Drain Samba"', '<me>'))
+        :next(partial(wait, 8))
+        :next(function(self) actions.busy = false; end));
+      return true;
     end
   end,
 

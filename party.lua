@@ -35,12 +35,6 @@ return {
 
         -- Try see if the memberindex is the correct slot to put them in.
         local playeridx = pidx + 1;
-        for i = 1, 5 do
-          if (iparty:GetMemberIndex(i) == pidx + 1) then
-            playeridx = i;
-            break;
-          end
-        end
         local buffs = {};
         party[playeridx] = buffs;
         -- print(playeridx .. ',' .. tostring(party[playeridx]));
