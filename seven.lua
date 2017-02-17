@@ -21,6 +21,10 @@ function magic(spell, target)
   AshitaCore:GetChatManager():QueueCommand('/magic ' .. spell .. ' ' .. target, 0);
 end
 
+function ability(ability, target)
+  AshitaCore:GetChatManager():QueueCommand('/ja ' .. ability .. ' ' .. target, 0);
+end
+
 function partial(func, ...)
   local args = {...};
   return function(...)
