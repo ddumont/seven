@@ -7,6 +7,8 @@
 ## general
 * **/seven leader**
   * Make the current character the leader.
+* **/seven shutdown**
+  * Instructs all bots and the leader to shutdown.
 * **/seven follow**
   * Instructs all bots to follow the leader.
 * **/seven stay**
