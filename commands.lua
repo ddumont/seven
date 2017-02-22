@@ -42,6 +42,8 @@ return {
       self:stay();
     elseif (msg == 'reload') then
       self:reload();
+    elseif (msg == 'shutdown') then
+      self:shutdown();
     elseif (msg:sub(2,3) == 'ov') then
       local fovgov = msg:sub(1,3);
       msg = msg:sub(5);
@@ -119,6 +121,10 @@ return {
 
   reload = function(self)
     AshitaCore:GetChatManager():QueueCommand("/addon reload seven", -1);
+  end,
+
+  shutdown = function(self)
+    AshitaCore:GetChatManager():QueueCommand("/shutdown", -1);
   end
 
 };
