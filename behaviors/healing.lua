@@ -37,7 +37,7 @@ return {
 
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Cure', target))
+        :next(partial(magic, '"Cure II"', target))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
 

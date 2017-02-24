@@ -78,6 +78,16 @@ return {
   -- cast idle buffs
   -- @param table of spell levels
   IdleBuffs = function(self, levels)
+    local buffs = party:GetBuffs(0);
+    -- if (buffs[status.EFFECT_REFRESH] == nil) then
+    --   actions.busy = true;
+    --   actions:queue(actions:new()
+    --     :next(partial(magic, 'Refresh', '<me>'))
+    --     :next(partial(wait, 16))
+    --     :next(function(self) actions.busy = false; end));
+    --   return true;
+    -- end
+
     if (config:get()['IdleBuffs'] ~= true) then return end
     if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 70) then return end
 
@@ -119,7 +129,6 @@ return {
       return true;
     end
 
-    local buffs = party:GetBuffs(0);
     if (self:CanCast(spells.STONESKIN, levels) and buffs[status.EFFECT_STONESKIN] == nil) then
       actions.busy = true;
       actions:queue(actions:new()

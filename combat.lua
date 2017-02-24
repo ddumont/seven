@@ -7,11 +7,23 @@ local pgen = require('pgen');
 local jblm = require('jobs.blm');
 local jbrd = require('jobs.brd');
 local jdnc = require('jobs.dnc');
+local jdrk = require('jobs.drk');
 local jrdm = require('jobs.rdm');
 local jsch = require('jobs.sch');
 local jthf = require('jobs.thf');
 local jwar = require('jobs.war');
 local jwhm = require('jobs.whm');
+
+local map = {};
+map[Jobs.BlackMage] = jblm;
+map[Jobs.Bard] = jbrd;
+map[Jobs.Dancer] = jdnc;
+map[Jobs.DarkKnight] = jdrk;
+map[Jobs.RedMage] = jrdm;
+map[Jobs.Scholar] = jsch;
+map[Jobs.Thief] = jthf;
+map[Jobs.Warrior] = jwar;
+map[Jobs.WhiteMage] = jwhm;
 
 local healing = false;
 
@@ -43,122 +55,45 @@ return {
 
 
   nuke = function(self, tid)
-    local player = AshitaCore:GetDataManager():GetPlayer();
-    local main = player:GetMainJob();
-    local sub  = player:GetSubJob();
+    local main = AshitaCore:GetDataManager():GetPlayer():GetMainJob();
 
-    if (main == Jobs.WhiteMage) then
-      -- actions:queue(actions:new()
-      --   :next(partial(magic, 'Banish', tid)));
-    elseif (main == Jobs.BlackMage) then
-      actions:queue(actions:new():next(function(self)
-        -- multiple casts in a row seem to crsh the client
-        -- magic('Thunder', tid);
-        -- magic('Blizzard', tid);
-        -- magic('Fire', tid);
-        magic('Aero', tid);
-        -- magic('Water', tid);
-        -- magic('Stone', tid);
-      end));
-    elseif (main == Jobs.RedMage) then
-      actions:queue(actions:new():next(function(self)
-        -- multiple casts in a row seem to crsh the client
-        -- magic('Thunder', tid);
-        -- magic('Blizzard', tid);
-        -- magic('Fire', tid);
-        magic('Aero', tid);
-        -- magic('Water', tid);
-        -- magic('Stone', tid);
-      end));
-    elseif (main == Jobs.Scholar) then
-      actions:queue(actions:new():next(function(self)
-        -- multiple casts in a row seem to crsh the client
-        -- magic('Thunder', tid);
-        -- magic('Blizzard', tid);
-        -- magic('Fire', tid);
-        magic('Aero', tid);
-        -- magic('Water', tid);
-        -- magic('Stone', tid);
-      end));
+    for jobid, job in pairs(map) do
+      if (main == jobid and job.nuke) then
+        return job:nuke(tid);
+      end
     end
   end,
 
 
   sleep = function(self, tid)
-    local player = AshitaCore:GetDataManager():GetPlayer();
-    local main = player:GetMainJob();
-    local sub  = player:GetSubJob();
+    local main = AshitaCore:GetDataManager():GetPlayer():GetMainJob();
 
-    if (main == Jobs.BlackMage) then
-      actions:queue(actions:new():next(partial(magic, 'Sleep', tid)));
+    for jobid, job in pairs(map) do
+      if (main == jobid and job.sleep) then
+        return job:sleep(tid);
+      end
     end
   end,
 
 
   attack = function(self, tid)
-    local player = AshitaCore:GetDataManager():GetPlayer();
-    local main = player:GetMainJob();
+    local main = AshitaCore:GetDataManager():GetPlayer():GetMainJob();
 
-    if (main == Jobs.WhiteMage) then
-      jwhm:attack(tid);
-    elseif (main == Jobs.RedMage) then
-      jrdm:attack(tid);
-    elseif (main == Jobs.Bard) then
-      jbrd:attack(tid);
-    elseif (main == Jobs.Thief) then
-      jthf:attack(tid);
-    elseif (main == Jobs.Warrior) then
-      jwar:attack(tid);
-    elseif (main == Jobs.Scholar) then
-      jsch:attack(tid);
-    elseif (main == Jobs.Dancer) then
-      jdnc:attack(tid);
-    elseif (main == Jobs.BlackMage) then
-      jblm:attack(tid);
-    elseif (main == Jobs.DarkKnight) then
-      jdrk:attack(tid);
-    end
-
-    if (main == Jobs.Thief or main == Jobs.Warrior) then
-      actions:queue(actions:new()
-        :next(function(self)
-          AshitaCore:GetChatManager():QueueCommand('/attack ' .. tid, 0);
-        end)
-        :next(function(self)
-          config:get().ATTACK_TID = tid;
-          AshitaCore:GetChatManager():QueueCommand('/follow ' .. tid, 0);
-        end));
+    for jobid, job in pairs(map) do
+      if (main == jobid and job.attack) then
+        return job:attack(tid);
+      end
     end
   end,
 
 
   tick = function(self)
-    local datamgr = AshitaCore:GetDataManager();
-    local tid = datamgr:GetTarget():GetTargetServerId();
+    local main = AshitaCore:GetDataManager():GetPlayer():GetMainJob();
 
-    local player = datamgr:GetPlayer();
-    local main = player:GetMainJob();
-    local sub  = player:GetSubJob();
-
-    if (main == Jobs.WhiteMage) then
-      jwhm:tick();
-    elseif (main == Jobs.RedMage) then
-      jrdm:tick();
-    elseif (main == Jobs.Bard) then
-      jbrd:tick();
-    elseif (main == Jobs.Thief) then
-      jthf:tick();
-    elseif (main == Jobs.Warrior) then
-      jwar:tick();
-    elseif (main == Jobs.Scholar) then
-      jsch:tick();
-    elseif (main == Jobs.Dancer) then
-      jdnc:tick();
-    elseif (main == Jobs.BlackMage) then
-      jblm:tick();
-    elseif (main == Jobs.DarkKnight) then
-      jdrk:tick();
+    for jobid, job in pairs(map) do
+      if (main == jobid and job.tick) then
+        return job:tick(tid);
+      end
     end
-
   end
 };
