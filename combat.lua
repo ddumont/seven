@@ -12,6 +12,7 @@ local jsch = require('jobs.sch');
 local jthf = require('jobs.thf');
 local jwar = require('jobs.war');
 local jwhm = require('jobs.whm');
+local jmnk = require('jobs.mnk');
 
 local healing = false;
 
@@ -56,9 +57,9 @@ return {
         -- magic('Thunder', tid);
         -- magic('Blizzard', tid);
         -- magic('Fire', tid);
-        magic('Aero', tid);
+        -- magic('Aero', tid);
         -- magic('Water', tid);
-        -- magic('Stone', tid);
+        magic('Stone', tid);
       end));
     elseif (main == Jobs.RedMage) then
       actions:queue(actions:new():next(function(self)
@@ -117,9 +118,11 @@ return {
       jblm:attack(tid);
     elseif (main == Jobs.DarkKnight) then
       jdrk:attack(tid);
+    elseif (main == Jobs.Monk) then
+      jmnk:attack(tid);
     end
 
-    if (main == Jobs.Thief or main == Jobs.Warrior) then
+    if (main == Jobs.Thief or main == Jobs.Warrior or main == Jobs.Monk) then
       actions:queue(actions:new()
         :next(function(self)
           AshitaCore:GetChatManager():QueueCommand('/attack ' .. tid, 0);
@@ -158,6 +161,8 @@ return {
       jblm:tick();
     elseif (main == Jobs.DarkKnight) then
       jdrk:tick();
+    elseif (main == Jobs.Monk) then
+      jmnk:tick();
     end
 
   end
