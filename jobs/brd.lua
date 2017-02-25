@@ -15,9 +15,11 @@ spell_levels[packets.spells.ARMYS_PAEON] = 5;
 spell_levels[packets.spells.FOE_REQUIEM] = 7;
 spell_levels[packets.spells.HERB_PASTORAL] = 9;
 spell_levels[packets.spells.ARMYS_PAEON_II] = 15;
-spell_levels[packets.spells.FOE_REQUIEM] = 17;
+spell_levels[packets.spells.FOE_LULLABY] = 16;
+spell_levels[packets.spells.FOE_REQUIEM_II] = 17;
 spell_levels[packets.spells.KNIGHTS_MINNE_II] = 21;
 spell_levels[packets.spells.VALOR_MINUET_II] = 23;
+spell_levels[packets.spells.LIGHTNING_THRENODY] = 24;
 spell_levels[packets.spells.MAGES_BALLAD] = 25;
 spell_levels[packets.spells.MAGES_BALLAD_II] = 55;
 
@@ -25,13 +27,6 @@ return {
 
   tick = function(self)
     if (actions.busy) then return end
-
-    -- local cnf = config:get();
-    -- local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();
-    -- if (cnf.ATTACK_TID and tid ~= cnf.ATTACK_TID) then
-    --   cnf.ATTACK_TID = nil;
-    --   AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
-    -- end
 
     local status = party:GetBuffs(0);
     if (buffs:CanCast(spells.MAGES_BALLAD, spell_levels) and status[packets.status.EFFECT_BALLAD] ~= true) then
@@ -46,7 +41,7 @@ return {
     if (buffs:CanCast(spells.ARMYS_PAEON, spell_levels) and status[packets.status.EFFECT_PAEON] ~= true) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, '"Army\'s Paeon"', '<me>'))
+        :next(partial(magic, '"Army\'s Paeon II"', '<me>'))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -61,25 +56,41 @@ return {
     --   return true;
     -- end
 
-    if (buffs:CanCast(spells.VALOR_MINUET, spell_levels) and status[packets.status.EFFECT_MINUET] ~= true) then
-      actions.busy = true;
-      actions:queue(actions:new()
-        :next(partial(magic, '"Valor Minuet"', '<me>'))
-        :next(partial(wait, 8))
-        :next(function(self) actions.busy = false; end));
-      return true;
-    end
+    -- if (buffs:CanCast(spells.VALOR_MINUET, spell_levels) and status[packets.status.EFFECT_MINUET] ~= true) then
+    --   actions.busy = true;
+    --   actions:queue(actions:new()
+    --     :next(partial(magic, '"Valor Minuet II"', '<me>'))
+    --     :next(partial(wait, 8))
+    --     :next(function(self) actions.busy = false; end));
+    --   return true;
+    -- end
   end,
 
   attack = function(self, tid)
-    -- actions:queue(actions:new()
-    --   :next(function(self)
-    --     AshitaCore:GetChatManager():QueueCommand('/attack ' .. tid, 0);
-    --   end)
-    --   :next(function(self)
-    --     config:get().ATTACK_TID = tid;
-    --     AshitaCore:GetChatManager():QueueCommand('/follow ' .. tid, 0);
-    --   end));
+    local action = actions:new();
+
+    if (buffs:CanCast(spells.FOE_REQUIEM_II, spell_levels)) then
+      action:next(partial(magic, '"Foe Requiem II"', tid))
+        :next(partial(wait, 7));
+    elseif (buffs:CanCast(spells.FOE_REQUIEM, spell_levels)) then
+      action:next(partial(magic, '"Foe Requiem"', tid))
+        :next(partial(wait, 7));
+    end
+
+    -- if (buffs:CanCast(spells.LIGHTNING_THRENODY, spell_levels)) then
+    --   action:next(partial(magic, '"Ltng. Threnody"', tid))
+    --     :next(partial(wait, 7));
+    -- end
+
+    actions:queue(action);
+  end,
+
+  sleep = function(self, tid)
+    if (buffs:CanCast(spells.FOE_LULLABY, spell_levels)) then
+      actions:queue(actions:new()
+        :next(partial(magic, '"Foe Lullaby"', tid))
+        :next(partial(wait, 7)));
+    end
   end
 
 };
