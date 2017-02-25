@@ -25,6 +25,7 @@ map[Jobs.Scholar] = jsch;
 map[Jobs.Thief] = jthf;
 map[Jobs.Warrior] = jwar;
 map[Jobs.WhiteMage] = jwhm;
+map[Jobs.Monk] = jmnk;
 
 local healing = false;
 
