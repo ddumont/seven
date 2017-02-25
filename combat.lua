@@ -83,8 +83,6 @@ return {
     for jobid, job in pairs(map) do
       if (main == jobid and job.attack) then
         return job:attack(tid);
-    elseif (main == Jobs.Monk) then
-      jmnk:attack(tid);
       end
     end
   end,
@@ -97,8 +95,6 @@ return {
       if (main == jobid and job.tick) then
         return job:tick(tid);
       end
-    elseif (main == Jobs.Monk) then
-      jmnk:tick();
     end
   end
 };
