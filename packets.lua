@@ -25,7 +25,6 @@ local packets = {
 
   CHAT_TYPE_LINKSHELL2 = 0x1B,
 
-
   fov = {
     PAGE_REPEAT          = 0x8000,
 
@@ -170,6 +169,12 @@ local packets = {
     HERB_PASTORAL = 406,
     LIGHTNING_THRENODY = 458,
     FOE_LULLABY = 463,
+  },
+
+  weaponskills = {
+    COMBO = 1,
+    SHOULDER_TACKLE = 2,
+    CYCLONE = 20
   }
 
 };

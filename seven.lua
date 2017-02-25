@@ -25,6 +25,10 @@ function ability(ability, target)
   AshitaCore:GetChatManager():QueueCommand('/ja ' .. ability .. ' ' .. target, 0);
 end
 
+function weaponskill(ability, target)
+  AshitaCore:GetChatManager():QueueCommand('/ws ' .. ability .. ' ' .. target, 0);
+end
+
 function partial(func, ...)
   local args = {...};
   return function(...)
@@ -106,6 +110,9 @@ ashita.register_event('command', function(cmd, nType)
   elseif (args[2] == 'reload') then
     AshitaCore:GetChatManager():QueueCommand('/l2 reload', 1);
     AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
+  elseif (args[2] == 'shutdown') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 shutdown', 1);
+    AshitaCore:GetChatManager():QueueCommand('/shutdown', -1);
   elseif (args[2] == 'fov' or args[2] == 'gov') then
     if (args[3] == nil) then
       print('Which page?');
@@ -159,6 +166,19 @@ ashita.register_event('command', function(cmd, nType)
   elseif (args[2] == 'sneakytime') then
     AshitaCore:GetChatManager():QueueCommand('/l2 sneakytime ' .. args[3], 1);
     commands:SetSneakyTime(args[3]);
+  elseif (args[2] == 'setweaponskill') then
+    if (args[4] ~= nil and tonumber(args[4]) ~= nil) then
+      AshitaCore:GetChatManager():QueueCommand('/l2 setweaponskill ' .. args[3] .. ' ' .. args[4], 1);
+    else
+      print(' ');
+      print('ERROR: Invalid entry for the "/seven setweaponskill" command');
+      print('SYNTAX: /seven setweaponsill (player) (weapon skill ID number)');
+      print(' ');
+      print('TIP: Use "/seven searchweaponskill" to find available weapon skill ID');
+      print(' ');
+    end
+  elseif (args[2] == 'searchweaponskill') then
+    commands:SearchWeaponSkill(args[3]);
   elseif (args[2] == 'talk') then
     AshitaCore:GetChatManager():QueueCommand('/l2 talk ' .. tid .. " " .. tidx, 1);
     actions:queue(actions:new():next(partial(wait, 2))

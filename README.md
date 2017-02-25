@@ -7,6 +7,8 @@
 ## general
 * **/seven leader**
   * Make the current character the leader.
+* **/seven shutdown**
+  * Instructs all bots and the leader to shutdown.
 * **/seven follow**
   * Instructs all bots to follow the leader.
 * **/seven stay**
@@ -33,7 +35,7 @@
     * regen
     * refresh
     * food
-    * *It's assumed you would have prot/shell already if you're mboxin*
+    * *It's assumed you would have prot/shell already if you're mboxin!*
 
 ## gov
 * **/seven gov #** ( with book targeted )
@@ -45,7 +47,7 @@
     * regen
     * refresh
     * food
-    * *It's assumed you would have prot/shell already if you're mboxin*
+    * *It's assumed you would have prot/shell already if you're mboxin!*
 
 ## combat
 * **/seven debuff** ( with mob targeted )
@@ -67,3 +69,8 @@
     * Currently only blm sleep
 * **/seven attack** ( with mob targeted )
   * Tell all melee bots to attack your target
+* **/seven searchweaponskill [text]**
+  * With text provided, searches for any text matches in the weapon skill ID table.  To assist with using '/seven setweaponskill'
+* **/seven setweaponskill [player] [weaponskill ID]**
+  * Sets the weaponskill to be used by a specific player
+  * *Only works if the job's behavior is setup to use weaponskills!*

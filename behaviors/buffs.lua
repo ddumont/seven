@@ -16,7 +16,7 @@ return {
     return player:HasSpell(spell) and levels[spell] ~= nil and lvl >= levels[spell];
   end,
 
-  -- Can the player cast this spell?
+  -- Can the player use this ability?
   -- @param the ability id
   -- @param the ability level table
   IsAble = function(self, ability, levels)
