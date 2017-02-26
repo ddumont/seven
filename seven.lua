@@ -132,14 +132,6 @@ ashita.register_event('command', function(cmd, nType)
       AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
       fov:page(args[2], tid, tidx, args[3]);
     end
-
-  elseif (args[2] == 'buffs') then
-    local buffs = party:GetBuffs(tonumber(args[3]));
-    local buffstr = '';
-    for k, v in pairs(buffs) do
-        buffstr = buffstr .. k .. ' ';
-    end
-    print(buffstr);
   elseif (args[2] == 'debuff') then
     AshitaCore:GetChatManager():QueueCommand('/l2 debuff ' .. tid, 1);
   elseif (args[2] == 'nuke') then

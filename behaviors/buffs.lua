@@ -38,13 +38,14 @@ return {
       exclude[exclude_classes[i]] = true;
     end
 
-    party:PartyBuffs(function(i, buffs)
+    party:PartyBuffs(function(i, buffs, pid)
       if (i == 0) then return end
-      local samez = zone == iparty:GetMemberZone(i);
-      local alive = iparty:GetMemberCurrentHPP(i) > 0;
+      local idx = party:ById(pid);
+      local samez = zone == iparty:GetMemberZone(idx);
+      local alive = iparty:GetMemberCurrentHPP(idx) > 0;
       if (alive and samez and buffs[buff] == nil) then
-        if (exclude[iparty:GetMemberMainJob(i)] ~= true) then
-          table.insert(need, i);
+        if (exclude[iparty:GetMemberMainJob(idx)] ~= true) then
+          table.insert(need, pid);
         end
       end
     end);
@@ -65,11 +66,12 @@ return {
     local need = {};
     local iparty = AshitaCore:GetDataManager():GetParty();
     local zone = iparty:GetMemberZone(0);
-    party:PartyBuffs(function(i, buffs)
-      local samez = zone == iparty:GetMemberZone(i);
-      local alive = iparty:GetMemberCurrentHPP(i) > 0;
+    party:PartyBuffs(function(i, buffs, pid)
+      local idx = party:ById(pid);
+      local samez = zone == iparty:GetMemberZone(idx);
+      local alive = iparty:GetMemberCurrentHPP(idx) > 0;
       if (alive and samez and buffs[status] ~= nil) then
-        table.insert(need, i);
+        table.insert(need, pid);
       end
     end);
     return need;
@@ -104,7 +106,7 @@ return {
       local iparty = AshitaCore:GetDataManager():GetParty();
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Protect', iparty:GetMemberServerId(need[math.random(#need)])))
+        :next(partial(magic, 'Protect', need[math.random(#need)]))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -123,7 +125,7 @@ return {
       local iparty = AshitaCore:GetDataManager():GetParty();
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Shell', iparty:GetMemberServerId(need[math.random(#need)])))
+        :next(partial(magic, 'Shell', need[math.random(#need)]))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -145,7 +147,7 @@ return {
     if (self:CanCast(spells.POISONA, levels) and #need > 0) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Poisona', iparty:GetMemberServerId(need[math.random(#need)])))
+        :next(partial(magic, 'Poisona', need[math.random(#need)]))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -154,7 +156,7 @@ return {
     if (self:CanCast(spells.BLINDNA, levels) and #need > 0) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Blindna', iparty:GetMemberServerId(need[math.random(#need)])))
+        :next(partial(magic, 'Blindna', need[math.random(#need)]))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -163,7 +165,7 @@ return {
     if (self:CanCast(spells.PARALYNA, levels) and #need > 0) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Paralyna', iparty:GetMemberServerId(need[math.random(#need)])))
+        :next(partial(magic, 'Paralyna', need[math.random(#need)]))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -179,7 +181,7 @@ return {
     if (self:CanCast(spells.SNEAK, levels) and #need > 0) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Sneak', iparty:GetMemberServerId(need[math.random(#need)])))
+        :next(partial(magic, 'Sneak', need[math.random(#need)]))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -188,7 +190,7 @@ return {
     if (self:CanCast(spells.INVISIBLE, levels) and #need > 0) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Invisible', iparty:GetMemberServerId(need[math.random(#need)])))
+        :next(partial(magic, 'Invisible', need[math.random(#need)]))
         :next(partial(wait, 12))
         :next(function(self) actions.busy = false; end));
       return true;

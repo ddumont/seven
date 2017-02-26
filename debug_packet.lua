@@ -3,10 +3,11 @@ local packets = require('packets');
 local tinc = {};
 local tout = {};
 
--- table.insert(tinc, function(id, size, packet)
+-- table.insert(tinc, 0x029, function(id, size, packet)
 --   string.char(id):hex()
 --   print('IN: ' .. packet:hex());
--- end, packets.inc.PACKET_NPC_INTERACTION);
+-- end);
+
 
 -- table.insert(tout, packets.out.PACKET_NPC_INTERACTION, function(id, size, packet)
 --   -- https://github.com/Windower/Lua/blob/422880f0e353a82bb9a11328dc4202ed76cd948a/addons/libs/packets/fields.lua#L349
@@ -36,6 +37,9 @@ local tout = {};
 
 return {
   inc = function(self, id, size, packet)
+    -- if (id ~= 0x0E) then
+    --   print(id);
+    -- end
     if (tinc[id] ~= nil) then
       tinc[id](id, size, packet);
     end

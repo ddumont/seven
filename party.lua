@@ -1,6 +1,6 @@
 local packets = require('packets');
 local config = require('config');
-local party = {{},{},{},{},{}}; -- array of buff tables
+local party = {}; -- array of buff tables
 
 return {
 
@@ -34,9 +34,8 @@ return {
         -- print('offset:' .. pidx + 1 .. ' packetid:' .. playerid .. ' packetidx:' .. partyidx .. ' id:' ..  tostring(iparty:GetMemberServerId(pidx + 1)));
 
         -- Try see if the memberindex is the correct slot to put them in.
-        local playeridx = pidx + 1;
         local buffs = {};
-        party[playeridx] = buffs;
+        party[playerid] = buffs;
         -- print(playeridx .. ',' .. tostring(party[playeridx]));
         for buff = 0, 31, 1 do
           -- 64 total bits in the mask
@@ -63,14 +62,14 @@ return {
   end,
 
   DumpBuffs = function(self)
-    self:PartyBuffs(function(i, buffs)
+    self:PartyBuffs(function(i, buffs, pid)
       if (buffs ~= nil) then
         local list = {};
         for k, v in pairs(buffs) do
           table.insert(list, k);
         end
         table.sort(list);
-        print('member'.. i .. ': ' .. ashita.settings.JSON:encode_pretty(list, nil, {}));
+        print('member'.. pid .. ': ' .. ashita.settings.JSON:encode_pretty(list, nil, {}));
       end
     end);
   end,
@@ -79,8 +78,8 @@ return {
   -- func: GetBuffs
   -- desc: Gets the buffs for a party member (player == index 0)
   ---------------------------------------------------------------------------------------------------
-  GetBuffs = function(self, index)
-    if (index == 0) then -- for the local player
+  GetBuffs = function(self, pid)
+    if (pid == 0) then -- for the local player
       local buffs = {};
       local bufftbl = AshitaCore:GetDataManager():GetPlayer():GetBuffs();
       for k, v in pairs(bufftbl) do
@@ -90,7 +89,7 @@ return {
       end
       return buffs;
     else
-      return party[index];
+      return party[pid] or {};
     end
   end,
 
@@ -99,10 +98,25 @@ return {
   -- @param cb The callback, will be passed index of party member (0 == self), and buff table
   --           return true from the cb to stop party member iteration.
   PartyBuffs = function(self, cb)
-    for i = 0, 5 do -- include current player
-      local buffs = self:GetBuffs(i);
-      if (cb(i, buffs) == true) then
+    if (cb(0, self:GetBuffs(0), GetPlayerEntity().ServerId) == true) then
+      return;
+    end
+
+    for i = 1, 5 do
+      local pid = AshitaCore:GetDataManager():GetParty():GetMemberServerId(i);
+      local buffs = self:GetBuffs(pid);
+      if (cb(i, buffs, pid) == true) then
         break;
+      end
+    end
+  end,
+
+  ById = function(self, pid)
+    if (pid == 0 or pid == GetPlayerEntity().ServerId) then return 0 end
+    local iparty = AshitaCore:GetDataManager():GetParty();
+    for i = 1, 5 do
+      if (pid == AshitaCore:GetDataManager():GetParty():GetMemberServerId(i)) then
+        return i;
       end
     end
   end,
