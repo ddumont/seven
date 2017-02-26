@@ -40,6 +40,8 @@ return {
       self:follow(config.leader or actor);
     elseif (msg == 'stay') then
       self:stay();
+    elseif (msg == 'rest') then
+      self:rest();
     elseif (msg == 'reload') then
       self:reload();
     elseif (msg == 'shutdown') then
@@ -166,6 +168,10 @@ return {
 
   shutdown = function(self)
     AshitaCore:GetChatManager():QueueCommand("/shutdown", -1);
+  end,
+
+  rest = function(self)
+    AshitaCore:GetChatManager():QueueCommand('/heal', -1);
   end
 
 };

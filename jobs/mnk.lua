@@ -22,7 +22,6 @@ return {
     -- Attempt to weaponskill when you have TP
     elseif (cnf.ATTACK_TID and tid == cnf.ATTACK_TID and tp >= 1000) then
       if (cnf.WeaponSkillID ~= nil ) then
-        print('CP1 '..cnf.WeaponSkillID);
         if AshitaCore:GetDataManager():GetPlayer():HasWeaponSkill(tonumber(cnf.WeaponSkillID)) then
           for k, v in pairs(packets.weaponskills) do
             if ( tonumber(cnf.WeaponSkillID) == tonumber(v)) then
