@@ -4,6 +4,7 @@ local actions = require('actions');
 local packets = require('packets');
 local buffs = require('behaviors.buffs')
 local healing = require('behaviors.healing');
+local jwhm = require('jobs.whm');
 
 local spells = packets.spells;
 local status = packets.status;
@@ -75,6 +76,12 @@ return {
     elseif (buffs:CanCast(spells.FOE_REQUIEM, spell_levels)) then
       action:next(partial(magic, '"Foe Requiem"', tid))
         :next(partial(wait, 7));
+    end
+
+    local sub = AshitaCore:GetDataManager():GetPlayer():GetSubJob();
+    if (sub == Jobs.WhiteMage and buffs:CanCast(spells.DIA, jwhm.spell_levels)) then
+      action:next(partial(magic, 'Dia', tid))
+        :next(partial(wait, 4));
     end
 
     -- if (buffs:CanCast(spells.LIGHTNING_THRENODY, spell_levels)) then

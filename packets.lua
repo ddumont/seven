@@ -106,6 +106,7 @@ local packets = {
     POISONA = 14,
     PARALYNA = 15,
     BLINDNA = 16,
+    DIA = 23,
     PROTECT = 43,
     SHELL = 48,
     STONESKIN = 54,

@@ -5,6 +5,7 @@ local buffs = require('behaviors.buffs')
 local healing = require('behaviors.healing');
 
 local spell_levels = {};
+spell_levels[packets.spells.DIA] = 3;
 spell_levels[packets.spells.POISONA] = 6;
 spell_levels[packets.spells.PROTECT] = 7;
 spell_levels[packets.spells.PROTECTRA] = 7;
@@ -18,6 +19,7 @@ spell_levels[packets.spells.INVISIBLE] = 25;
 spell_levels[packets.spells.STONESKIN] = 28;
 
 return {
+  spell_levels = spell_levels,
 
   tick = function(self)
     if (actions.busy) then return end
