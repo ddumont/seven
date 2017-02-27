@@ -99,7 +99,7 @@ return {
   --           return true from the cb to stop party member iteration.
   PartyBuffs = function(self, cb)
     local ent = GetPlayerEntity();
-    if (ent and cb(0, self:GetBuffs(0), ent.ServerId) == true) then
+    if (not ent or cb(0, self:GetBuffs(0), ent.ServerId) == true) then
       return;
     end
 
@@ -113,7 +113,8 @@ return {
   end,
 
   ById = function(self, pid)
-    if (pid == 0 or pid == GetPlayerEntity().ServerId) then return 0 end
+    local ent = GetPlayerEntity();
+    if (pid == 0 or (ent and pid == ent.ServerId)) then return 0 end
     local iparty = AshitaCore:GetDataManager():GetParty();
     for i = 1, 5 do
       if (pid == AshitaCore:GetDataManager():GetParty():GetMemberServerId(i)) then
