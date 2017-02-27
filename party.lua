@@ -98,7 +98,8 @@ return {
   -- @param cb The callback, will be passed index of party member (0 == self), and buff table
   --           return true from the cb to stop party member iteration.
   PartyBuffs = function(self, cb)
-    if (cb(0, self:GetBuffs(0), GetPlayerEntity().ServerId) == true) then
+    local ent = GetPlayerEntity();
+    if (ent and cb(0, self:GetBuffs(0), ent.ServerId) == true) then
       return;
     end
 
