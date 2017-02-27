@@ -73,7 +73,6 @@ return {
           key = key .. '_' .. strength;
           spell = spell .. ' ' .. strength;
         end
-        print(key .. spell)
         if (buffs:CanCast(spells[key], spell_levels)) then
           actions.busy = true;
           actions:queue(actions:new()
