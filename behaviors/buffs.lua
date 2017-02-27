@@ -10,9 +10,13 @@ return {
   -- Can the player cast this spell?
   -- @param the spell id
   -- @param the spell level table
-  CanCast = function(self, spell, levels)
+  CanCast = function(self, spell, levels, isSub)
+    local iparty = AshitaCore:GetDataManager():GetParty();
     local player = AshitaCore:GetDataManager():GetPlayer();
-    local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
+    local lvl = iparty:GetMemberMainJobLevel(0);
+    if (isSub) then
+      lvl = ipary:GetMemberSubJobLevel(0);
+    end
     return player:HasSpell(spell) and levels[spell] ~= nil and lvl >= levels[spell];
   end,
 
