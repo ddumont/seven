@@ -57,7 +57,7 @@ return {
     if (#need == 0) then
       local alive = iparty:GetMemberCurrentHPP(0) > 0;
       if (alive and party:GetBuffs(0)[buff] == nil) then
-        table.insert(need, 0);
+        table.insert(need, GetPlayerEntity().ServerId);
       end
     end
     return need;
@@ -192,6 +192,7 @@ return {
     end
     need = self:NeedBuff(status.EFFECT_INVISIBLE, Jobs.WhiteMage);
     if (self:CanCast(spells.INVISIBLE, levels) and #need > 0) then
+      -- print('need invis ' .. ashita.settings.JSON:encode_pretty(need, nil, { pretty = true, align_keys = false, indent = '    ' }));
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, 'Invisible', need[math.random(#need)]))

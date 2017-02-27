@@ -41,8 +41,9 @@ return {
 
   tick = function(self)
     if (actions.busy) then return end
-
     local status = party:GetBuffs(0);
+    if (status[packets.status.EFFECT_INVISIBLE]) then return end
+
 
     if (not status[packets.status.EFFECT_BALLAD]) then
       local strengths = {''};
