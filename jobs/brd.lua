@@ -46,9 +46,9 @@ return {
 
     if (not status[packets.status.EFFECT_BALLAD]) then
       local strengths = {''};
-      local key = 'MAGES_BALLAD'
-      local spell = "Mage's Ballad";
       for i, strength in ipairs(strengths) do
+        local key = 'MAGES_BALLAD'
+        local spell = "Mage's Ballad";
         if (strength ~= '') then
           key = key .. '_' .. strength;
           spell = spell .. ' ' .. strength;
@@ -66,9 +66,9 @@ return {
 
     if (not status[packets.status.EFFECT_PAEON]) then
       local strengths = {'IV','III','II',''};
-      local key = 'ARMYS_PAEON'
-      local spell = "Army's Paeon";
       for i, strength in ipairs(strengths) do
+        local key = 'ARMYS_PAEON'
+        local spell = "Army's Paeon";
         if (strength ~= '') then
           key = key .. '_' .. strength;
           spell = spell .. ' ' .. strength;
@@ -107,9 +107,9 @@ return {
     local action = actions:new();
 
     local strengths = {'III','II',''};
-    local key = 'FOE_REQUIEM'
-    local spell = 'FOE REQUIEM';
     for i, strength in ipairs(strengths) do
+      local key = 'FOE_REQUIEM'
+      local spell = 'FOE REQUIEM';
       if (strength ~= '') then
         key = key .. '_' .. strength;
         spell = spell .. ' ' .. strength;
