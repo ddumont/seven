@@ -9,10 +9,13 @@ return {
     local need = {};
     local player = GetPlayerEntity();
     local iparty = AshitaCore:GetDataManager():GetParty();
+    local zone = iparty:GetMemberZone(0);
     local i;
     for i = 0, 5 do
       local hpp = party:GetHPP(i);
-      if (hpp > 0 and hpp < 80) then
+      local samez = zone == iparty:GetMemberZone(i);
+      local alive = iparty:GetMemberCurrentHPP(i) > 0;
+      if (alive and samez and hpp > 0 and hpp < 80) then
         table.insert(need, i);
       end
       table.sort(need, function(a, b)
@@ -35,6 +38,7 @@ return {
         target = iparty:GetMemberServerId(target);
       end
 
+print('foo')
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Cure II"', target))

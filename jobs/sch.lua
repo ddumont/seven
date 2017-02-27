@@ -13,6 +13,8 @@ spell_levels[packets.spells.BLINDNA] = 17;
 spell_levels[packets.spells.SHELL] = 20;
 spell_levels[packets.spells.SNEAK] = 20;
 spell_levels[packets.spells.INVISIBLE] = 25;
+spell_levels[packets.spells.PROTECT_II] = 30;
+spell_levels[packets.spells.SHELL_II] = 40;
 spell_levels[packets.spells.STONESKIN] = 44;
 
 return {
