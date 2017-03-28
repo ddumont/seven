@@ -17,10 +17,10 @@ local spell_levels = {};
 return {
 
   tick = function(self)
-    if (healing:Heal(spell_levels)) then return end -- first priority...
-    if (buffs:Cleanse(spell_levels)) then return end
-    if (buffs:SneakyTime(spell_levels)) then return end
-    if (buffs:IdleBuffs(spell_levels)) then return end
+    -- if (healing:Heal(spell_levels)) then return end -- first priority...
+    -- if (buffs:Cleanse(spell_levels)) then return end
+    -- if (buffs:SneakyTime(spell_levels)) then return end
+    -- if (buffs:IdleBuffs(spell_levels)) then return end
 
     -- local cnf = config:get();
     -- local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();

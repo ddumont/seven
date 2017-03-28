@@ -180,6 +180,17 @@ ashita.register_event('command', function(cmd, nType)
     :next(function(self, stalled)
       actions:queue(actions:InteractNpc(tid, tidx));
     end))
+  elseif (args[2] == 'bard') then
+    if (args[4]) then
+      args[4] = '"'..args[4]..'"';
+    end
+    AshitaCore:GetChatManager():QueueCommand('/l2 bard ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
+  elseif (args[2] == 'yaw') then
+    local ientity = AshitaCore:GetDataManager():GetEntity();
+    local rot = ientity:GetLocalYaw(GetPlayerEntity().TargetIndex);
+    local trot = ientity:GetLocalYaw(tidx);
+    print(math.abs(rot - trot));
+    print(os.date("%j"))
   end
 
   return true;

@@ -2,7 +2,7 @@ local config = nil;
 
 function load_settings(player)
   config = ashita.settings.load_merged(_addon.path .. '/settings/' .. player .. '/settings.json', {
-    -- defaults
+    bard = {}
   });
   return config;
 end

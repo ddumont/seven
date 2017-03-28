@@ -93,6 +93,7 @@ local packets = {
     EFFECT_BALLAD                   = 196,
     EFFECT_MINNE                    = 197,
     EFFECT_MINUET                   = 198,
+    EFFECT_MAZURKA                  = 219,
     EFFECT_FOOD                     = 251,
     EFFECT_DRAIN_SAMBA              = 368,
     EFFECT_POISON_II                = 540,
@@ -185,6 +186,8 @@ local packets = {
     DARK_THRENODY = 461,
     MAGIC_FINALE = 462,
     FOE_LULLABY = 463,
+    CHOCOBO_MAZURKA = 465,
+    RAPTOR_MAZURKA = 467,
   },
 
   weaponskills = {

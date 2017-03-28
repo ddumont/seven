@@ -3,6 +3,7 @@ local actions = require('actions');
 local combat = require('combat');
 local config = require('config');
 local fov = require('fov');
+local jbrd = require('jobs.brd');
 
 local queue = {};
 local start = 0;
@@ -27,8 +28,9 @@ return {
 
     local actor = struct.unpack('s', packet, 0x8 + 1);
     local msg = struct.unpack('s', packet, 0x18 + 1);
+    local args = msg:args();
 
-    if (msg == 'leader') then
+    if (args[1] == 'leader') then
       actions:leader(actor);
       config:save();
     end
@@ -36,56 +38,50 @@ return {
     -- If we're the leader...  then don't listen.
     if (config:get().leader == GetPlayerEntity().Name) then return end
 
-    if (msg == 'follow') then
+    if (args[1] == 'follow') then
       self:follow(config.leader or actor);
-    elseif (msg == 'stay') then
+    elseif (args[1] == 'stay') then
       self:stay();
-    elseif (msg == 'rest') then
+    elseif (args[1] == 'rest') then
       self:rest();
-    elseif (msg == 'reload') then
+    elseif (args[1] == 'reload') then
       self:reload();
-    elseif (msg == 'shutdown') then
+    elseif (args[1] == 'shutdown') then
       self:shutdown();
-    elseif (msg:sub(2,3) == 'ov') then
-      local fovgov = msg:sub(1,3);
-      msg = msg:sub(5);
-
-      local tid, tidx;
-      tid, tidx, msg = findIds(msg);
-
-      if (msg == 'cancel') then
-        fov:cancel(fovgov, tid, tidx);
-      elseif(msg == 'buffs') then
-        fov:buffs(fovgov, tid, tidx);
+    elseif (args[1] == 'gov' or args[1] == 'fov') then
+      if (args[4] == 'cancel') then
+        fov:cancel(args[1], args[2], args[3]);
+      elseif(args[4] == 'buffs') then
+        fov:buffs(args[1], args[2], args[3]);
       else
-        fov:page(fovgov, tid, tidx, msg);
+        fov:page(args[1], args[2], args[3], args[4]);
       end
-    elseif (msg:sub(1,6) == 'debuff') then
-      combat:debuff(tonumber(msg:sub(8)));
-    elseif (msg:sub(1,4) == 'nuke') then
-      combat:nuke(tonumber(msg:sub(6)));
-    elseif (msg:sub(1,5) == 'sleep') then
-      combat:sleep(tonumber(msg:sub(7)));
-    elseif (msg:sub(1,6) == 'attack') then
-      combat:attack(tonumber(msg:sub(8)));
-    elseif (msg:sub(1,6) == 'signet') then
-      actions:signet(findIds(msg:sub(8)))
-    elseif (msg:sub(1,10) == 'warpscroll') then
-      local tid, tidx = findIds(msg:sub(12))
-      if (tidx ~= 0) then
-        actions:warp_scroll(tid, tidx);
+    elseif (args[1] == 'debuff') then
+      combat:debuff(tonumber(args[2]));
+    elseif (args[1] == 'nuke') then
+      combat:nuke(tonumber(args[2]));
+    elseif (args[1] == 'sleep') then
+      combat:sleep(tonumber(args[2]));
+    elseif (args[1] == 'attack') then
+      combat:attack(tonumber(args[2]));
+    elseif (args[1] == 'signet') then
+      actions:signet(args[2], args[3]);
+    elseif (args[1] == 'warpscroll') then
+      if (args[3] ~= '0') then
+        actions:warp_scroll(args[2], args[3]);
       else
-        AshitaCore:GetChatManager():QueueCommand("/item \"Instant Warp\" <me>", -1);
+        AshitaCore:GetChatManager():QueueCommand('/item "Instant Warp" <me>', -1);
       end
-    elseif (msg:sub(1,9) == 'idlebuffs') then
-      self:SetIdleBuffs(msg:sub(11));
-    elseif (msg:sub(1,10) == 'sneakytime') then
-      self:SetSneakyTime(msg:sub(12));
-    elseif (msg:sub(1,4) == 'talk') then
-      msg = msg:sub(6);
-      actions:queue(actions:InteractNpc(findIds(msg)));
-    elseif (msg:sub(1,14) == 'setweaponskill') then
-      self:SetWeaponSkill(msg:sub(16));
+    elseif (args[1] == 'idlebuffs') then
+      self:SetIdleBuffs(args[2]);
+    elseif (args[1] == 'sneakytime') then
+      self:SetSneakyTime(args[2]);
+    elseif (args[1] == 'talk') then
+      actions:queue(actions:InteractNpc(args[2], args[3]));
+    elseif (args[1] == 'setweaponskill') then
+      self:SetWeaponSkill(args[2]);
+    elseif (args[1] == 'bard' and Jobs.Bard == AshitaCore:GetDataManager():GetPlayer():GetMainJob()) then
+      jbrd:bard(unpack(args));
     end
   end,
 
