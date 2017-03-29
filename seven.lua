@@ -185,6 +185,11 @@ ashita.register_event('command', function(cmd, nType)
       args[4] = '"'..args[4]..'"';
     end
     AshitaCore:GetChatManager():QueueCommand('/l2 bard ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
+  elseif (args[2] == 'corsair') then
+    if (args[4]) then
+      args[4] = '"'..args[4]..'"';
+    end
+    AshitaCore:GetChatManager():QueueCommand('/l2 corsair ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
   elseif (args[2] == 'yaw') then
     local ientity = AshitaCore:GetDataManager():GetEntity();
     local rot = ientity:GetLocalYaw(GetPlayerEntity().TargetIndex);

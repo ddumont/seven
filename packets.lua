@@ -95,11 +95,52 @@ local packets = {
     EFFECT_MINUET                   = 198,
     EFFECT_MAZURKA                  = 219,
     EFFECT_FOOD                     = 251,
+    EFFECT_FIGHTERS_ROLL            = 310,
+    EFFECT_MONKS_ROLL               = 311,
+    EFFECT_HEALERS_ROLL             = 312,
+    EFFECT_WIZARDS_ROLL             = 313,
+    EFFECT_WARLOCKS_ROLL            = 314,
+    EFFECT_ROGUES_ROLL              = 315,
+    EFFECT_GALLANTS_ROLL            = 316,
+    EFFECT_CHAOS_ROLL               = 317,
+    EFFECT_BEAST_ROLL               = 318,
+    EFFECT_CHORAL_ROLL              = 319,
+    EFFECT_HUNTERS_ROLL             = 320,
+    EFFECT_SAMURAI_ROLL             = 321,
+    EFFECT_NINJA_ROLL               = 322,
+    EFFECT_DRACHEN_ROLL             = 323,
+    EFFECT_EVOKERS_ROLL             = 324,
+    EFFECT_MAGUSS_ROLL              = 325,
+    EFFECT_CORSAIRS_ROLL            = 326,
+    EFFECT_PUPPET_ROLL              = 327,
+    EFFECT_DANCERS_ROLL             = 328,
+    EFFECT_SCHOLARS_ROLL            = 329,
     EFFECT_DRAIN_SAMBA              = 368,
     EFFECT_POISON_II                = 540,
   },
 
   abilities = {
+    PHANTOM_ROLL = 81,
+    FIGHTERS_ROLL = 82,
+    MONKS_ROLL = 83,
+    HEALERS_ROLL = 84,
+    WIZARDS_ROLL = 85,
+    WARLOCKS_ROLL = 86,
+    ROGUES_ROLL = 87,
+    GALLANTS_ROLL = 88,
+    CHAOS_ROLL = 89,
+    BEAST_ROLL = 90,
+    CHORAL_ROLL = 91,
+    HUNTERS_ROLL = 92,
+    SAMURAI_ROLL = 93,
+    NINJA_ROLL = 94,
+    DRACHEN_ROLL = 95,
+    EVOKERS_ROLL = 96,
+    MAGUSS_ROLL = 97,
+    CORSAIRS_ROLL = 98,
+    PUPPET_ROLL = 99,
+    DANCERS_ROLL = 100,
+    SCHOLARS_ROLL = 101,
     DRAIN_SAMBA = 168,
   },
 
@@ -193,8 +234,40 @@ local packets = {
   weaponskills = {
     COMBO = 1,
     SHOULDER_TACKLE = 2,
-    CYCLONE = 20
-  }
+    CYCLONE = 20,
+  },
 
+  stoe = {}
 };
+
+packets.stoe.MAGES_BALLAD = packets.status.EFFECT_BALLAD;
+packets.stoe.MAGES_BALLAD_II = packets.status.EFFECT_BALLAD;
+packets.stoe.ARMYS_PAEON = packets.status.EFFECT_PAEON;
+packets.stoe.ARMYS_PAEON_II = packets.status.EFFECT_PAEON;
+packets.stoe.ARMYS_PAEON_III = packets.status.EFFECT_PAEON;
+packets.stoe.ARMYS_PAEON_IV = packets.status.EFFECT_PAEON;
+packets.stoe.RAPTOR_MAZURKA = packets.status.EFFECT_MAZURKA;
+packets.stoe.DRAIN_SAMBA = packets.status.EFFECT_DRAIN_SAMBA;
+packets.stoe.PHANTOM_ROLL = packets.status.EFFECT_PHANTOM_ROLL;
+packets.stoe.FIGHTERS_ROLL = packets.status.EFFECT_FIGHTERS_ROLL;
+packets.stoe.MONKS_ROLL = packets.status.EFFECT_MONKS_ROLL;
+packets.stoe.HEALERS_ROLL = packets.status.EFFECT_HEALERS_ROLL;
+packets.stoe.WIZARDS_ROLL = packets.status.EFFECT_WIZARDS_ROLL;
+packets.stoe.WARLOCKS_ROLL = packets.status.EFFECT_WARLOCKS_ROLL;
+packets.stoe.ROGUES_ROLL = packets.status.EFFECT_ROGUES_ROLL;
+packets.stoe.GALLANTS_ROLL = packets.status.EFFECT_GALLANTS_ROLL;
+packets.stoe.CHAOS_ROLL = packets.status.EFFECT_CHAOS_ROLL;
+packets.stoe.BEAST_ROLL = packets.status.EFFECT_BEAST_ROLL;
+packets.stoe.CHORAL_ROLL = packets.status.EFFECT_CHORAL_ROLL;
+packets.stoe.HUNTERS_ROLL = packets.status.EFFECT_HUNTERS_ROLL;
+packets.stoe.SAMURAI_ROLL = packets.status.EFFECT_SAMURAI_ROLL;
+packets.stoe.NINJA_ROLL = packets.status.EFFECT_NINJA_ROLL;
+packets.stoe.DRACHEN_ROLL = packets.status.EFFECT_DRACHEN_ROLL;
+packets.stoe.EVOKERS_ROLL = packets.status.EFFECT_EVOKERS_ROLL;
+packets.stoe.MAGUSS_ROLL = packets.status.EFFECT_MAGUSS_ROLL;
+packets.stoe.CORSAIRS_ROLL = packets.status.EFFECT_CORSAIRS_ROLL;
+packets.stoe.PUPPET_ROLL = packets.status.EFFECT_PUPPET_ROLL;
+packets.stoe.DANCERS_ROLL = packets.status.EFFECT_DANCERS_ROLL;
+packets.stoe.SCHOLARS_ROLL = packets.status.EFFECT_SCHOLARS_ROLL;
+
 return packets;

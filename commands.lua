@@ -4,6 +4,7 @@ local combat = require('combat');
 local config = require('config');
 local fov = require('fov');
 local jbrd = require('jobs.brd');
+local jcor = require('jobs.cor');
 
 local queue = {};
 local start = 0;
@@ -26,6 +27,7 @@ return {
     local chatType = struct.unpack('b', packet, 0x4 + 1);
     if (chatType ~= packets.CHAT_TYPE_LINKSHELL2) then return end
 
+    local player = AshitaCore:GetDataManager():GetPlayer();
     local actor = struct.unpack('s', packet, 0x8 + 1);
     local msg = struct.unpack('s', packet, 0x18 + 1);
     local args = msg:args();
@@ -80,8 +82,10 @@ return {
       actions:queue(actions:InteractNpc(args[2], args[3]));
     elseif (args[1] == 'setweaponskill') then
       self:SetWeaponSkill(args[2]);
-    elseif (args[1] == 'bard' and Jobs.Bard == AshitaCore:GetDataManager():GetPlayer():GetMainJob()) then
+    elseif (args[1] == 'bard' and (Jobs.Bard == player:GetMainJob() or Jobs.Bard == player:GetSubJob())) then
       jbrd:bard(unpack(args));
+    elseif (args[1] == 'corsair' and (Jobs.Corsair == player:GetMainJob() or Jobs.Corsair == player:GetSubJob())) then
+      jcor:corsair(unpack(args));
     end
   end,
 

@@ -2,7 +2,8 @@ local config = nil;
 
 function load_settings(player)
   config = ashita.settings.load_merged(_addon.path .. '/settings/' .. player .. '/settings.json', {
-    bard = {}
+    bard = {},
+    corsair = {}
   });
   return config;
 end
