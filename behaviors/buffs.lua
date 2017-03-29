@@ -5,27 +5,38 @@ local packets = require('packets');
 
 local spells = packets.spells;
 local status = packets.status;
+
+-- What is level, and are we talking about your main job or sub job?  Takes into account level sync!
+-- @param true/false on checking for SUBJOB
+function JobLvlCheck (isSub)
+    local iparty = AshitaCore:GetDataManager():GetParty();
+    local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
+    if (isSub) then
+      local maxlvlsub = AshitaCore:GetDataManager():GetPlayer():GetSubJobLevel();
+      lvl = math.min(math.modf(lvl/2),maxlvlsub);
+    end
+    return lvl
+end
+
 return {
 
   -- Can the player cast this spell?
   -- @param the spell id
   -- @param the spell level table
+  -- @param true/false on checking for SUBJOB
   CanCast = function(self, spell, levels, isSub)
-    local iparty = AshitaCore:GetDataManager():GetParty();
     local player = AshitaCore:GetDataManager():GetPlayer();
-    local lvl = iparty:GetMemberMainJobLevel(0);
-    if (isSub) then
-      lvl = ipary:GetMemberSubJobLevel(0);
-    end
+    local lvl = JobLvlCheck(isSub);
     return player:HasSpell(spell) and levels[spell] ~= nil and lvl >= levels[spell];
   end,
 
   -- Can the player use this ability?
   -- @param the ability id
   -- @param the ability level table
-  IsAble = function(self, ability, levels)
-    local player = AshitaCore:GetDataManager():GetPlayer();
-    local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
+  -- @param true/false on checking for SUBJOB
+  IsAble = function(self, ability, levels, isSub)
+    local iparty = AshitaCore:GetDataManager():GetParty();
+    local lvl = JobLvlCheck(isSub);
     return levels[ability] ~= nil and lvl >= levels[ability];
   end,
 

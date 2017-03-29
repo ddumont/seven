@@ -7,7 +7,7 @@ local healing = require('behaviors.healing');
 local jwhm = require('jobs.whm');
 
 local spells = packets.spells;
-local status = packets.status;
+local stoe = packets.stoe;
 
 local spell_levels = {};
 spell_levels[packets.spells.KNIGHTS_MINNE] = 1;
@@ -39,18 +39,9 @@ spell_levels[packets.spells.FOE_REQUIEM_IV] = 47;
 spell_levels[packets.spells.MAGES_BALLAD_II] = 55;
 spell_levels[packets.spells.CHOCOBO_MAZURKA] = 73;
 
--- spells to effect
-local stoe = {
-  MAGES_BALLAD = packets.status.EFFECT_BALLAD,
-  MAGES_BALLAD_II = packets.status.EFFECT_BALLAD,
-  ARMYS_PAEON = packets.status.EFFECT_PAEON,
-  ARMYS_PAEON_II = packets.status.EFFECT_PAEON,
-  ARMYS_PAEON_III = packets.status.EFFECT_PAEON,
-  ARMYS_PAEON_IV = packets.status.EFFECT_PAEON,
-  RAPTOR_MAZURKA = packets.status.EFFECT_MAZURKA,
-};
 
 return {
+  spell_levels = spell_levels,
 
   tick = function(self)
     if (actions.busy) then return end
