@@ -82,7 +82,8 @@ ashita.register_event('render', function()
   local t0 = clock();
   if (t0 - last > 0.5) then
     last = t0;
-    if (config:get()['stay'] == true) then
+    local cnf = config:get();
+    if (cnf ~= nil and cnf['stay'] == true) then
       return commands:stay();
     end
     actions:tick();

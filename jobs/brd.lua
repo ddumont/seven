@@ -112,7 +112,7 @@ function jbrd:attack(tid)
   end
 
   if (buffs:CanCast(spells.WATER_THRENODY, spell_levels)) then
-    action:next(partial(magic, '"Water Threnody"', tid))
+    action:next(partial(magic, '"Fire Threnody"', tid))
       :next(partial(wait, 7));
   end
 
