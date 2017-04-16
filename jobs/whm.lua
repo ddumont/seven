@@ -17,19 +17,22 @@ spell_levels[packets.spells.SHELLRA] = 17;
 spell_levels[packets.spells.SNEAK] = 20;
 spell_levels[packets.spells.INVISIBLE] = 25;
 spell_levels[packets.spells.STONESKIN] = 28;
+spell_levels[packets.spells.CURSNA] = 29;
+spell_levels[packets.spells.STONA] = 39;
 
-return {
+local jwhm = {
   spell_levels = spell_levels,
-
-  tick = function(self)
-    if (actions.busy) then return end
-    if (healing:Heal(spell_levels)) then return end -- first priority...
-    if (buffs:Cleanse(spell_levels)) then return end
-    if (buffs:SneakyTime(spell_levels)) then return end
-    if (buffs:IdleBuffs(spell_levels)) then return end
-  end,
-
-  attack = function(self, tid)
-  end
-
 };
+
+function jwhm:tick()
+  if (actions.busy) then return end
+  if (healing:Heal(spell_levels)) then return end -- first priority...
+  if (buffs:Cleanse(spell_levels)) then return end
+  if (buffs:SneakyTime(spell_levels)) then return end
+  if (buffs:IdleBuffs(spell_levels)) then return end
+end
+
+function jwhm:attack(tid)
+end
+
+return jwhm;

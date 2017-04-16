@@ -76,10 +76,14 @@ local packets = {
     MENU_CANCEL_REGIME   = 3
   },
 
+  --https://github.com/DarkstarProject/darkstar/blob/master/scripts/globals/status.lua#L129
   status = {
     EFFECT_POISON                   = 3,
     EFFECT_PARALYSIS                = 4,
     EFFECT_BLINDNESS                = 5,
+    EFFECT_PETRIFICATION            = 7,
+    EFFECT_CURSE_I                  = 9,
+    EFFECT_CURSE_II                 = 20,
     EFFECT_STONESKIN                = 37,
     EFFECT_PROTECT                  = 40,
     EFFECT_SHELL                    = 41,
@@ -107,6 +111,8 @@ local packets = {
     POISONA = 14,
     PARALYNA = 15,
     BLINDNA = 16,
+    STONA = 18,
+    CURSNA = 20,
     DIA = 23,
     PROTECT = 43,
     PROTECT_II = 44,

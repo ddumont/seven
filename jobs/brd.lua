@@ -111,8 +111,8 @@ function jbrd:attack(tid)
       :next(partial(wait, 4));
   end
 
-  if (buffs:CanCast(spells.ICE_THRENODY, spell_levels)) then
-    action:next(partial(magic, '"Ice Threnody"', tid))
+  if (buffs:CanCast(spells.WATER_THRENODY, spell_levels)) then
+    action:next(partial(magic, '"Water Threnody"', tid))
       :next(partial(wait, 7));
   end
 

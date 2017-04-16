@@ -149,13 +149,14 @@ return {
   end,
 
   stay = function(self)
-    actions:queue(actions:new()
-      :next(function(self)
-        AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 down", -1);
-      end)
-      :next(function(self)
-        AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 up", -1);
-      end));
+    local cnf = config:get();
+    if (cnf['stay'] == nil) then
+      cnf['stay'] = true;
+      AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 down", -1);
+    elseif (cnf['stay'] == true) then
+      cnf['stay'] = nil;
+      AshitaCore:GetChatManager():QueueCommand("/sendkey numpad7 up", -1);
+    end
   end,
 
   reload = function(self)
