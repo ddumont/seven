@@ -12,7 +12,7 @@ return {
     if (config == nil) then
       local player = GetPlayerEntity();
       if (player == nil or player.Name == nil) then
-        log('warning: error loading config, player name not found.');
+        -- print('warn: error loading config, player name not found.');
         return nil;
       end
 

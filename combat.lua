@@ -90,6 +90,7 @@ return {
 
 
   tick = function(self)
+    if (config:get() == nil) then return end
     local main = AshitaCore:GetDataManager():GetPlayer():GetMainJob();
 
     for jobid, job in pairs(map) do

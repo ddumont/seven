@@ -15,7 +15,7 @@ return {
       if (type == packets.INVITE_TYPE_PARTY and actor == config:get().leader) then
         AshitaCore:GetChatManager():QueueCommand('/join', 0);
       elseif (type == packets.INVITE_TYPE_PARTY) then
-        print('actor: ' .. actor .. ' leader: ' .. config:get().leader);
+        print('actor: ' .. actor .. ' leader: ' .. tostring(config:get().leader));
       end
     end
 

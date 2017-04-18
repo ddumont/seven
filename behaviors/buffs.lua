@@ -85,6 +85,7 @@ end
 -- cast idle buffs
 -- @param table of spell levels
 function buffs:IdleBuffs(levels)
+  if (not(config:get())) then return end
   if (config:get()['IdleBuffs'] ~= true) then return end
   if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 70) then return end
 
