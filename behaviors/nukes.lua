@@ -19,8 +19,6 @@ return {
   -- cast nuke on target
   -- @param table of spell levels
   Nuke = function(self, tid, levels)
-    local buffs = party:GetBuffs(0);
-
     local names = {'THUNDER','BLIZZARD','FIRE','AERO','WATER','STONE'};
     local strengths = {'IV','III','II',''};
     local waits = {12,6,4,2};

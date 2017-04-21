@@ -39,14 +39,14 @@ return {
         -- print(playeridx .. ',' .. tostring(party[playeridx]));
         for buff = 0, 31, 1 do
           -- 64 total bits in the mask
-          local shifted = bit.rshift(mask, 62 - (2 * buff)); -- move the 2 bits all the way to the right
+          local shifted = bit.rshift(mask, 2 * buff); -- move the 2 bits all the way to the right
           shifted = bit.band(shifted, 3) -- only the last 2 bits
 
           local base = struct.unpack('I1', packet, offset + 16 + buff);
           local buffid = (256 * shifted) + base;
 
           if (base ~= 0xFF and base ~= 0x00) then
-            -- print("Party member: " .. pidx .. " buff: " .. buffid);
+            -- print("Party member: " .. pidx .. " buff: " .. buffid .. " shifted: " .. shifted .. " mask: " .. mask);
             if (buffs[buffid] == nil) then
               buffs[buffid] = true;
             elseif (buffs[buffid] == true) then

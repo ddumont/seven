@@ -87,55 +87,78 @@ end
 function buffs:IdleBuffs(levels)
   if (not(config:get())) then return end
   if (config:get()['IdleBuffs'] ~= true) then return end
-  if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 70) then return end
 
   local need = buffs:NeedBuff(status.EFFECT_PROTECT);
-  -- print('need prot ' .. ashita.settings.JSON:encode_pretty(need, nil, { pretty = true, align_keys = false, indent = '    ' }));
-  if (buffs:CanCast(spells.PROTECTRA, levels) and #need > 1) then
-    actions.busy = true;
-    actions:queue(actions:new()
-      :next(partial(magic, 'Protectra', '<me>'))
-      :next(partial(wait, 18))
-      :next(function(self) actions.busy = false; end));
-    return true;
-  elseif (buffs:CanCast(spells.PROTECT, levels) and #need > 0) then
-    local iparty = AshitaCore:GetDataManager():GetParty();
-    actions.busy = true;
-    actions:queue(actions:new()
-      :next(partial(magic, 'Protect', need[math.random(#need)]))
-      :next(partial(wait, 8))
-      :next(function(self) actions.busy = false; end));
-    return true;
+  if (#need > 0) then
+    local strengths = {'IV','III','II',''};
+    local waits = {6,5,4,3};
+
+    for i, strength in ipairs(strengths) do
+      local key = 'PROTECTRA';
+      local spell = 'Protectra';
+      if (strength ~= '') then
+        key = key .. '_' .. strength;
+        spell = spell .. ' ' .. strength;
+      end
+
+      if (buffs:CanCast(spells[key], levels)) then
+        actions.busy = true;
+        actions:queue(actions:new()
+        :next(partial(magic, '"' .. spell .. '"', '<me>'))
+        :next(partial(wait, waits[i]))
+        :next(function(self) actions.busy = false; end));
+        return true;
+      end
+    end
   end
 
   need = buffs:NeedBuff(status.EFFECT_SHELL);
-  -- print('need shell ' .. ashita.settings.JSON:encode_pretty(need, nil, { pretty = true, align_keys = false, indent = '    ' }));
-  if (buffs:CanCast(spells.SHELLRA, levels) and #need > 1) then
-    actions.busy = true;
-    actions:queue(actions:new()
-      :next(partial(magic, 'Shellra', '<me>'))
-      :next(partial(wait, 18))
-      :next(function(self) actions.busy = false; end));
-    return true;
-  elseif (buffs:CanCast(spells.SHELL, levels) and #need > 0) then
-    local iparty = AshitaCore:GetDataManager():GetParty();
-    actions.busy = true;
-    actions:queue(actions:new()
-      :next(partial(magic, 'Shell', need[math.random(#need)]))
-      :next(partial(wait, 8))
-      :next(function(self) actions.busy = false; end));
-    return true;
+  if (#need > 0) then
+    local strengths = {'IV','III','II',''};
+    local waits = {6,5,4,3};
+
+    for i, strength in ipairs(strengths) do
+      local key = 'SHELLRA';
+      local spell = 'Shellra';
+      if (strength ~= '') then
+        key = key .. '_' .. strength;
+        spell = spell .. ' ' .. strength;
+      end
+
+      if (buffs:CanCast(spells[key], levels)) then
+        actions.busy = true;
+        actions:queue(actions:new()
+        :next(partial(magic, '"' .. spell .. '"', '<me>'))
+        :next(partial(wait, waits[i]))
+        :next(function(self) actions.busy = false; end));
+        return true;
+      end
+    end
   end
 
-  local mybuffs = party:GetBuffs(0);
-  if (buffs:CanCast(spells.STONESKIN, levels) and mybuffs[status.EFFECT_STONESKIN] == nil) then
-    actions.busy = true;
-    actions:queue(actions:new()
-      :next(partial(magic, 'Stoneskin', '<me>'))
-      :next(partial(wait, 16))
-      :next(function(self) actions.busy = false; end));
-    return true;
+  if (config:get().ATTACK_TID ~= nil) then
+    need = buffs:NeedBuff(status.EFFECT_AUSPICE);
+    print(#need);
+    if (#need > 0 and buffs:CanCast(spells.AUSPICE, levels)) then
+      actions.busy = true;
+      actions:queue(actions:new()
+        :next(partial(magic, 'Auspice', '<me>'))
+        :next(partial(wait, 4))
+        :next(function(self) actions.busy = false; end));
+      return true;
+    end
   end
+
+  if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 70) then return end
+  -- local mybuffs = party:GetBuffs(0);
+  -- if (buffs:CanCast(spells.STONESKIN, levels) and mybuffs[status.EFFECT_STONESKIN] == nil) then
+  --   actions.busy = true;
+  --   actions:queue(actions:new()
+  --     :next(partial(magic, 'Stoneskin', '<me>'))
+  --     :next(partial(wait, 16))
+  --     :next(function(self) actions.busy = false; end));
+  --   return true;
+  -- end
 end
 
 function buffs:Cleanse(levels)
