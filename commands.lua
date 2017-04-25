@@ -39,7 +39,7 @@ return {
     if (config:get().leader == GetPlayerEntity().Name) then return end
 
     if (args[1] == 'follow') then
-      self:follow(config.leader or actor);
+      self:follow(actor);
     elseif (args[1] == 'stay') then
       self:stay();
     elseif (args[1] == 'rest') then

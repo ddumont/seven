@@ -119,7 +119,6 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
   elseif (args[2] == 'shutdown') then
     AshitaCore:GetChatManager():QueueCommand('/l2 shutdown', 1);
-    AshitaCore:GetChatManager():QueueCommand('/shutdown', -1);
   elseif (args[2] == 'fov' or args[2] == 'gov') then
     if (args[3] == nil) then
       print('Which page?');

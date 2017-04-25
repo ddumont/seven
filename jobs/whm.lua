@@ -7,6 +7,7 @@ local healing = require('behaviors.healing');
 
 local spell_levels = {};
 spell_levels[packets.spells.DIA] = 3;
+spell_levels[packets.spells.BANISH] = 5;
 spell_levels[packets.spells.POISONA] = 6;
 spell_levels[packets.spells.PROTECT] = 7;
 spell_levels[packets.spells.PROTECTRA] = 7;
@@ -20,12 +21,14 @@ spell_levels[packets.spells.INVISIBLE] = 25;
 spell_levels[packets.spells.PROTECTRA_II] = 27;
 spell_levels[packets.spells.STONESKIN] = 28;
 spell_levels[packets.spells.CURSNA] = 29;
+spell_levels[packets.spells.BANISH_II] = 30;
 spell_levels[packets.spells.SHELLRA_II] = 37;
 spell_levels[packets.spells.STONA] = 39;
 spell_levels[packets.spells.PROTECTRA_III] = 47;
 spell_levels[packets.spells.AUSPICE] = 55;
 spell_levels[packets.spells.SHELLRA_III] = 57;
 spell_levels[packets.spells.PROTECTRA_IV] = 63;
+spell_levels[packets.spells.BANISH_III] = 65;
 spell_levels[packets.spells.SHELLRA_IV] = 68;
 
 local jwhm = {
@@ -54,6 +57,12 @@ function jwhm:attack(tid)
     :next(function(self)
       config:get().ATTACK_TID = tid;
     end));
+end
+
+function jwhm:nuke(tid)
+  if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 50) then return end
+
+  nukes:Nuke(tid, spell_levels);
 end
 
 return jwhm;

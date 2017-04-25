@@ -38,7 +38,6 @@ return {
         target = iparty:GetMemberServerId(target);
       end
 
-print('foo')
       actions.busy = true;
       actions:queue(actions:new()
         :next(partial(magic, '"Cure II"', target))

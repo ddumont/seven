@@ -1,29 +1,23 @@
-local config = nil;
+local configs = {};
 
 function load_settings(player)
-  config = ashita.settings.load_merged(_addon.path .. '/settings/' .. player .. '/settings.json', {
+  configs[player] = ashita.settings.load_merged(_addon.path .. '/settings/' .. player .. '/settings.json', {
     bard = {}
   });
-  return config;
+  return configs[player];
 end
 
 return {
-  get = function(self, cb)
-    if (config == nil) then
-      local player = GetPlayerEntity();
-      if (player == nil or player.Name == nil) then
-        -- print('warn: error loading config, player name not found.');
-        return nil;
-      end
+  get = function()
+    local entity = GetPlayerEntity();
+    if (not(entity)) then return end
+    local player = entity.Name;
 
-      load_settings(player.Name);
+    if (configs[player] == nil) then
+      load_settings(player);
     end
 
-    if cb ~= nil then
-      cb(config);
-    end
-
-    return config;
+    return configs[player];
   end,
 
   save = function(self)

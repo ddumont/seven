@@ -13,13 +13,13 @@ return {
   CanCast = function(self, spell, levels)
     local player = AshitaCore:GetDataManager():GetPlayer();
     local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
-    return player:HasSpell(spell) and levels[spell] ~= nil and lvl >= levels[spell];
+    return spell and player:HasSpell(spell) and levels[spell] ~= nil and lvl >= levels[spell];
   end,
 
   -- cast nuke on target
   -- @param table of spell levels
   Nuke = function(self, tid, levels)
-    local names = {'THUNDER','BLIZZARD','FIRE','AERO','WATER','STONE'};
+    local names = {'THUNDER','BLIZZARD','FIRE','AERO','WATER','STONE','BANISH'};
     local strengths = {'IV','III','II',''};
     local waits = {12,6,4,2};
 
