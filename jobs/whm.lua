@@ -4,6 +4,7 @@ local actions = require('actions');
 local packets = require('packets');
 local buffs = require('behaviors.buffs')
 local healing = require('behaviors.healing');
+local nukes = require('behaviors.nukes');
 
 local spell_levels = {};
 spell_levels[packets.spells.DIA] = 3;
