@@ -138,7 +138,6 @@ function buffs:IdleBuffs(levels)
 
   if (config:get().ATTACK_TID ~= nil) then
     need = buffs:NeedBuff(status.EFFECT_AUSPICE);
-    print(#need);
     if (#need > 0 and buffs:CanCast(spells.AUSPICE, levels)) then
       actions.busy = true;
       actions:queue(actions:new()
