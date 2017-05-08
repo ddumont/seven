@@ -2,6 +2,7 @@ local party = require('party');
 local config = require('config');
 local actions = require('actions');
 local packets = require('packets');
+local magic = require('magic');
 
 local spells = packets.spells;
 local status = packets.status;
@@ -35,7 +36,7 @@ return {
         if (self:CanCast(spells[key], levels)) then
           actions.busy = true;
           actions:queue(actions:new()
-            :next(partial(magic, '"' .. spell .. '"', tid))
+            :next(partial(magic.cast, magic, '"' .. spell .. '"', tid))
             :next(partial(wait, waits[i]))
             :next(function(self) actions.busy = false; end));
           return;

@@ -226,6 +226,75 @@ local actions = {
     );
   end,
 
+  corn = function(self, tid, tidx)
+    local actions = self;
+    local Inventory = AshitaCore:GetDataManager():GetInventory();
+    local idx = nil;
+    for i = 0, Inventory:GetContainerMax(0) - 1 do
+      local item_t = Inventory:GetItem(0, i);
+      if (item_t and item_t.Id == 629 and item_t.Count >= 3) then
+        idx = i;
+        break;
+      end
+    end
+
+    if (idx == nil) then
+      AshitaCore:GetChatManager():QueueCommand('/l2 LADIES AND GENTLEMEN! NO MORE CORN!', 1);
+      return;
+    end
+    self:queue(self:new():next(function()
+      local pid = packets.out.PACKET_TRADE_MENU_ITEM;
+      local packet = pgen:new(pid)
+        :push('L', tid)
+        :push('L', 3) -- slot 0 (or gil)
+        :push('L', 0):push('L', 0):push('L', 0):push('L', 0)
+        :push('L', 0):push('L', 0):push('L', 0):push('L', 0)
+        :push('L', 0) -- unk1
+        :push('B', idx) -- slot 0 (or gil)
+        :push('B', 0):push('B', 0):push('B', 0):push('B', 0)
+        :push('B', 0):push('B', 0):push('B', 0):push('B', 0)
+        :push('B', 0)
+        :push('H', tidx)
+        :push('B', 1)
+        :push('B', 0)
+        :push('B', 0)
+        :push('B', 0)
+        :get_packet();
+
+      AddOutgoingPacket(pid, packet);
+      return 'packet_in';
+    end)
+    :next(function(self, stalled, id, size, packet)
+      if (stalled or id ~= 0x1E) then
+        if (self.__count ~= nil and self.__count >= 15) then -- bail
+          print('I give up');
+          return;
+        end
+
+        local me = self;
+        if (not(me.keydown)) then
+          me.keydown = true;
+          AshitaCore:GetChatManager():QueueCommand('/sendkey return down', -1);
+          ashita.timer.once(1, function()
+            AshitaCore:GetChatManager():QueueCommand('/sendkey return up', -1);
+            ashita.timer.once(1, function()
+              me.keydown = false;
+            end);
+          end);
+        end
+
+        self.stalled = false; -- try again
+        self.count = 0; -- backdown
+        self.__count = (self.__count or 0) + 1;
+        return false;
+      else
+        ashita.timer.once(1, function()
+          actions:corn(tid, tidx);
+        end);
+      end
+    end));
+  end,
+
   leader = function(self, leader)
     config:get().leader = leader;
     print(config:get().leader);

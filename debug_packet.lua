@@ -38,7 +38,7 @@ local tout = {};
 return {
   inc = function(self, id, size, packet)
     -- if (id ~= 0x0E) then
-    --   print(id);
+    --   print('IN: ' .. packet:hex());
     -- end
     if (tinc[id] ~= nil) then
       tinc[id](id, size, packet);
@@ -46,6 +46,9 @@ return {
   end,
 
   out = function(self, id, size, packet)
+    -- if (id ~= 0x15) then
+    --   print('OUT: ' .. packet:hex());
+    -- end
     if (tout[id] ~= nil) then
       tout[id](id, size, packet);
     end

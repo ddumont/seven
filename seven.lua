@@ -17,10 +17,6 @@ function wait(time)
   return 'wait', time;
 end
 
-function magic(spell, target)
-  AshitaCore:GetChatManager():QueueCommand('/magic ' .. spell .. ' ' .. target, 0);
-end
-
 function ability(ability, target)
   AshitaCore:GetChatManager():QueueCommand('/ja ' .. ability .. ' ' .. target, 0);
 end
@@ -188,6 +184,9 @@ ashita.register_event('command', function(cmd, nType)
       args[4] = '"'..args[4]..'"';
     end
     AshitaCore:GetChatManager():QueueCommand('/l2 bard ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
+  elseif (args[2] == 'corn') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 corn' .. ' ' .. tid .. ' ' .. tidx, 1);
+    actions:corn(tid, tidx);
   elseif (args[2] == 'yaw') then
     local ientity = AshitaCore:GetDataManager():GetEntity();
     local rot = ientity:GetLocalYaw(GetPlayerEntity().TargetIndex);

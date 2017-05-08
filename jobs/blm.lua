@@ -3,6 +3,7 @@ local actions = require('actions');
 local packets = require('packets');
 local buffs = require('behaviors.buffs');
 local nukes = require('behaviors.nukes');
+local magic = require('magic');
 
 
 local spell_levels = {};
@@ -61,7 +62,7 @@ return {
   end,
 
   sleep = function(self, tid)
-    actions:queue(actions:new():next(partial(magic, 'Sleep', tid)));
+    actions:queue(actions:new():next(partial(magic.cast, magic, 'Sleep', tid)));
   end,
 
   nuke = function(self, tid)

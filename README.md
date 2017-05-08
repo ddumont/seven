@@ -74,3 +74,7 @@
 * **/seven setweaponskill [player] [weaponskill ID]**
   * Sets the weaponskill to be used by a specific player
   * *Only works if the job's behavior is setup to use weaponskills!*
+
+## misc
+* **/seven corn** ( with selbina dude targeted )
+  * Tell all bots to trade the target 3 millioncorn until they have no more left.

@@ -5,49 +5,53 @@ local packets = require('packets');
 local buffs = require('behaviors.buffs')
 local healing = require('behaviors.healing');
 local jwhm = require('jobs.whm');
+local magic = require('magic');
 
 local spells = packets.spells;
 local status = packets.status;
 
 local spell_levels = {};
-spell_levels[packets.spells.KNIGHTS_MINNE] = 1;
-spell_levels[packets.spells.VALOR_MINUET] = 3;
-spell_levels[packets.spells.ARMYS_PAEON] = 5;
-spell_levels[packets.spells.FOE_REQUIEM] = 7;
-spell_levels[packets.spells.HERB_PASTORAL] = 9;
-spell_levels[packets.spells.LIGHTNING_THRENODY] = 10;
-spell_levels[packets.spells.DARK_THRENODY] = 12;
-spell_levels[packets.spells.EARTH_THRENODY] = 14;
-spell_levels[packets.spells.ARMYS_PAEON_II] = 15;
-spell_levels[packets.spells.FOE_LULLABY] = 16;
-spell_levels[packets.spells.WATER_THRENODY] = 16;
-spell_levels[packets.spells.FOE_REQUIEM_II] = 17;
-spell_levels[packets.spells.WIND_THRENODY] = 18;
-spell_levels[packets.spells.FIRE_THRENODY] = 20;
-spell_levels[packets.spells.KNIGHTS_MINNE_II] = 21;
-spell_levels[packets.spells.ICE_THRENODY] = 22;
-spell_levels[packets.spells.VALOR_MINUET_II] = 23;
-spell_levels[packets.spells.LIGHTNING_THRENODY] = 24;
-spell_levels[packets.spells.MAGES_BALLAD] = 25;
-spell_levels[packets.spells.MAGIC_FINALE] = 33;
-spell_levels[packets.spells.ARMYS_PAEON_III] = 35;
-spell_levels[packets.spells.FOE_REQUIEM_III] = 37;
-spell_levels[packets.spells.RAPTOR_MAZURKA] = 37;
-spell_levels[packets.spells.VALOR_MINUET_III] = 43;
-spell_levels[packets.spells.ARMYS_PAEON_IV] = 45;
-spell_levels[packets.spells.FOE_REQUIEM_IV] = 47;
-spell_levels[packets.spells.MAGES_BALLAD_II] = 55;
-spell_levels[packets.spells.CHOCOBO_MAZURKA] = 73;
+spell_levels[spells.KNIGHTS_MINNE] = 1;
+spell_levels[spells.VALOR_MINUET] = 3;
+spell_levels[spells.ARMYS_PAEON] = 5;
+spell_levels[spells.FOE_REQUIEM] = 7;
+spell_levels[spells.HERB_PASTORAL] = 9;
+spell_levels[spells.LIGHTNING_THRENODY] = 10;
+spell_levels[spells.DARK_THRENODY] = 12;
+spell_levels[spells.EARTH_THRENODY] = 14;
+spell_levels[spells.ARMYS_PAEON_II] = 15;
+spell_levels[spells.FOE_LULLABY] = 16;
+spell_levels[spells.WATER_THRENODY] = 16;
+spell_levels[spells.FOE_REQUIEM_II] = 17;
+spell_levels[spells.WIND_THRENODY] = 18;
+spell_levels[spells.FIRE_THRENODY] = 20;
+spell_levels[spells.KNIGHTS_MINNE_II] = 21;
+spell_levels[spells.ICE_THRENODY] = 22;
+spell_levels[spells.VALOR_MINUET_II] = 23;
+spell_levels[spells.LIGHTNING_THRENODY] = 24;
+spell_levels[spells.MAGES_BALLAD] = 25;
+spell_levels[spells.MAGIC_FINALE] = 33;
+spell_levels[spells.ARMYS_PAEON_III] = 35;
+spell_levels[spells.FOE_REQUIEM_III] = 37;
+spell_levels[spells.RAPTOR_MAZURKA] = 37;
+spell_levels[spells.BATTLEFIELD_ELEGY] = 39;
+spell_levels[spells.VALOR_MINUET_III] = 43;
+spell_levels[spells.ARMYS_PAEON_IV] = 45;
+spell_levels[spells.FOE_REQUIEM_IV] = 47;
+spell_levels[spells.MAGES_BALLAD_II] = 55;
+spell_levels[spells.ARMYS_PAEON_V] = 65;
+spell_levels[spells.CHOCOBO_MAZURKA] = 73;
 
 -- spells to effect
 local stoe = {
-  MAGES_BALLAD = packets.status.EFFECT_BALLAD,
-  MAGES_BALLAD_II = packets.status.EFFECT_BALLAD,
-  ARMYS_PAEON = packets.status.EFFECT_PAEON,
-  ARMYS_PAEON_II = packets.status.EFFECT_PAEON,
-  ARMYS_PAEON_III = packets.status.EFFECT_PAEON,
-  ARMYS_PAEON_IV = packets.status.EFFECT_PAEON,
-  RAPTOR_MAZURKA = packets.status.EFFECT_MAZURKA,
+  MAGES_BALLAD = status.EFFECT_BALLAD,
+  MAGES_BALLAD_II = status.EFFECT_BALLAD,
+  ARMYS_PAEON = status.EFFECT_PAEON,
+  ARMYS_PAEON_II = status.EFFECT_PAEON,
+  ARMYS_PAEON_III = status.EFFECT_PAEON,
+  ARMYS_PAEON_IV = status.EFFECT_PAEON,
+  ARMYS_PAEON_V = status.EFFECT_PAEON,
+  RAPTOR_MAZURKA = status.EFFECT_MAZURKA,
 };
 
 local jbrd = {};
@@ -65,7 +69,7 @@ function jbrd:tick()
     if (buffs:CanCast(spells[cnf.bard.songvar1], spell_levels)) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, '"' .. cnf.bard.song1 .. '"', '<me>'))
+        :next(partial(magic.cast, magic, '"' .. cnf.bard.song1 .. '"', '<me>'))
         :next(partial(wait, 7))
         :next(function(self) actions.busy = false; end));
       return;
@@ -76,7 +80,7 @@ function jbrd:tick()
     if (buffs:CanCast(spells[cnf.bard.songvar2], spell_levels)) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, '"' .. cnf.bard.song2 .. '"', '<me>'))
+        :next(partial(magic.cast, magic, '"' .. cnf.bard.song2 .. '"', '<me>'))
         :next(partial(wait, 7))
         :next(function(self) actions.busy = false; end));
       return;
@@ -87,42 +91,40 @@ end
 function jbrd:attack(tid)
   local action = actions:new();
 
-  local strengths = {'III','II',''};
-  for i, strength in ipairs(strengths) do
-    local key = 'FOE_REQUIEM'
-    local spell = 'FOE REQUIEM';
-    if (strength ~= '') then
-      key = key .. '_' .. strength;
-      spell = spell .. ' ' .. strength;
-    end
-    if (buffs:CanCast(spells[key], spell_levels)) then
-      actions.busy = true;
-      actions:queue(actions:new()
-        :next(partial(magic, '"' .. spell .. '"', tid))
-        :next(partial(wait, 7))
-        :next(function(self) actions.busy = false; end));
-      break;
-    end
+  if (buffs:CanCast(spells.BATTLEFIELD_ELEGY, spell_levels)) then
+    actions.busy = true;
+    action:next(partial(magic.cast, magic, '"Battlefield Elegy"', tid))
+    :next(partial(wait, 7));
+  end
+
+  local spell = magic:highest('FOE_REQUIEM', spell_levels);
+  if (spell) then
+    actions.busy = true;
+    actions:queue(actions:new()
+      :next(partial(magic.cast, magic, '"' .. spell .. '"', tid))
+      :next(partial(wait, 7))
+      :next(function(self) actions.busy = false; end));
   end
 
   local sub = AshitaCore:GetDataManager():GetPlayer():GetSubJob();
   if (sub == Jobs.WhiteMage and buffs:CanCast(spells.DIA, jwhm.spell_levels)) then
-    action:next(partial(magic, 'Dia', tid))
+    actions.busy = true;
+    action:next(partial(magic.cast, magic, 'Dia', tid))
       :next(partial(wait, 5));
   end
 
-  if (buffs:CanCast(spells.WATER_THRENODY, spell_levels)) then
-    action:next(partial(magic, '"Ice Threnody"', tid))
+  if (buffs:CanCast(spells.ICE_THRENODY, spell_levels)) then
+    actions.busy = true;
+    action:next(partial(magic.cast, magic, '"Ice Threnody"', tid))
       :next(partial(wait, 7));
   end
-
   actions:queue(action);
 end
 
 function jbrd:sleep(tid)
   if (buffs:CanCast(spells.FOE_LULLABY, spell_levels)) then
     actions:queue(actions:new()
-      :next(partial(magic, '"Foe Lullaby"', tid))
+      :next(partial(magic.cast, magic, '"Foe Lullaby"', tid))
       :next(partial(wait, 7)));
   end
 end
@@ -163,12 +165,12 @@ function jbrd:bard(bard, command, song, silent)
       brd['songvar2'] = nil;
       song2 = 'none';
     elseif (command == 'run') then
-      jbrd:bard(bard, '1', 'raptor mazurka', true)
-      jbrd:bard(bard, '2', 'chocobo mazurka')
+      jbrd:bard(bard, '1', 'raptor mazurka', true);
+      jbrd:bard(bard, '2', 'chocobo mazurka');
       return;
     elseif (command == 'sustain') then
-      jbrd:bard(bard, '1', "mage's ballad", true)
-      jbrd:bard(bard, '2', "army's paeon iv")
+      jbrd:bard(bard, '1', "mage's ballad", true);
+      jbrd:bard(bard, '2', "army's paeon v");
       return;
     end
     config:save();

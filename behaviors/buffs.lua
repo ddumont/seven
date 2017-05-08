@@ -2,6 +2,7 @@ local party = require('party');
 local config = require('config');
 local actions = require('actions');
 local packets = require('packets');
+local magic = require('magic');
 
 local spells = packets.spells;
 local status = packets.status;
@@ -104,7 +105,7 @@ function buffs:IdleBuffs(levels)
       if (buffs:CanCast(spells[key], levels)) then
         actions.busy = true;
         actions:queue(actions:new()
-        :next(partial(magic, '"' .. spell .. '"', '<me>'))
+        :next(partial(magic.cast, magic, '"' .. spell .. '"', '<me>'))
         :next(partial(wait, waits[i]))
         :next(function(self) actions.busy = false; end));
         return true;
@@ -128,7 +129,7 @@ function buffs:IdleBuffs(levels)
       if (buffs:CanCast(spells[key], levels)) then
         actions.busy = true;
         actions:queue(actions:new()
-        :next(partial(magic, '"' .. spell .. '"', '<me>'))
+        :next(partial(magic.cast, magic, '"' .. spell .. '"', '<me>'))
         :next(partial(wait, waits[i]))
         :next(function(self) actions.busy = false; end));
         return true;
@@ -141,7 +142,7 @@ function buffs:IdleBuffs(levels)
     if (#need > 0 and buffs:CanCast(spells.AUSPICE, levels)) then
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, 'Auspice', '<me>'))
+        :next(partial(magic.cast, magic, 'Auspice', '<me>'))
         :next(partial(wait, 4))
         :next(function(self) actions.busy = false; end));
       return true;
@@ -153,7 +154,7 @@ function buffs:IdleBuffs(levels)
   -- if (buffs:CanCast(spells.STONESKIN, levels) and mybuffs[status.EFFECT_STONESKIN] == nil) then
   --   actions.busy = true;
   --   actions:queue(actions:new()
-  --     :next(partial(magic, 'Stoneskin', '<me>'))
+  --     :next(partial(magic.cast, magic, 'Stoneskin', '<me>'))
   --     :next(partial(wait, 16))
   --     :next(function(self) actions.busy = false; end));
   --   return true;
@@ -166,7 +167,7 @@ function buffs:Cleanse(levels)
   if (buffs:CanCast(spells.POISONA, levels) and #need > 0) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Poisona', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Poisona', need[math.random(#need)]))
       :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
     return true;
@@ -175,7 +176,7 @@ function buffs:Cleanse(levels)
   if (buffs:CanCast(spells.BLINDNA, levels) and #need > 0) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Blindna', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Blindna', need[math.random(#need)]))
       :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
     return true;
@@ -184,7 +185,7 @@ function buffs:Cleanse(levels)
   if (buffs:CanCast(spells.PARALYNA, levels) and #need > 0) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Paralyna', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Paralyna', need[math.random(#need)]))
       :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
     return true;
@@ -193,7 +194,7 @@ function buffs:Cleanse(levels)
   if (buffs:CanCast(spells.CURSNA, levels) and #need > 0) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Cursna', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Cursna', need[math.random(#need)]))
       :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
     return true;
@@ -202,7 +203,7 @@ function buffs:Cleanse(levels)
   if (buffs:CanCast(spells.CURSNA, levels) and #need > 0) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Cursna', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Cursna', need[math.random(#need)]))
       :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
     return true;
@@ -211,7 +212,7 @@ function buffs:Cleanse(levels)
   if (buffs:CanCast(spells.STONA, levels) and #need > 0) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Stona', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Stona', need[math.random(#need)]))
       :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
     return true;
@@ -227,7 +228,7 @@ function buffs:SneakyTime(levels)
   if (buffs:CanCast(spells.SNEAK, levels) and #need > 0) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Sneak', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Sneak', need[math.random(#need)]))
       :next(partial(wait, 8))
       :next(function(self) actions.busy = false; end));
     return true;
@@ -237,7 +238,7 @@ function buffs:SneakyTime(levels)
     -- print('need invis ' .. ashita.settings.JSON:encode_pretty(need, nil, { pretty = true, align_keys = false, indent = '    ' }));
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic, 'Invisible', need[math.random(#need)]))
+      :next(partial(magic.cast, magic, 'Invisible', need[math.random(#need)]))
       :next(partial(wait, 12))
       :next(function(self) actions.busy = false; end));
     return true;

@@ -3,6 +3,7 @@ local packets = require('packets');
 local config = require('config');
 local party = require('party');
 local pgen = require('pgen');
+local magic = require('magic');
 
 local jblm = require('jobs.blm');
 local jbrd = require('jobs.brd');
@@ -41,19 +42,19 @@ return {
 
     if (main == Jobs.WhiteMage) then
       actions:queue(actions:new()
-        :next(partial(magic, 'Slow', tid)));
+        :next(partial(magic.cast, magic, 'Slow', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
-        :next(partial(magic, 'Paralyze', tid)));
+        :next(partial(magic.cast, magic, 'Paralyze', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
-        :next(partial(magic, 'Dia', tid)));
+        :next(partial(magic.cast, magic, 'Dia', tid)));
 
     elseif (main == Jobs.BlackMage) then
       actions:queue(actions:new()
-        :next(partial(magic, 'Blind', tid)));
+        :next(partial(magic.cast, magic, 'Blind', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
-        :next(partial(magic, 'Poison', tid)));
+        :next(partial(magic.cast, magic, 'Poison', tid)));
       actions:queue(actions:new():next(partial(wait, 10))
-        :next(partial(magic, 'Bio', tid)));
+        :next(partial(magic.cast, magic, 'Bio', tid)));
     end
   end,
 

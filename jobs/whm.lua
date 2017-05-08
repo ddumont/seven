@@ -23,6 +23,7 @@ spell_levels[packets.spells.PROTECTRA_II] = 27;
 spell_levels[packets.spells.STONESKIN] = 28;
 spell_levels[packets.spells.CURSNA] = 29;
 spell_levels[packets.spells.BANISH_II] = 30;
+spell_levels[packets.spells.DIA_II] = 36;
 spell_levels[packets.spells.SHELLRA_II] = 37;
 spell_levels[packets.spells.STONA] = 39;
 spell_levels[packets.spells.PROTECTRA_III] = 47;

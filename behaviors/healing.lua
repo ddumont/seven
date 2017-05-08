@@ -1,5 +1,6 @@
 local party = require('party');
 local actions = require('actions');
+local magic = require('magic');
 
 return {
 
@@ -40,7 +41,7 @@ return {
 
       actions.busy = true;
       actions:queue(actions:new()
-        :next(partial(magic, '"Cure II"', target))
+        :next(partial(magic.cast, magic, '"Cure II"', target))
         :next(partial(wait, 8))
         :next(function(self) actions.busy = false; end));
 

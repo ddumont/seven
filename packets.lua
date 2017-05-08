@@ -3,7 +3,9 @@ local packets = {
   out = { -- outgoing
     PACKET_NPC_INTERACTION = 0x1A,
     PACKET_NPC_CHOICE = 0x5B,
-    PACKET_IDX_UPDATE = 0x15
+    PACKET_IDX_UPDATE = 0x15,
+    PACKET_TRADE_OFFER = 0x34,
+    PACKET_TRADE_MENU_ITEM = 0x36,
   },
 
 
@@ -115,6 +117,7 @@ local packets = {
     STONA = 18,
     CURSNA = 20,
     DIA = 23,
+    DIA_II = 24,
     BANISH = 28,
     BANISH_II = 29,
     BANISH_III = 30,
@@ -185,6 +188,7 @@ local packets = {
     ARMYS_PAEON_II = 379,
     ARMYS_PAEON_III = 380,
     ARMYS_PAEON_IV = 381,
+    ARMYS_PAEON_V = 382,
     MAGES_BALLAD = 386,
     MAGES_BALLAD_II = 387,
     KNIGHTS_MINNE = 389,
@@ -193,6 +197,7 @@ local packets = {
     VALOR_MINUET_II = 395,
     VALOR_MINUET_III = 396,
     HERB_PASTORAL = 406,
+    BATTLEFIELD_ELEGY = 421,
     FIRE_THRENODY = 454,
     ICE_THRENODY = 455,
     WIND_THRENODY = 456,

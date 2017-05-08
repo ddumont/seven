@@ -82,6 +82,8 @@ return {
       self:SetWeaponSkill(args[2]);
     elseif (args[1] == 'bard' and Jobs.Bard == AshitaCore:GetDataManager():GetPlayer():GetMainJob()) then
       jbrd:bard(unpack(args));
+    elseif (args[1] == 'corn') then
+      actions:corn(args[2], args[3]);
     end
   end,
 
