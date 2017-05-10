@@ -1,3 +1,4 @@
+local util = require('util');
 local packets = require('packets');
 local spells = packets.spells;
 local status = packets.status;
@@ -38,10 +39,11 @@ end
 -- Can the player cast this spell?
 -- @param the spell id
 -- @param the spell level table
+-- @param true/false on checking for SUBJOB
 function magic:can(spell, levels, isSub)
   local iparty = AshitaCore:GetDataManager():GetParty();
   local player = AshitaCore:GetDataManager():GetPlayer();
-  local lvl = iparty:GetMemberMainJobLevel(0);
+  local lvl = util:JobLvlCheck(isSub);
   if (isSub) then
     lvl = ipary:GetMemberSubJobLevel(0);
   end

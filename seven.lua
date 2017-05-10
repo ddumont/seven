@@ -184,6 +184,11 @@ ashita.register_event('command', function(cmd, nType)
       args[4] = '"'..args[4]..'"';
     end
     AshitaCore:GetChatManager():QueueCommand('/l2 bard ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
+  elseif (args[2] == 'corsair') then
+    if (args[4]) then
+      args[4] = '"'..args[4]..'"';
+    end
+    AshitaCore:GetChatManager():QueueCommand('/l2 corsair ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
   elseif (args[2] == 'corn') then
     AshitaCore:GetChatManager():QueueCommand('/l2 corn' .. ' ' .. tid .. ' ' .. tidx, 1);
     actions:corn(tid, tidx);

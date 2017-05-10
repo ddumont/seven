@@ -9,6 +9,7 @@ local magic = require('magic');
 
 local spells = packets.spells;
 local status = packets.status;
+local stoe = packets.stoe;
 
 local spell_levels = {};
 spell_levels[spells.KNIGHTS_MINNE] = 1;
@@ -54,7 +55,9 @@ local stoe = {
   RAPTOR_MAZURKA = status.EFFECT_MAZURKA,
 };
 
-local jbrd = {};
+local jbrd = {
+  spell_levels = spell_levels
+};
 
 function jbrd:tick()
   if (actions.busy) then return end

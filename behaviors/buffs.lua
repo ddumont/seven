@@ -1,8 +1,9 @@
 local party = require('party');
 local config = require('config');
 local actions = require('actions');
-local packets = require('packets');
 local magic = require('magic');
+local util = require('util');
+local packets = require('packets');
 
 local spells = packets.spells;
 local status = packets.status;
@@ -25,9 +26,9 @@ end
 -- Can the player use this ability?
 -- @param the ability id
 -- @param the ability level table
-function buffs:IsAble(ability, levels)
-  local player = AshitaCore:GetDataManager():GetPlayer();
-  local lvl = AshitaCore:GetDataManager():GetParty():GetMemberMainJobLevel(0);
+-- @param true/false on checking for SUBJOB
+function buffs:IsAble(ability, levels, isSub)
+  local lvl = util:JobLvlCheck(isSub);
   return levels[ability] ~= nil and lvl >= levels[ability];
 end
 

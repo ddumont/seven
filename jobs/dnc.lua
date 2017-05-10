@@ -8,6 +8,7 @@ local healing = require('behaviors.healing');
 local spells = packets.spells;
 local status = packets.status;
 local abilities = packets.abilities;
+local stoe = packets.stoe;
 
 local ability_levels = {};
 ability_levels[packets.abilities.DRAIN_SAMBA] = 5;
@@ -28,7 +29,7 @@ return {
     if (cnf.ATTACK_TID ~= nil) then
       local status = party:GetBuffs(0);
       local tp = AshitaCore:GetDataManager():GetParty():GetMemberCurrentTP(0);
-      if (tp >= 150 and buffs:IsAble(abilities.DRAIN_SAMBA, ability_levels) and status[packets.status.EFFECT_DRAIN_SAMBA] ~= true) then
+      if (tp >= 150 and buffs:IsAble(abilities.DRAIN_SAMBA, ability_levels) and status[stoe.DRAIN_SAMBA] ~= true) then
         actions.busy = true;
         actions:queue(actions:new()
           :next(partial(ability, '"Drain Samba"', '<me>'))
