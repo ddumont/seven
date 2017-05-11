@@ -137,6 +137,8 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/l2 nuke ' .. tid, 1);
   elseif (args[2] == 'sleep') then
     AshitaCore:GetChatManager():QueueCommand('/l2 sleep ' .. tid, 1);
+  elseif (args[2] == 'sleepga') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 sleepga ' .. tid, 1);
   elseif (args[2] == 'attack') then
     AshitaCore:GetChatManager():QueueCommand('/l2 attack ' .. tid, 1);
   elseif (args[2] == 'signet') then

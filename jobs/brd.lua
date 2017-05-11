@@ -31,6 +31,7 @@ spell_levels[spells.ICE_THRENODY] = 22;
 spell_levels[spells.VALOR_MINUET_II] = 23;
 spell_levels[spells.LIGHTNING_THRENODY] = 24;
 spell_levels[spells.MAGES_BALLAD] = 25;
+spell_levels[spells.HORDE_LULLABY] = 27;
 spell_levels[spells.MAGIC_FINALE] = 33;
 spell_levels[spells.ARMYS_PAEON_III] = 35;
 spell_levels[spells.FOE_REQUIEM_III] = 37;
@@ -124,10 +125,14 @@ function jbrd:attack(tid)
   actions:queue(action);
 end
 
-function jbrd:sleep(tid)
-  if (buffs:CanCast(spells.FOE_LULLABY, spell_levels)) then
+function jbrd:sleep(tid, aoe)
+  if (not(aoe) and magic:can(spells.FOE_LULLABY, spell_levels)) then
     actions:queue(actions:new()
       :next(partial(magic.cast, magic, '"Foe Lullaby"', tid))
+      :next(partial(wait, 7)));
+  elseif (aoe and magic:can(spells.HORDE_LULLABY, spell_levels)) then
+    actions:queue(actions:new()
+      :next(partial(magic.cast, magic, '"Horde Lullaby"', tid))
       :next(partial(wait, 7)));
   end
 end

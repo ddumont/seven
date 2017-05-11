@@ -54,6 +54,8 @@ return {
       combat:nuke(tonumber(args[2]));
     elseif (args[1] == 'sleep') then
       combat:sleep(tonumber(args[2]));
+    elseif (args[1] == 'sleepga') then
+      combat:sleep(tonumber(args[2]), true);
     elseif (args[1] == 'attack') then
       combat:attack(tonumber(args[2]));
     elseif (args[1] == 'signet') then

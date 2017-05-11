@@ -61,7 +61,7 @@ return {
   attack = function(self, tid)
   end,
 
-  sleep = function(self, tid)
+  sleep = function(self, tid, aoe)
     actions:queue(actions:new():next(partial(magic.cast, magic, 'Sleep', tid)));
   end,
 

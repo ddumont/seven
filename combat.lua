@@ -72,12 +72,12 @@ return {
   end,
 
 
-  sleep = function(self, tid)
+  sleep = function(self, tid, aoe)
     local main = AshitaCore:GetDataManager():GetPlayer():GetMainJob();
 
     for jobid, job in pairs(map) do
       if (main == jobid and job.sleep) then
-        return job:sleep(tid);
+        return job:sleep(tid, aoe);
       end
     end
   end,
