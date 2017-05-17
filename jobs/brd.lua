@@ -1,3 +1,5 @@
+require 'ffxi.recast';
+
 local config = require('config');
 local party = require('party');
 local actions = require('actions');
@@ -18,6 +20,7 @@ spell_levels[spells.ARMYS_PAEON] = 5;
 spell_levels[spells.FOE_REQUIEM] = 7;
 spell_levels[spells.HERB_PASTORAL] = 9;
 spell_levels[spells.LIGHTNING_THRENODY] = 10;
+spell_levels[spells.SWORD_MADRIGAL] = 11;
 spell_levels[spells.DARK_THRENODY] = 12;
 spell_levels[spells.EARTH_THRENODY] = 14;
 spell_levels[spells.ARMYS_PAEON_II] = 15;
@@ -39,6 +42,7 @@ spell_levels[spells.RAPTOR_MAZURKA] = 37;
 spell_levels[spells.BATTLEFIELD_ELEGY] = 39;
 spell_levels[spells.VALOR_MINUET_III] = 43;
 spell_levels[spells.ARMYS_PAEON_IV] = 45;
+spell_levels[spells.ICE_CAROL] = 46;
 spell_levels[spells.FOE_REQUIEM_IV] = 47;
 spell_levels[spells.MAGES_BALLAD_II] = 55;
 spell_levels[spells.ARMYS_PAEON_V] = 65;
@@ -54,10 +58,13 @@ local stoe = {
   ARMYS_PAEON_IV = status.EFFECT_PAEON,
   ARMYS_PAEON_V = status.EFFECT_PAEON,
   RAPTOR_MAZURKA = status.EFFECT_MAZURKA,
+  SWORD_MADRIGAL = status.EFFECT_MADRIGAL,
+  ICE_CAROL = status.EFFECT_CAROL,
 };
 
 local jbrd = {
-  spell_levels = spell_levels
+  spell_levels = spell_levels,
+  stack_toggle = 0;
 };
 
 function jbrd:tick()
@@ -67,27 +74,58 @@ function jbrd:tick()
   if (not(cnf.bard.sing)) then return end
 
   local status = party:GetBuffs(0);
+  local statustbl = AshitaCore:GetDataManager():GetPlayer():GetStatusIcons();
   if (status[packets.status.EFFECT_INVISIBLE]) then return end
 
-  if (cnf.bard.songvar1 and not(status[stoe[cnf.bard.songvar1]])) then
-    if (buffs:CanCast(spells[cnf.bard.songvar1], spell_levels)) then
-      actions.busy = true;
-      actions:queue(actions:new()
+  if (ashita.ffxi.recast.get_spell_recast_by_index(spells[cnf.bard.songvar1]) == 0) then
+    local need = not(status[stoe[cnf.bard.songvar1]]);
+    if (not(need) and stoe[cnf.bard.songvar1] == stoe[cnf.bard.songvar2]) then
+      local buffcount = 0;
+      for slot = 0, 31, 1 do
+        local buff = statustbl[slot];
+        if (buff == stoe[cnf.bard.songvar1]) then
+          buffcount = buffcount + 1;
+        end
+      end
+      if (buffcount < 2) then
+        need = true;
+      end
+    end
+    if (cnf.bard.songvar1 and need) then
+      if (buffs:CanCast(spells[cnf.bard.songvar1], spell_levels)) then
+        actions.busy = true;
+        actions:queue(actions:new()
         :next(partial(magic.cast, magic, '"' .. cnf.bard.song1 .. '"', '<me>'))
         :next(partial(wait, 7))
         :next(function(self) actions.busy = false; end));
-      return;
+        return;
+      end
     end
   end
 
-  if (cnf.bard.songvar2 and not(status[stoe[cnf.bard.songvar2]])) then
-    if (buffs:CanCast(spells[cnf.bard.songvar2], spell_levels)) then
-      actions.busy = true;
-      actions:queue(actions:new()
-        :next(partial(magic.cast, magic, '"' .. cnf.bard.song2 .. '"', '<me>'))
-        :next(partial(wait, 7))
-        :next(function(self) actions.busy = false; end));
-      return;
+  if (ashita.ffxi.recast.get_spell_recast_by_index(spells[cnf.bard.songvar2]) == 0) then
+    need = not(status[stoe[cnf.bard.songvar2]]);
+    if (not(need) and stoe[cnf.bard.songvar1] == stoe[cnf.bard.songvar2]) then
+      local buffcount = 0;
+      for slot = 0, 31, 1 do
+        local buff = statustbl[slot];
+        if (buff == stoe[cnf.bard.songvar2]) then
+          buffcount = buffcount + 1;
+        end
+      end
+      if (buffcount < 2) then
+        need = true;
+      end
+    end
+    if (cnf.bard.songvar2 and need) then
+      if (buffs:CanCast(spells[cnf.bard.songvar2], spell_levels)) then
+        actions.busy = true;
+        actions:queue(actions:new()
+          :next(partial(magic.cast, magic, '"' .. cnf.bard.song2 .. '"', '<me>'))
+          :next(partial(wait, 7))
+          :next(function(self) actions.busy = false; end));
+        return;
+      end
     end
   end
 end
@@ -117,9 +155,9 @@ function jbrd:attack(tid)
       :next(partial(wait, 5));
   end
 
-  if (buffs:CanCast(spells.ICE_THRENODY, spell_levels)) then
+  if (buffs:CanCast(spells.LIGHTNING_THRENODY, spell_levels)) then
     actions.busy = true;
-    action:next(partial(magic.cast, magic, '"Ice Threnody"', tid))
+    action:next(partial(magic.cast, magic, '"Ltng. Threnody"', tid))
       :next(partial(wait, 7));
   end
   actions:queue(action);
@@ -177,8 +215,12 @@ function jbrd:bard(bard, command, song, silent)
       jbrd:bard(bard, '2', 'chocobo mazurka');
       return;
     elseif (command == 'sustain') then
-      jbrd:bard(bard, '1', "mage's ballad", true);
+      jbrd:bard(bard, '1', "mage's ballad ii", true);
       jbrd:bard(bard, '2', "army's paeon v");
+      return;
+    elseif (command == 'mana') then
+      jbrd:bard(bard, '1', "mage's ballad ii", true);
+      jbrd:bard(bard, '2', "mage's ballad");
       return;
     end
     config:save();

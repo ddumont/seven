@@ -34,12 +34,10 @@ return {
       self:follow(actor);
     elseif (args[1] == 'stay') then
       self:stay();
-    elseif (args[1] == 'rest') then
-      self:rest();
     elseif (args[1] == 'reload') then
       self:reload();
-    elseif (args[1] == 'shutdown') then
-      self:shutdown();
+    elseif (args[1] == 'echo') then
+      AshitaCore:GetChatManager():QueueCommand(msg:sub(6), -1);
     elseif (args[1] == 'gov' or args[1] == 'fov') then
       if (args[4] == 'cancel') then
         fov:cancel(args[1], args[2], args[3]);

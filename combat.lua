@@ -10,6 +10,7 @@ local jbrd = require('jobs.brd');
 local jdnc = require('jobs.dnc');
 local jdrk = require('jobs.drk');
 local jrdm = require('jobs.rdm');
+local jsam = require('jobs.sam');
 local jsch = require('jobs.sch');
 local jthf = require('jobs.thf');
 local jwar = require('jobs.war');
@@ -31,6 +32,7 @@ map[Jobs.WhiteMage] = jwhm;
 map[Jobs.Monk] = jmnk;
 map[Jobs.Summoner] = jsmn;
 map[Jobs.Corsair] = jcor;
+map[Jobs.Samurai] = jsam;
 
 local healing = false;
 
