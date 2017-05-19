@@ -64,7 +64,8 @@ end
 function jwhm:nuke(tid)
   if (AshitaCore:GetDataManager():GetParty():GetMemberCurrentMPP(0) < 50) then return end
 
-  nukes:Nuke(tid, spell_levels);
+  -- nukes:Nuke(tid, spell_levels);
+  AshitaCore:GetChatManager():QueueCommand('/magic Banish ' .. tid, 0);
 end
 
 return jwhm;

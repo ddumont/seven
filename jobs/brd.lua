@@ -45,7 +45,9 @@ spell_levels[spells.ARMYS_PAEON_IV] = 45;
 spell_levels[spells.ICE_CAROL] = 46;
 spell_levels[spells.FOE_REQUIEM_IV] = 47;
 spell_levels[spells.MAGES_BALLAD_II] = 55;
+spell_levels[spells.FOE_REQUIEM_V] = 57;
 spell_levels[spells.ARMYS_PAEON_V] = 65;
+spell_levels[spells.FOE_REQUIEM_VI] = 67;
 spell_levels[spells.CHOCOBO_MAZURKA] = 73;
 
 -- spells to effect
@@ -71,6 +73,12 @@ function jbrd:tick()
   if (actions.busy) then return end
 
   local cnf = config:get();
+  local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();
+  if (cnf.ATTACK_TID and tid ~= cnf.ATTACK_TID) then
+    cnf.ATTACK_TID = nil;
+    AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
+  end
+
   if (not(cnf.bard.sing)) then return end
 
   local status = party:GetBuffs(0);
@@ -131,7 +139,19 @@ function jbrd:tick()
 end
 
 function jbrd:attack(tid)
+  local cnf = config:get();
   local action = actions:new();
+
+  if (cnf['bard']['melee']) then
+    action:next(function(self)
+      AshitaCore:GetChatManager():QueueCommand('/attack ' .. tid, 0);
+    end)
+    :next(function(self)
+      cnf.ATTACK_TID = tid;
+      AshitaCore:GetChatManager():QueueCommand('/follow ' .. tid, 0);
+    end)
+    :next(partial(wait, 7));
+  end
 
   if (buffs:CanCast(spells.BATTLEFIELD_ELEGY, spell_levels)) then
     actions.busy = true;
@@ -142,10 +162,8 @@ function jbrd:attack(tid)
   local spell = magic:highest('FOE_REQUIEM', spell_levels);
   if (spell) then
     actions.busy = true;
-    actions:queue(actions:new()
-      :next(partial(magic.cast, magic, '"' .. spell .. '"', tid))
-      :next(partial(wait, 7))
-      :next(function(self) actions.busy = false; end));
+    action:next(partial(magic.cast, magic, '"' .. spell .. '"', tid))
+      :next(partial(wait, 7));
   end
 
   local sub = AshitaCore:GetDataManager():GetPlayer():GetSubJob();
@@ -160,6 +178,7 @@ function jbrd:attack(tid)
     action:next(partial(magic.cast, magic, '"Ltng. Threnody"', tid))
       :next(partial(wait, 7));
   end
+  action:next(function(self) actions.busy = false; end);
   actions:queue(action);
 end
 
@@ -222,12 +241,19 @@ function jbrd:bard(bard, command, song, silent)
       jbrd:bard(bard, '1', "mage's ballad ii", true);
       jbrd:bard(bard, '2', "mage's ballad");
       return;
+    elseif (command == 'melee') then
+      brd['melee'] = not(brd['melee']);
     end
     config:save();
   end
 
   if (not(silent)) then
-    AshitaCore:GetChatManager():QueueCommand('/l2 I\'m a Bard!\nsinging: ' .. onoff .. '\n1: ' .. song1 .. '\n2: ' .. song2, 1);
+    local msg = "I'm a ";
+    if (brd['melee']) then
+      msg = msg .. 'MELEE ';
+    end
+    msg = msg .. 'Bard!\nsinging: ' .. onoff .. '\n1: ' .. song1 .. '\n2: ' .. song2;
+    AshitaCore:GetChatManager():QueueCommand('/l2 ' .. msg, 1);
   end
 end
 
