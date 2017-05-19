@@ -70,8 +70,6 @@ local jbrd = {
 };
 
 function jbrd:tick()
-  if (actions.busy) then return end
-
   local cnf = config:get();
   local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();
   if (cnf.ATTACK_TID and tid ~= cnf.ATTACK_TID) then
@@ -79,6 +77,7 @@ function jbrd:tick()
     AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
   end
 
+  if (actions.busy) then return end
   if (not(cnf.bard.sing)) then return end
 
   local status = party:GetBuffs(0);
@@ -150,7 +149,7 @@ function jbrd:attack(tid)
       cnf.ATTACK_TID = tid;
       AshitaCore:GetChatManager():QueueCommand('/follow ' .. tid, 0);
     end)
-    :next(partial(wait, 7));
+    :next(partial(wait, 10));
   end
 
   if (buffs:CanCast(spells.BATTLEFIELD_ELEGY, spell_levels)) then

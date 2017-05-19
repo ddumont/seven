@@ -11,14 +11,14 @@ local abilities = packets.abilities;
 return {
 
   tick = function(self)
-    if (actions.busy) then return end
-
     local cnf = config:get();
     local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();
     if (cnf.ATTACK_TID and tid ~= cnf.ATTACK_TID) then
       cnf.ATTACK_TID = nil;
       AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
     end
+    if (actions.busy) then return end
+
 
     local sub = AshitaCore:GetDataManager():GetPlayer():GetSubJob();
     if (sub == Jobs.Dancer and cnf.ATTACK_TID ~= nil) then
