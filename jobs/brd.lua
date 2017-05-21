@@ -44,11 +44,13 @@ spell_levels[spells.VALOR_MINUET_III] = 43;
 spell_levels[spells.ARMYS_PAEON_IV] = 45;
 spell_levels[spells.ICE_CAROL] = 46;
 spell_levels[spells.FOE_REQUIEM_IV] = 47;
+spell_levels[spells.BLADE_MADRIGAL] = 51;
 spell_levels[spells.MAGES_BALLAD_II] = 55;
 spell_levels[spells.FOE_REQUIEM_V] = 57;
+spell_levels[spells.VICTORY_MARCH] = 60;
 spell_levels[spells.ARMYS_PAEON_V] = 65;
 spell_levels[spells.FOE_REQUIEM_VI] = 67;
-spell_levels[spells.CHOCOBO_MAZURKA] = 73;
+spell_levels[wdspells.CHOCOBO_MAZURKA] = 73;
 
 -- spells to effect
 local stoe = {
@@ -61,6 +63,9 @@ local stoe = {
   ARMYS_PAEON_V = status.EFFECT_PAEON,
   RAPTOR_MAZURKA = status.EFFECT_MAZURKA,
   SWORD_MADRIGAL = status.EFFECT_MADRIGAL,
+  BLADE_MADRIGAL = status.EFFECT_MADRIGAL,
+  VICTORY_MARCH = status.EFFECT_MARCH,
+  ADVANCING_MARCH = status.EFFECT_MARCH,
   ICE_CAROL = status.EFFECT_CAROL,
 };
 
@@ -84,7 +89,7 @@ function jbrd:tick()
   local statustbl = AshitaCore:GetDataManager():GetPlayer():GetStatusIcons();
   if (status[packets.status.EFFECT_INVISIBLE]) then return end
 
-  if (ashita.ffxi.recast.get_spell_recast_by_index(spells[cnf.bard.songvar1]) == 0) then
+  if (not(not(cnf.bard.songvar1)) and ashita.ffxi.recast.get_spell_recast_by_index(spells[cnf.bard.songvar1]) == 0) then
     local need = not(status[stoe[cnf.bard.songvar1]]);
     if (not(need) and stoe[cnf.bard.songvar1] == stoe[cnf.bard.songvar2]) then
       local buffcount = 0;
@@ -110,7 +115,7 @@ function jbrd:tick()
     end
   end
 
-  if (ashita.ffxi.recast.get_spell_recast_by_index(spells[cnf.bard.songvar2]) == 0) then
+  if (not(not(cnf.bard.songvar2)) and ashita.ffxi.recast.get_spell_recast_by_index(spells[cnf.bard.songvar2]) == 0) then
     need = not(status[stoe[cnf.bard.songvar2]]);
     if (not(need) and stoe[cnf.bard.songvar1] == stoe[cnf.bard.songvar2]) then
       local buffcount = 0;
