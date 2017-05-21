@@ -50,7 +50,7 @@ spell_levels[spells.FOE_REQUIEM_V] = 57;
 spell_levels[spells.VICTORY_MARCH] = 60;
 spell_levels[spells.ARMYS_PAEON_V] = 65;
 spell_levels[spells.FOE_REQUIEM_VI] = 67;
-spell_levels[wdspells.CHOCOBO_MAZURKA] = 73;
+spell_levels[spells.CHOCOBO_MAZURKA] = 73;
 
 -- spells to effect
 local stoe = {
