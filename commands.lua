@@ -37,7 +37,7 @@ return {
     elseif (args[1] == 'reload') then
       self:reload();
     elseif (args[1] == 'echo') then
-      AshitaCore:GetChatManager():QueueCommand(msg:sub(6), 0);
+      AshitaCore:GetChatManager():QueueCommand(msg:sub(6):gsub('<self>','<me>'), 0);
     elseif (args[1] == 'gov' or args[1] == 'fov') then
       if (args[4] == 'cancel') then
         fov:cancel(args[1], args[2], args[3]);
