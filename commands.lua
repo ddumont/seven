@@ -71,7 +71,7 @@ return {
     elseif (args[1] == 'talk') then
       actions:queue(actions:InteractNpc(args[2], args[3]));
     elseif (args[1] == 'setweaponskill') then
-      self:SetWeaponSkill(args[2]);
+      self:SetWeaponSkill(args[2], args[3]);
     elseif (args[1] == 'bard' and (Jobs.Bard == player:GetMainJob() or Jobs.Bard == player:GetSubJob())) then
       jbrd:bard(unpack(args));
     elseif (args[1] == 'corsair' and (Jobs.Corsair == player:GetMainJob() or Jobs.Corsair == player:GetSubJob())) then
@@ -99,15 +99,12 @@ return {
     config:save();
   end,
 
-  SetWeaponSkill = function(self, playerandvalue)
+  SetWeaponSkill = function(self, player, value)
     --split out player and value
     local pv = { };
-    for part in playerandvalue:gmatch("%w+") do
-      table.insert(pv,part);
-    end
-    if (tonumber(pv[2]) ~= nil and pv[1] == GetPlayerEntity().Name) then
+    if (tonumber(value) ~= nil and player == GetPlayerEntity().Name) then
       local cnf = config:get();
-      cnf['WeaponSkillID'] = tonumber(pv[2]);
+      cnf['WeaponSkillID'] = tonumber(value);
       config:save();
     end
   end,
