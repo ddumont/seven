@@ -165,7 +165,7 @@ ashita.register_event('command', function(cmd, nType)
     else
       print(' ');
       print('ERROR: Invalid entry for the "/seven setweaponskill" command');
-      print('SYNTAX: /seven setweaponsill (player) (weapon skill ID number)');
+      print('SYNTAX: /seven setweaponskill (player) (weapon skill ID number)');
       print(' ');
       print('TIP: Use "/seven searchweaponskill" to find available weapon skill ID');
       print(' ');

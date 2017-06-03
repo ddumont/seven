@@ -4,8 +4,12 @@ local actions = require('actions');
 local packets = require('packets');
 local buffs = require('behaviors.buffs')
 local healing = require('behaviors.healing');
+local jdnc = require('jobs.dnc');
 
-local spell_levels = {};
+local spells = packets.spells;
+local status = packets.status;
+local abilities = packets.abilities;
+local stoe = packets.stoe;
 
 return {
 
@@ -19,6 +23,21 @@ return {
       AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
     end
 
+
+    local sub = AshitaCore:GetDataManager():GetPlayer():GetSubJob();
+    if (sub == Jobs.Dancer and cnf.ATTACK_TID ~= nil) then
+      local status = party:GetBuffs(0);
+      local tp = AshitaCore:GetDataManager():GetParty():GetMemberCurrentTP(0);
+      if (tp >= 150 and buffs:IsAble(abilities.DRAIN_SAMBA, jdnc.ability_levels) and status[packets.status.EFFECT_DRAIN_SAMBA] ~= true) then
+        actions.busy = true;
+        actions:queue(actions:new()
+          :next(partial(ability, '"Drain Samba"', '<me>'))
+          :next(partial(wait, 8))
+          :next(function(self) actions.busy = false; end));
+        return true;
+      end
+      if (healing:DNCHeal(spell_levels)) then return end
+    end
   end,
 
   attack = function(self, tid)
