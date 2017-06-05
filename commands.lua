@@ -43,6 +43,8 @@ return {
         fov:cancel(args[1], args[2], args[3]);
       elseif(args[4] == 'buffs') then
         fov:buffs(args[1], args[2], args[3]);
+      elseif(args[4] == 'home') then
+        fov:home(args[1], args[2], args[3]);
       else
         fov:page(args[1], args[2], args[3], args[4]);
       end

@@ -110,6 +110,14 @@ return {
     actions:queue(actions:new():next(function(self)
       AshitaCore:GetChatManager():QueueCommand('/l2 done buffing.', 1);
     end));
+  end,
+
+  ---------------------------------------------------------------------------------------------------
+  -- func: buffs
+  -- desc:
+  ---------------------------------------------------------------------------------------------------
+  home = function(self, fovgov, tid, tidx)
+    actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_HOME_NATION));
   end
 
 };

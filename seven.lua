@@ -124,6 +124,9 @@ ashita.register_event('command', function(cmd, nType)
     elseif (args[3] == 'buff' or args[3] == 'buffs') then
       AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' buffs', 1);
       fov:buffs(args[2], tid, tidx);
+    elseif (args[3] == 'home') then
+      AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' home', 1);
+      fov:home(args[2], tid, tidx);
     elseif (tonumber(args[3])) then
       AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
       fov:page(args[2], tid, tidx, args[3]);

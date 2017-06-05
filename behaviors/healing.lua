@@ -20,7 +20,7 @@ return {
         table.insert(need, i);
       end
       table.sort(need, function(a, b)
-        return party:GetHPP(a) < party:GetHPP(b)
+        return party:GetHPP(a) < party:GetHPP(b);
       end);
     end
     return need;
