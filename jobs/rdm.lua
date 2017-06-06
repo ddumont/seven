@@ -29,10 +29,6 @@ return {
     --   AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
     -- end
 
-    if (actions.busy) then return end
-    -- if (healing:Heal(spell_levels)) then return end -- first priority...
-    -- if (buffs:Cleanse(spell_levels)) then return end
-    -- if (buffs:IdleBuffs(spell_levels)) then return end
   end,
 
   attack = function(self, tid)

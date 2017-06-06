@@ -18,6 +18,7 @@ return {
 
   tick = function(self)
     if (actions.busy) then return end
+    if (healing:DNCHeal(spell_levels)) then return end
 
     local cnf = config:get();
     local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();

@@ -53,21 +53,6 @@ spell_levels[spells.FOE_REQUIEM_VI] = 67;
 spell_levels[spells.CHOCOBO_MAZURKA] = 73;
 
 -- spells to effect
-local stoe = {
-  MAGES_BALLAD = status.EFFECT_BALLAD,
-  MAGES_BALLAD_II = status.EFFECT_BALLAD,
-  ARMYS_PAEON = status.EFFECT_PAEON,
-  ARMYS_PAEON_II = status.EFFECT_PAEON,
-  ARMYS_PAEON_III = status.EFFECT_PAEON,
-  ARMYS_PAEON_IV = status.EFFECT_PAEON,
-  ARMYS_PAEON_V = status.EFFECT_PAEON,
-  RAPTOR_MAZURKA = status.EFFECT_MAZURKA,
-  SWORD_MADRIGAL = status.EFFECT_MADRIGAL,
-  BLADE_MADRIGAL = status.EFFECT_MADRIGAL,
-  VICTORY_MARCH = status.EFFECT_MARCH,
-  ADVANCING_MARCH = status.EFFECT_MARCH,
-  ICE_CAROL = status.EFFECT_CAROL,
-};
 
 local jbrd = {
   spell_levels = spell_levels,
@@ -140,6 +125,9 @@ function jbrd:tick()
       end
     end
   end
+
+  if (healing:SupportHeal(spell_levels)) then return end
+  
 end
 
 function jbrd:attack(tid)

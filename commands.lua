@@ -127,14 +127,10 @@ return {
       end
     -- No search argument provided
     else
-      for k, v in pairs(packets.weaponskills) do
-          print(k.." "..v);
-      end
-      print(' ');
       print('To narrow your search, provide text to be searched for');
-      print('EXAMPLE - "/seven searchweaponskill comb" yields the following result:');
+      print('EXAMPLE - "/seven searchweaponskill co" yields the following result:');
       for k, v in pairs(packets.weaponskills) do
-        if (string.find(k,'COMB') ~= nil or string.find(v,'COMB') ~= nil) then
+        if (string.find(k,'CO') ~= nil or string.find(v,'CO') ~= nil) then
           print(k.." "..v);
         end
       end

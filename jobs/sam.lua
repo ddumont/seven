@@ -17,9 +17,22 @@ function jsam:tick()
 
   local cnf = config:get();
   local tid = AshitaCore:GetDataManager():GetTarget():GetTargetServerId();
+  local tp = AshitaCore:GetDataManager():GetParty():GetMemberCurrentTP(0);
+
   if (cnf.ATTACK_TID and tid ~= cnf.ATTACK_TID) then
     cnf.ATTACK_TID = nil;
     AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
+  -- Attempt to weaponskill when you have TP
+  elseif (cnf.ATTACK_TID and tid == cnf.ATTACK_TID and tp >= 1000) then
+    if (cnf.WeaponSkillID ~= nil ) then
+      if AshitaCore:GetDataManager():GetPlayer():HasWeaponSkill(tonumber(cnf.WeaponSkillID)) then
+        for k, v in pairs(packets.weaponskills) do
+          if (tonumber(cnf.WeaponSkillID) == tonumber(v)) then
+            AshitaCore:GetChatManager():QueueCommand('/ws "' .. string.gsub(string.gsub(k,"_"," "),"TACHI","TACHI:") .. '" <t>', 1);
+          end
+        end
+      end
+    end
   end
 end
 
