@@ -125,11 +125,16 @@ local packets = {
     EFFECT_PUPPET_ROLL              = 327,
     EFFECT_DANCERS_ROLL             = 328,
     EFFECT_SCHOLARS_ROLL            = 329,
+    EFFECT_HASSO                    = 353,
     EFFECT_DRAIN_SAMBA              = 368,
     EFFECT_POISON_II                = 540,
   },
 
   abilities = {
+    STEAL = 25,
+    THIRD_EYE = 46,
+    MEDITATE = 47,
+    WARDING_CIRCLE = 48,
     PHANTOM_ROLL = 81,
     FIGHTERS_ROLL = 82,
     MONKS_ROLL = 83,
@@ -151,7 +156,11 @@ local packets = {
     PUPPET_ROLL = 99,
     DANCERS_ROLL = 100,
     SCHOLARS_ROLL = 101,
+    HASSO = 157,
+    SEIGAN = 158,
     DRAIN_SAMBA = 168,
+    SEKKANOKI = 214,
+    KONZENITTAI = 304
   },
 
   spells = {
@@ -512,5 +521,6 @@ stoe.VALOR_MINUET_II = status.EFFECT_MINUET;
 stoe.VALOR_MINUET_III = status.EFFECT_MINUET;
 stoe.SWORD_MADRIGAL = status.EFFECT_MADRIGAL;
 stoe.BLADE_MADRIGAL = status.EFFECT_MADRIGAL;
+stoe.HASSO = status.EFFECT_HASSO;
 
 return packets;
