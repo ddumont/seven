@@ -47,6 +47,8 @@ return {
       elseif(args[4] == 'home') then
         self:stay();
         fov:home(args[1], args[2], args[3]);
+      elseif(args[4] == 'sneak') then
+        fov:sneak(args[1], args[2], args[3]);
       else
         fov:page(args[1], args[2], args[3], args[4]);
       end

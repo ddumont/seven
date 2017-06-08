@@ -113,11 +113,19 @@ return {
   end,
 
   ---------------------------------------------------------------------------------------------------
-  -- func: buffs
+  -- func: home
   -- desc:
   ---------------------------------------------------------------------------------------------------
   home = function(self, fovgov, tid, tidx)
     actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_HOME_NATION));
+  end,
+
+  ---------------------------------------------------------------------------------------------------
+  -- func: home
+  -- desc:
+  ---------------------------------------------------------------------------------------------------
+  sneak = function(self, fovgov, tid, tidx)
+    actions:queue(talkToBook(tid, tidx, packets[fovgov].MENU_CIRCUMSPECTION));
   end
 
 };
