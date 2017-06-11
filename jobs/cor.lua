@@ -39,6 +39,9 @@ local jcor = {
 
 function jcor:tick()
   if (actions.busy) then return end
+  local cnf = config:get();
+  local cor = cnf['corsair'];
+  if (not(cor['roll'])) then return end
 
   local status = party:GetBuffs(0);
   if (status[packets.status.EFFECT_INVISIBLE]) then return end

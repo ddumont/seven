@@ -124,6 +124,12 @@ ashita.register_event('command', function(cmd, nType)
     elseif (args[3] == 'buff' or args[3] == 'buffs') then
       AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' buffs', 1);
       fov:buffs(args[2], tid, tidx);
+    elseif (args[3] == 'home') then
+      AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' home', 1);
+      fov:home(args[2], tid, tidx);
+    elseif (args[3] == 'sneak') then
+      AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' sneak', 1);
+      fov:sneak(args[2], tid, tidx);
     elseif (tonumber(args[3])) then
       AshitaCore:GetChatManager():QueueCommand('/l2 ' .. args[2] .. ' ' .. tid .. ' ' .. tidx .. ' ' .. args[3], 1);
       fov:page(args[2], tid, tidx, args[3]);
@@ -188,6 +194,8 @@ ashita.register_event('command', function(cmd, nType)
       args[4] = '"'..args[4]..'"';
     end
     AshitaCore:GetChatManager():QueueCommand('/l2 corsair ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
+  elseif (args[2] == 'summoner') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 summoner ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
   elseif (args[2] == 'corn') then
     AshitaCore:GetChatManager():QueueCommand('/l2 corn' .. ' ' .. tid .. ' ' .. tidx, 1);
     actions:corn(tid, tidx);

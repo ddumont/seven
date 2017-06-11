@@ -30,6 +30,8 @@
   * Tell all bots to pick up page #.
 * **/seven fov cancel** ( with book targeted )
   * Tell all bots to drop whatever page they are on.
+* **/seven gov home** ( with book targeted )
+  * Tell all bots to repatriate.
 * **/seven fov buffs** ( with book targeted )
   * Tell all bots to get Job appropriate buffs
     * regen
@@ -42,6 +44,8 @@
   * Tell all bots to pick up page #.
 * **/seven gov cancel** ( with book targeted )
   * Tell all bots to drop whatever page they are on.
+* **/seven gov home** ( with book targeted )
+  * Tell all bots to repatriate.
 * **/seven gov buffs** ( with book targeted )
   * Tell all bots to get Job appropriate buffs
     * regen

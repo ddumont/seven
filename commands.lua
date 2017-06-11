@@ -5,6 +5,7 @@ local config = require('config');
 local fov = require('fov');
 local jbrd = require('jobs.brd');
 local jcor = require('jobs.cor');
+local jsmn = require('jobs.smn');
 
 local queue = {};
 local start = 0;
@@ -43,6 +44,11 @@ return {
         fov:cancel(args[1], args[2], args[3]);
       elseif(args[4] == 'buffs') then
         fov:buffs(args[1], args[2], args[3]);
+      elseif(args[4] == 'home') then
+        self:stay();
+        fov:home(args[1], args[2], args[3]);
+      elseif(args[4] == 'sneak') then
+        fov:sneak(args[1], args[2], args[3]);
       else
         fov:page(args[1], args[2], args[3], args[4]);
       end
@@ -76,6 +82,8 @@ return {
       jbrd:bard(unpack(args));
     elseif (args[1] == 'corsair' and (Jobs.Corsair == player:GetMainJob() or Jobs.Corsair == player:GetSubJob())) then
       jcor:corsair(unpack(args));
+    elseif (args[1] == 'summoner' and (Jobs.Summoner == player:GetMainJob() or Jobs.Summoner == player:GetSubJob())) then
+      jsmn:summoner(unpack(args));
     elseif (args[1] == 'corn') then
       actions:corn(args[2], args[3]);
     end
