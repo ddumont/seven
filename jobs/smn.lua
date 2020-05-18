@@ -24,7 +24,7 @@ function jsmn:tick()
   if (player and mana > 50 and smn['practice']) then
     actions.busy = true;
     actions:queue(actions:new()
-      :next(partial(magic.cast, magic, 'carbuncle', '<me>'))
+      :next(partial(magic.cast, magic, 'ifrit', '<me>'))
       :next(partial(wait, 14))
       :next(function(self)
         AshitaCore:GetChatManager():QueueCommand('/ja release <me>', 0);
@@ -39,7 +39,7 @@ function jsmn:attack(tid)
 
 end
 
-function jsmn:summoner(summoner, command, arg)
+function jsmn:summoner(self, command, arg)
   local cnf = config:get();
   local smn = cnf['summoner'];
   local onoff = smn['practice'] and 'on' or 'off';

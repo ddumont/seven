@@ -18,6 +18,7 @@ local jwhm = require('jobs.whm');
 local jmnk = require('jobs.mnk');
 local jsmn = require('jobs.smn');
 local jcor = require('jobs.cor');
+local jgeo = require('jobs.geo');
 
 local map = {};
 map[Jobs.BlackMage] = jblm;
@@ -33,6 +34,7 @@ map[Jobs.Monk] = jmnk;
 map[Jobs.Summoner] = jsmn;
 map[Jobs.Corsair] = jcor;
 map[Jobs.Samurai] = jsam;
+map[Jobs.Geomancer] = jgeo;
 
 local healing = false;
 

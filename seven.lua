@@ -12,6 +12,8 @@ local combat = require('combat');
 local party = require('party');
 local pgen = require('pgen');
 local fov = require('fov');
+local jsmn = require('jobs.smn');
+local jgeo = require('jobs.geo');
 
 function wait(time)
   return 'wait', time;
@@ -160,10 +162,10 @@ ashita.register_event('command', function(cmd, nType)
         end));
     end
   elseif (args[2] == 'idlebuffs') then
-    AshitaCore:GetChatManager():QueueCommand('/l2 idlebuffs ' .. args[3], 1);
+    AshitaCore:GetChatManager():QueueCommand('/l2 idlebuffs ' .. (args[3] or ''), 1);
     commands:SetIdleBuffs(args[3]);
   elseif (args[2] == 'sneakytime') then
-    AshitaCore:GetChatManager():QueueCommand('/l2 sneakytime ' .. args[3], 1);
+    AshitaCore:GetChatManager():QueueCommand('/l2 sneakytime ' .. (args[3] or ''), 1);
     commands:SetSneakyTime(args[3]);
   elseif (args[2] == 'setweaponskill') then
     if (args[4] ~= nil and tonumber(args[4]) ~= nil) then
@@ -196,6 +198,10 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/l2 corsair ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
   elseif (args[2] == 'summoner') then
     AshitaCore:GetChatManager():QueueCommand('/l2 summoner ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
+    jsmn:summoner('summoner', args[3] or '', args[4] or '');
+  elseif (args[2] == 'geo') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 geo ' .. (args[3] or '') .. ' ' .. (args[4] or ''), 1);
+    jgeo:geo('geo', args[3] or '', args[4] or '');
   elseif (args[2] == 'corn') then
     AshitaCore:GetChatManager():QueueCommand('/l2 corn' .. ' ' .. tid .. ' ' .. tidx, 1);
     actions:corn(tid, tidx);

@@ -6,6 +6,7 @@ local fov = require('fov');
 local jbrd = require('jobs.brd');
 local jcor = require('jobs.cor');
 local jsmn = require('jobs.smn');
+local jgeo = require('jobs.geo');
 
 local queue = {};
 local start = 0;
@@ -84,6 +85,8 @@ return {
       jcor:corsair(unpack(args));
     elseif (args[1] == 'summoner' and (Jobs.Summoner == player:GetMainJob() or Jobs.Summoner == player:GetSubJob())) then
       jsmn:summoner(unpack(args));
+    elseif (args[1] == 'geo' and (Jobs.Geomancer == player:GetMainJob() or Jobs.Geomancer == player:GetSubJob())) then
+      jgeo:geo(unpack(args));
     elseif (args[1] == 'corn') then
       actions:corn(args[2], args[3]);
     end

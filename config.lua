@@ -4,7 +4,8 @@ function load_settings(player)
   configs[player] = ashita.settings.load_merged(_addon.path .. '/settings/' .. player .. '/settings.json', {
     bard = {},
     corsair = {},
-    summoner = {}
+    summoner = {},
+    geomancer = {},
   });
   return configs[player];
 end

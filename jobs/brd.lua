@@ -126,8 +126,8 @@ function jbrd:tick()
     end
   end
 
-  if (healing:SupportHeal(spell_levels)) then return end
-  
+  -- if (healing:SupportHeal(spell_levels)) then return end
+
 end
 
 function jbrd:attack(tid)

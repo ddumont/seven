@@ -69,7 +69,7 @@ return {
           table.insert(list, k);
         end
         table.sort(list);
-        print('member'.. pid .. ': ' .. ashita.settings.JSON:encode_pretty(list, nil, {}));
+        print('member:'.. i .. ' pid: ' .. pid .. ' buffs: ' .. ashita.settings.JSON:encode_pretty(list, nil, {}));
       end
     end);
   end,
