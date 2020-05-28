@@ -187,11 +187,17 @@ function jgeo:IdleBuffs()
 
       local spell = 'INDI_' .. geo['indispell']:upper():gsub("INDI[-]", "");
       if (packets.spells[spell] ~= nil and target_buffs[packets.stoe[spell]] == nil) then
-        if (buffs:CanCast(packets.spells[spell], spell_levels)) then
-          if (action == nil) then action = actions:new(); end
-          action = action
-          :next(partial(magic.cast, magic, '"' .. spell:gsub("[_]", "-") .. '"', iparty:GetMemberName(target)))
-          :next(partial(wait, 10));
+        -- if we already have a colure active, don't recast if its the same spell.
+        if (party:GetBuffs(0)[packets.status.COLURE_ACTIVE] == nil or geo['indilast'] ~= spell) then
+          if (buffs:CanCast(packets.spells[spell], spell_levels)) then
+            if (action == nil) then action = actions:new(); end
+            geo['indilast'] = spell;
+            config:save();
+
+            action = action
+            :next(partial(magic.cast, magic, '"' .. spell:gsub("[_]", "-") .. '"', iparty:GetMemberName(target)))
+            :next(partial(wait, 10));
+          end
         end
       end
     end
@@ -215,7 +221,15 @@ function jgeo:IdleBuffs()
         if (buffs:CanCast(packets.spells[spell], spell_levels)) then
           if (action == nil) then action = actions:new(); end
           action = action
-          :next(partial(ja.cast, ja, '"Full Circle"', '<me>'))
+          :next(partial(wait, 5))
+          :next(function(self)
+            local pid = AshitaCore:GetDataManager():GetParty():GetMemberServerId(target);
+            local buff_table = party:GetBuffs(0);
+            if (target ~= 0) then buff_table = party:GetBuffs(pid); end
+            if (buff_table[packets.stoe[spell]] == nil) then -- still no geo buff
+              ja.cast(ja, '"Full Circle"', '<me>');
+            end
+          end)
           :next(partial(wait, 5))
           :next(partial(magic.cast, magic, '"' .. spell:gsub("[_]", "-") .. '"', iparty:GetMemberName(target)))
           :next(partial(wait, 10));
@@ -250,6 +264,17 @@ function jgeo:geo(self, command, arg)
       geo['indispell'] = arg;
     elseif (command == 'geospell' and arg ~= nil) then
       geo['geospell'] = arg;
+    elseif (command == 'hatetarget' and arg ~= nil) then
+      geo['hatetarget'] = arg;
+    elseif (command == 'gethate' and arg ~= nil) then
+      actions.busy = true;
+      actions:queue(
+        actions:new()
+        :next(partial(wait, 10))
+        :next(partial(magic.cast, magic, '"cure"', geo['hatetarget']))
+        :next(partial(wait, 6))
+        :next(function(self) actions.busy = false; end)
+      );
     end
     config:save();
   end

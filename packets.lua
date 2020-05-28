@@ -158,6 +158,7 @@ local packets = {
     GEO_PARALYSIS                   = 566,
     GEO_WEIGHT                      = 567,
     GEO_HASTE                       = 580,
+    COLURE_ACTIVE                   = 612,
   },
 
   abilities = {
