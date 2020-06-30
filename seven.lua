@@ -114,6 +114,9 @@ ashita.register_event('command', function(cmd, nType)
     AshitaCore:GetChatManager():QueueCommand('/addon reload seven', -1);
   elseif (args[2] == 'echo') then
     AshitaCore:GetChatManager():QueueCommand('/l2 echo ' .. cmd:sub(13):gsub('<t>',tid), 1);
+  elseif (args[2] == 'ea') then
+    AshitaCore:GetChatManager():QueueCommand('/l2 echo ' .. cmd:sub(11):gsub('<t>',tid), 1);
+    AshitaCore:GetChatManager():QueueCommand(cmd:sub(11):gsub('<t>',tid), 1);
   elseif (args[2] == 'fov' or args[2] == 'gov') then
     if (args[3] == nil) then
       print('Which page?');

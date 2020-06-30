@@ -132,6 +132,7 @@ local jgeo = {
 
 
 function jgeo:tick()
+  if (jgeo:Hate()) then return end
   if (actions.busy) then return end
   if (buffs:SneakyTime(spell_levels)) then return end
   if (jgeo:IdleBuffs()) then return end
@@ -157,13 +158,26 @@ end
 
 function jgeo:IdleBuffs()
   local cnf = config:get();
-  if (cnf['IdleBuffs'] ~= true) then return end
   local geo = cnf['geomancer'];
+  if (cnf['IdleBuffs'] ~= true and geo['practice'] ~= true) then return end
 
   local buff_table = party:GetBuffs(0);
   if (buff_table[packets.status.EFFECT_INVISIBLE]) then return end
-  if (geo['indispell'] == nil and geo['geospell'] == nil) then return end
 
+  local sub = AshitaCore:GetDataManager():GetPlayer():GetSubJob();
+  if (sub == Jobs.RedMage and buff_table[packets.status.EFFECT_REFRESH] == nil) then
+    actions.busy = true;
+    actions:queue(
+      actions:new()
+      :next(partial(wait, 3))
+      :next(partial(magic.cast, magic, "refresh", "<me>"))
+      :next(partial(wait, 5))
+      :next(function() actions.busy = false; end)
+    );
+    return true;
+  end
+
+  if (geo['indispell'] == nil and geo['geospell'] == nil) then return end
   local player = AshitaCore:GetDataManager():GetPlayer();
   local iparty = AshitaCore:GetDataManager():GetParty();
   local mana = iparty:GetMemberCurrentMP(0);
@@ -186,9 +200,9 @@ function jgeo:IdleBuffs()
       end
 
       local spell = 'INDI_' .. geo['indispell']:upper():gsub("INDI[-]", "");
-      if (packets.spells[spell] ~= nil and target_buffs[packets.stoe[spell]] == nil) then
+      if (packets.spells[spell] ~= nil and target_buffs[packets.stoe[spell]] == nil or geo['practice']) then
         -- if we already have a colure active, don't recast if its the same spell.
-        if (party:GetBuffs(0)[packets.status.COLURE_ACTIVE] == nil or geo['indilast'] ~= spell) then
+        if (party:GetBuffs(0)[packets.status.COLURE_ACTIVE] == nil or geo['indilast'] ~= spell or geo['practice']) then
           if (buffs:CanCast(packets.spells[spell], spell_levels)) then
             if (action == nil) then action = actions:new(); end
             geo['indilast'] = spell;
@@ -196,7 +210,7 @@ function jgeo:IdleBuffs()
 
             action = action
             :next(partial(magic.cast, magic, '"' .. spell:gsub("[_]", "-") .. '"', iparty:GetMemberName(target)))
-            :next(partial(wait, 10));
+            :next(partial(wait, 7));
           end
         end
       end
@@ -217,7 +231,7 @@ function jgeo:IdleBuffs()
       end
 
       local spell = 'GEO_' .. geo['geospell']:upper():gsub("GEO[-]", "");
-      if (packets.spells[spell] ~= nil and target_buffs[packets.stoe[spell]] == nil) then
+      if (packets.spells[spell] ~= nil and target_buffs[packets.stoe[spell]] == nil or geo['practice']) then
         if (buffs:CanCast(packets.spells[spell], spell_levels)) then
           if (action == nil) then action = actions:new(); end
           action = action
@@ -226,22 +240,48 @@ function jgeo:IdleBuffs()
             local pid = AshitaCore:GetDataManager():GetParty():GetMemberServerId(target);
             local buff_table = party:GetBuffs(0);
             if (target ~= 0) then buff_table = party:GetBuffs(pid); end
-            if (buff_table[packets.stoe[spell]] == nil) then -- still no geo buff
+            if (buff_table[packets.stoe[spell]] == nil or geo['practice']) then -- still no geo buff
               ja.cast(ja, '"Full Circle"', '<me>');
             end
           end)
           :next(partial(wait, 5))
           :next(partial(magic.cast, magic, '"' .. spell:gsub("[_]", "-") .. '"', iparty:GetMemberName(target)))
-          :next(partial(wait, 10));
+          :next(partial(wait, 7));
         end
       end
     end
 
     if (action ~= nil) then
       actions.busy = true;
+      if (geo['practice']) then
+        action:next(partial(wait, 30)) -- don't burn mana so fast... usually practicing with refresh up, so can maintain longer
+      end
       actions:queue(action:next(function(self) actions.busy = false; end));
     end
   end
+end
+
+function jgeo:Hate()
+  if (jgeo.hate) then return end
+  local cnf = config:get();
+  if (cnf['IdleBuffs'] ~= true) then return end
+  local geo = cnf['geomancer'];
+
+  local bt = jgeo:bt();
+  if (bt == nil or bt.ServerId == geo['hatetargetlasttarget']) then return end
+
+  geo['hatetargetlasttarget'] = bt.ServerId;
+  config:save();
+  print(bt.ServerId);
+  jgeo.hate = true;
+  actions:queue(
+    actions:new()
+    :next(partial(wait, 5))
+    :next(partial(magic.cast, magic, "cure", bt.ClaimServerId))
+    :next(partial(wait, 3))
+    :next(function() jgeo.hate = false; end)
+  );
+  return true;
 end
 
 function jgeo:geo(self, command, arg)
@@ -266,17 +306,28 @@ function jgeo:geo(self, command, arg)
       geo['geospell'] = arg;
     elseif (command == 'hatetarget' and arg ~= nil) then
       geo['hatetarget'] = arg;
-    elseif (command == 'gethate' and arg ~= nil) then
-      actions.busy = true;
-      actions:queue(
-        actions:new()
-        :next(partial(wait, 10))
-        :next(partial(magic.cast, magic, '"cure"', geo['hatetarget']))
-        :next(partial(wait, 6))
-        :next(function(self) actions.busy = false; end)
-      );
     end
     config:save();
+  end
+end
+
+function jgeo:bt()
+  local iparty = AshitaCore:GetDataManager():GetParty();
+  local ids = {};
+  for x = 0, 5 do
+    local serverid = iparty:GetMemberServerId(x);
+    if (serverid ~= nil and serverid ~= 0) then
+      ids[serverid] = true;
+    end
+  end
+
+  for x = 0, 2303 do
+    local entity = GetEntity(x);
+    if (entity ~= nil and entity.WarpPointer ~= 0 and ids[entity.ClaimServerId] == true) then
+      if (entity.StatusServer ~= 2 and entity.StatusServer ~= 3) then
+        return entity;
+      end
+    end
   end
 end
 
