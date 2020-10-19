@@ -268,6 +268,7 @@ function jgeo:Hate()
   local geo = cnf['geomancer'];
 
   local bt = jgeo:bt();
+  -- print(bt)
   if (bt == nil or bt.ServerId == geo['hatetargetlasttarget']) then return end
 
   geo['hatetargetlasttarget'] = bt.ServerId;
