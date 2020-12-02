@@ -1,6 +1,6 @@
-_addon.author   = 'siete';
+_addon.author   = 'Yarbles - Asura';
 _addon.name     = 'seven';
-_addon.version  = '0.2.1';
+_addon.version  = '1.0.0';
 
 require 'common';
 local config = require('config');
