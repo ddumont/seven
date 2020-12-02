@@ -1,6 +1,6 @@
 _addon.author   = 'siete';
 _addon.name     = 'seven';
-_addon.version  = '0.2';
+_addon.version  = '0.2.1';
 
 require 'common';
 local config = require('config');

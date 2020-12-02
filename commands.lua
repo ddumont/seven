@@ -21,7 +21,10 @@ return {
 
     local player = AshitaCore:GetDataManager():GetPlayer();
     local actor = struct.unpack('s', packet, 0x8 + 1);
-    local msg = struct.unpack('s', packet, 0x18 + 1);
+
+    local idSize = struct.unpack('H', packet, 0x00 + 1);
+    local msgSize = (4 * (bit.rshift(idSize, 9)) - 0x18) + 1;
+    local msg = struct.unpack(string.format('c%d', msgSize), packet, 0x17 + 1);
     local args = msg:args();
 
     if (args[1] == 'leader') then
