@@ -1,3 +1,5 @@
+require 'ffxi.recast';
+
 local party = require('party');
 local config = require('config');
 local actions = require('actions');
@@ -244,6 +246,20 @@ function buffs:SneakyTime(levels)
       :next(function(self) actions.busy = false; end));
     return true;
   end
+end
+
+function buffs:AbilityOnCD(abilityName)
+  local r = AshitaCore:GetResourceManager();
+  local onCD = false;
+  for x = 0, 31 do
+    if (ashita.ffxi.recast.get_ability_recast_by_index(x) > 0) then
+      local ability = r:GetAbilityByTimerId(ashita.ffxi.recast.get_ability_id_from_index(x));
+      if (ability.Name[0] == abilityName) then
+        onCD = true;
+      end
+    end
+  end
+  return onCD;
 end
 
 return buffs;

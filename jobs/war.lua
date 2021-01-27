@@ -23,6 +23,7 @@ return {
       AshitaCore:GetChatManager():QueueCommand("/follow " .. cnf.leader, 1);
     end
 
+    if (party:GetBuffs(0)[packets.status.EFFECT_INVISIBLE]) then return end
 
     local sub = AshitaCore:GetDataManager():GetPlayer():GetSubJob();
     if (sub == Jobs.Dancer and cnf.ATTACK_TID ~= nil) then
@@ -37,6 +38,27 @@ return {
         return true;
       end
       if (healing:DNCHeal(spell_levels)) then return end
+    end
+
+    local queueJobAbility = nil;
+    local queueTarget = nil;
+    if (not(buffs:AbilityOnCD("Provoke")) and cnf.ATTACK_TID ~= nil) then
+      queueJobAbility = '"Provoke"';
+      queueTarget = '<t>';
+    elseif not(buffs:AbilityOnCD("Warcry")) then
+      queueJobAbility = '"Warcry"';
+      queueTarget = '<me>';
+    elseif not(buffs:AbilityOnCD("Defender")) then
+      queueJobAbility = '"Defender"';
+      queueTarget = '<me>';
+    end
+    if (queueJobAbility ~= nil) then
+      actions.busy = true;
+      actions:queue(actions:new()
+        :next(partial(ability, queueJobAbility, queueTarget))
+        :next(partial(wait, 3))
+        :next(function(self) actions.busy = false; end));
+      return true;
     end
   end,
 
